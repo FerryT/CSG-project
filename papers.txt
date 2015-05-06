@@ -3,3 +3,18 @@ https://www.cs.utexas.edu/~pingali/CS395T/2009fa/papers/metis.pdf
 
 AZY paper:
 http://epubs.siam.org/doi/abs/10.1137/1.9781611972801.42
+
+========================================
+Papers/Thesis that refer to our paper:
+----------------------------------------
+DYNAMIC PARTITIONING OF SOCIAL NETWORKS (thesis)
+Link: https://www.ideals.illinois.edu/bitstream/handle/2142/42231/Mindi_Yuan.pdf?sequence=1
+Small summary: Make use of the algorithm in our paper for analysing social networks. Hereby get the edges a weight based on chat frequency and access recency. In combination of the algorithm the social network is analysed.
+
+STREAMING HYPERGRAPH PARTITION FOR MASSIVE GRAPHS (thesis)
+Link: https://etd.ohiolink.edu/!etd.send_file?accession=kent1385097649&disposition=inline
+Small summary: A solution for the same problem but then for hyper graphs.
+
+Efficient processing of streaming graphs for evolution-aware clustering
+Link: http://dl.acm.org/citation.cfm?id=2505750 (not yet have read the PDF)
+Small summary: Describes another clustering algorithm. This is different algorithm than in our paper that clusters in a snapshot at a single timestep. In this algorithm if an edge is removed, then it is still taken into account for the clustering. 
