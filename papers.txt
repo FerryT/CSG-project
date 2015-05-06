@@ -1,2 +1,5 @@
 METIS paper:
 https://www.cs.utexas.edu/~pingali/CS395T/2009fa/papers/metis.pdf
+
+AZY paper:
+http://epubs.siam.org/doi/abs/10.1137/1.9781611972801.42
