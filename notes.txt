@@ -1,2 +1,6 @@
 METIS source code:
 http://glaros.dtc.umn.edu/gkhome/metis/metis/download
+
+Datasets:
+[cit-HepPh: Paper citations in physics papers]
+https://snap.stanford.edu/data/cit-HepPh.html
