@@ -1,12 +1,13 @@
-METIS paper:
+================================================================================
+Important papers that aren't that interesting for lit survey:
+--------------------------------------------------------------------------------
+
+METIS paper [7]:
 https://www.cs.utexas.edu/~pingali/CS395T/2009fa/papers/metis.pdf
 
-AZY paper:
-http://epubs.siam.org/doi/abs/10.1137/1.9781611972801.42
-
-========================================
+================================================================================
 Papers/Thesis that refer to our paper:
-----------------------------------------
+--------------------------------------------------------------------------------
 DYNAMIC PARTITIONING OF SOCIAL NETWORKS (thesis)
 Link: https://www.ideals.illinois.edu/bitstream/handle/2142/42231/Mindi_Yuan.pdf?sequence=1
 Small summary: Make use of the algorithm in our paper for analysing social networks. Hereby get the edges a weight based on chat frequency and access recency. In combination of the algorithm the social network is analysed.
@@ -18,3 +19,25 @@ Small summary: A solution for the same problem but then for hyper graphs.
 Efficient processing of streaming graphs for evolution-aware clustering
 Link: http://dl.acm.org/citation.cfm?id=2505750 (not yet have read the PDF)
 Small summary: Describes another clustering algorithm. This is different algorithm than in our paper that clusters in a snapshot at a single timestep. In this algorithm if an edge is removed, then it is still taken into account for the clustering. 
+
+================================================================================
+Papers/Thesis that our paper refer:
+--------------------------------------------------------------------------------
+A. Jain and R. Dubes, Algorithms for Clustering Data. Prentice-Hall, 1988. [1]
+Can't find the paper (probably doesn't exist digitally)
+
+Global Min-cuts in RNC, and Other Ramifications of a Simple Min-Cut Algorithm[11]
+link: http://general-k-cut.googlecode.com/svn-history/r143/trunk/articles/karger93.pdf
+Small summary: Calculates the min-ST-cuts for a graph. This is done by random sampling a graph. This is the main attribution to our paper.
+
+Fast online graph clustering [12]
+Link: http://ac.els-cdn.com/S0031320308002483/1-s2.0-S0031320308002483-main.pdf?_tid=c2c9a9d4-f401-11e4-80ab-00000aab0f27&acdnat=1430925092_dc2948daea9452cae5c982aa5befcd15
+Small summary: Solves the same problem as our paper in a different way, with Erdös Réyni model. Our paper claims that it does not handle a lot of clusters well, did not verify this claim.
+
+On Clustering Graph Streams [13]
+Link: http://epubs.siam.org/doi/pdf/10.1137/1.9781611972801.42
+Small summary: Probably most closely related to our paper. Solves the same problem as our paper, with hash-compressed micro-clusters. A lot more math is involved to it and algorithm is more complex. (This claim can't be copied, this is a very quick overview)
+
+Outlier Detection in Graph Streams [14] (the AZY paper)
+Link: http://ieeexplore.ieee.org/stamp/stamp.jsp?tp=&arnumber=5767885
+Small summary: This is also used as reference in our paper. Our paper extended the AZY paper. They have also used reservoir sampling with constraints. A important part difference is that the result of the AZY algorithm shows the outliers, which isn't directly applicable to our problem. Our paper says that you can use the outliers to create the clustering.
