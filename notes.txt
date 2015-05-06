@@ -4,3 +4,13 @@ http://glaros.dtc.umn.edu/gkhome/metis/metis/download
 Datasets:
 [cit-HepPh: Paper citations in physics papers]
 https://snap.stanford.edu/data/cit-HepPh.html
+
+[web-NotreDame: Web graph from Univ. of Notre Dame]
+https://snap.stanford.edu/data/web-NotreDame.html
+
+[replies: Replies between Twitter users]
+https://snap.stanford.edu/data/higgs-twitter.html
+http://dmml.asu.edu/users/xufei/datasets.html
+
+[DNS]
+http://www.caida.org/data/active/ipv4_dnsnames_dataset.xml
