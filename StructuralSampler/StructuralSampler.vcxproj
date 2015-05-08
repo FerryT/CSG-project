@@ -64,7 +64,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GraphInput.cpp" />
+    <ClCompile Include="src\GraphManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\ReservoirManager.cpp" />
+    <ClCompile Include="src\WindowManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="headers\Algorithm.h" />
+    <ClInclude Include="headers\Graph.h" />
+    <ClInclude Include="headers\GraphInput.h" />
+    <ClInclude Include="headers\GraphManager.h" />
+    <ClInclude Include="headers\ReservoirManager.h" />
+    <ClInclude Include="headers\Tests.h" />
+    <ClInclude Include="headers\WindowManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
