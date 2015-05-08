@@ -1,6 +1,8 @@
 #ifndef GRAPH_INPUT_H
 #define GRAPH_INPUT_H
 
+#include <string>
+
 #include "Algorithm.h"
 
 //An input 
@@ -13,6 +15,21 @@ class Input {
 		//this executed the next update, this can be a delete or a insert
 		virtual void ExecuteNextUpdate() = 0;
 };
+
+class FileInput public Input {
+	public:
+	const std::string filename;
+	
+	FileInput(const char _filename) : filename(_filename) {}
+	
+	virtual void Open();
+	virtual void Close();
+	virtual void ExecuteNextUpdate();
+	
+	private:
+	struct File;
+	File *file;
+}
 
 /*
 
