@@ -16,11 +16,11 @@ class Input {
 		virtual void ExecuteNextUpdate() = 0;
 };
 
-class FileInput public Input {
+class FileInput: public Input {
 	public:
 	const std::string filename;
 	
-	FileInput(const char _filename) : filename(_filename) {}
+	FileInput(const char *_filename) : filename(_filename) {}
 	
 	virtual void Open();
 	virtual void Close();
@@ -29,7 +29,7 @@ class FileInput public Input {
 	private:
 	struct File;
 	File *file;
-}
+};
 
 /*
 

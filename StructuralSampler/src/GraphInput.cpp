@@ -26,7 +26,7 @@ void FileInput::Open()
 	file = new File;
 	file->fp = fopen(filename.c_str(), "rt");
 	file->buffer = new char[BUFFER_SIZE];
-	file->ptr = buffer;
+	file->ptr = file->buffer;
 }
 
 //------------------------------------------------------------------------------

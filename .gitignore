@@ -133,3 +133,5 @@ sympy-plots-for-*.tex/
 /*.opensdf
 /StructuralSampler/Debug
 /StructuralSampler/Release
+/StructuralSampler/obj
+/StructuralSampler/bin
