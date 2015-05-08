@@ -1,0 +1,46 @@
+//
+2.A clear statement of the specific research problem(s) addressed in your paper.
+
+The research problem is clustering large-scale and rapidly changing "streaming" graphs where the updates to a graph are given in form of a stream of vertex or edge additions and deletions. 
+
+The algorithm in the paper is proposed to solve the clustering problem and also satisfies 3 optimization requirements:
+a). should be easy to parallize for multi-core environments
+b). should hancle massive inputs (low overall space complexity)
+c). should handle high throughput streams (low time complexity per update or query)
+
+//
+3.A clear statement of the specific result(s) claimed in your paper.
+
+The paper tests on 4 data sets:
+1). cit-HepPh. Its number of vertices keeps increasing.
+2). web-NotreDame.
+3). replies. It is very sparse and does not cluster well even with METIS.
+4). DNS Edges. It contains lots of duplicate edges at different timestamps.
+
+The paper shows results in 3 aspects:
+
+a).Quality
+
+The paper tests 4 datasets above on the Structural Sampler, METIS, and AZY, with different clustering group size bounds B, while fixing sampling-threadshold parameter p at 1. The results shows the cut-size quality of the Structural Sampler is almost as well as METIS, which is assumed to be close to the best clustering. But it performs worse than AZY. 
+
+b).Performance
+
+The paper tests cit-HepPh and web-NotreDame on the Structural Sampler and METIS, with different values of Query/UpdateRatio. 
+The throughput out-performs METIS more than 3 orders of magnitude. The advantage is more significant with the increasing Query/UpdateRatio. 
+
+The paper tests DNS Edges and web-NotreDame on the Structural Sampler and METIS, with different clustering size bounds B, while fixing Query/UpdateRatio at 0.5. 
+The throughput out-performs METIS more than 3 orders of magnitude. 
+METIS gives almost the same throughput for different values of B while the performance of the Structural Sampler decreases as the cluster bound increases. 
+
+c).Tuning experiments on different sampling-threadshold parameter p
+
+The paper tests throughput on cit-HepPh and DNS Edges with the Structural Sampler and METIS. 
+The effect of sampling threshold on METIS is very limited but actually it gives the same trend as the Structural Sampler approach. They all show that a lower sampling threshold increases performance. 
+
+The paper tests cut-size quality on cit-HepPh and DNS Edges with the Structural Sampler, METIS, and AZY.
+For both METIS and the Structural Sampler, applying a lower sampling threshold could bring a worse clustering quality. However, the AZY is almostly not influenced by low sampling threashold. 
+
+
+
+
+
