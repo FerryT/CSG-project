@@ -124,3 +124,12 @@ sympy-plots-for-*.tex/
 # WinEdt
 *.bak
 *.sav
+
+
+*.sdf
+*.suo
+/Release
+/Debug
+/*.opensdf
+/StructuralSampler/Debug
+/StructuralSampler/Release
