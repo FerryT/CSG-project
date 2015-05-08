@@ -12,6 +12,7 @@ using vertex = int;
 struct edge {   // Declare PERSON struct type
 	vertex v1;
 	vertex v2;
+	real p;
 };
 
 using graph = vector<edge>;
