@@ -1,0 +1,12 @@
+
+13-5: part 2, hand in first report, planning and scope
+24-5: part 3, second report, ???
+12, 17, 19-6: project presentations
+21-6: part 4, third report, ???
+
+deadlines:
+13-5: report2
+24-5: untested implementation of the algorithm and preprocessed datasets, report3
+31-5: finished implementation of the algorithm
+14-6: main experiments finished
+21-6: everything finished, report4

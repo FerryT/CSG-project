@@ -1,0 +1,145 @@
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[a4paper]{geometry}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsbsy}
+\usepackage{amssymb}
+
+% URLs in citations
+\usepackage[hidelinks]{hyperref}
+\usepackage{biblatex}
+\bibliography{refs}
+% break at any character
+\setcounter{biburllcpenalty}{7000}
+\setcounter{biburlucpenalty}{8000}
+% cool colors
+% http://tex.stackexchange.com/a/847/56242
+\usepackage{xcolor}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!60!black},
+    citecolor={red!60!black},
+    urlcolor={red!60!black}
+}
+
+% courier font for monospace bold
+\usepackage{courier}
+% Libertine font
+\usepackage{libertine}
+\usepackage[libertine]{newtxmath}
+
+
+% no indent and horizontal space
+\usepackage[parfill]{parskip}
+
+% nice look
+\frenchspacing
+\usepackage{microtype}
+
+% tables with width
+\usepackage{tabularx}
+
+\title{Database Technology [2ID35] \\
+\textbf{Project part 2}}
+
+\author{
+Michiel Fortuin --- 812105 \\
+Fengjun Wang --- 0925350 \\
+Ferry Timmers --- 0637586 \\
+Myrthe van Delft --- 0657742}
+
+\date{\today}
+
+\begin{document}
+\newcommand{\papername}[0]{Clustering Streaming Graphs}
+
+\maketitle
+
+\section{Introduction}
+As part of the database and technolgoy course of 2014-2015, we have to investigate a research paper from the scientific community. For our project we were assigned the paper \papername (\cite{paper}). This paper presents an algorithm for `online' clustering of (large) streaming graphs. In this first progress report we will present a brief literature survey, the main outline of the results of the paper, and a rough estimate of the planning of the project. We may refer to \cite{paper} as `the paper' or `our paper'.
+
+\section{Literature Survey}, 
+%A brief literature survey, providing context and motivation for your paper.
+In the paper, a method for clustering online, streaming graphs is presented. A streaming graph is a graph where the updates to the graph are given in the form of a \textit{stream} of edge or vertex additions or deletions. Handling of such rapidly changing graphs is challenging because of its dynamic, online nature and massive scale. An algorithm thus would necessarily need to be incremental and extremely fast, and preferably amenable to parallel or distributed implementations. 
+
+The graph clustering problem has been a subject of extensive research, but mostly assuming an \textit{offline} setting where the entire graph is given beforehand. The paper presents an algorithm which is suitable to an online setting, and is capable of maintaining a decent graph clustering while updates are performed on the graph. 
+
+In \cite{11}, an alternative solution for clustering online graphs is presented. The algorithm uses the Erdös Réyni model. However, our paper claims their solution handles clusters better. Furthermore, in \cite{13} another alternative 
+
+%TODO complete, Michiel
+
+
+
+
+\section{Paper results}
+%A clear statement of the specific research problem(s) addressed in your paper.
+%A clear statement of the specific result(s) claimed in your paper.
+%TODO fill in
+
+
+\section{Planning}
+%A detailed, step by step plan for how your team will verify these claims. This plan must include the specific details of the test environment, tools, programming languages, data sets, etc., which you will use in validating the results of your paper. I expect that you will have already installed and tested all necessary tools/data before writing your report. Do not underestimate the work involved in setting up your experiment. 
+%You should design your verification methodology and planning in such a way that it can be completed by the end of May (at the very latest). As with setting up your study, do not underestimate the amount of time and effort which will be necessary for this verification.
+%A discussion of the progress your team has made towards validating the claims of the paper, following this plan.
+%TODO Myrthe: dates
+
+The planning of our project looks as follows. Depending on whether or not we receive the source code from the author, we will either execute with 3a (if we do receive the source code), or 3b (if we do not receive the source code).
+\begin{enumerate}
+\item[1] Mail the authors with a request for the source code. \textit{Completed}
+\item[2] Obtain the datasets used in the paper, as far as possible. \textit{Completed}
+\item[3-a] If we are capable of obtaining the source code from the authors, then:
+\begin{enumerate}
+\item[i] Compare the performance and quality results presented in the paper with those of METIS and our implementation.
+\end{enumerate}
+\item[3-b] If we do not receive the source code from the authors in a timely manner, then:
+\begin{enumerate}
+\item[i] Implement the algortihm presented in the paper.
+\item[ii] Compare the quality results presented in the paper with those of METIS and our implementation.
+\item[iii] \textit{Expansion:} Compare the performance results presented in the paper with those of METIS and our implementation.
+\end{enumerate}
+\item[4] Possible expansions, depending on the time it takes to implement and run the experiments:
+\begin{enumerate}
+\item[i] Repeat the tests on different datasets. An interesting candidate is a dataset showing no obvious clustering. %candidates are randomly generated clustering datasets, randomly generated datasets which do not show obvious clustering, significantly smaller datasets and the dataset showing the social network generated by the heroes from the Marvel Universe.
+\item[ii] Testing for additional $p$-values aside from those used in the paper, and verifying the claims made about higher and/or lower $p$-values.
+\item[iii] The paper claims the algorithm can be easily parallelized or run distributed. We are interested to test the method presented for parallelizing the algorithm.
+\end{enumerate}
+\end{enumerate}
+
+\subsection{Progress}
+Currently, we have e-mailed the author and have been able to obtain three of the four datasets used in the paper. The fourth dataset is from an IBM process, and we do not believe it to be possible to gain access to this dataset. 
+
+Furthermore, we have received a negative response from the author, and thus we will need to create our own implementation of the presented algorithm. However, we have been able to find an implementation of the METIS algorithm, and will use this implementation as a bench mark, and not write our own. 
+
+%TODO fill out some more
+
+
+\subsection{Tools} 
+We have decided to use git as a code repository for the project, and we will write our code in C++. The development environment we will use is Visual Studio. For writing documents and such we will use \LaTeX. We might use additional benchmarking tools. Any additional datasets we will we need, we believe to be able to find on the internet. 
+
+\begin{thebibliography}
+\bibitem{paper} A. Eldawy, R. Khandekar and K. Wu, ``Clustering Streaming Graphs'', in \textit{32nd IEEE International Conference on Distributed Computing Systems}, 2012.
+
+\bibitem{1} A. Jain and R. Dubes, ``Algorithms for Clustering Data''. Prentice-Hall, 1988.
+
+\bibitem{11} D. Karger, ``Global Min-cuts in RNC, and Other Ramifications of a Simple Min-Cut Algorithm'', in \textit{ACM-SIAM Symposium on Discrete Algorithms}, Austin, TX, Jan. 1993, pp. 21-30.
+
+\bibitem{12} H. Zanghi, C. Ambroise and V. Miele, ``Fast Online Graph Clustering Via Erdos-Rényi Mixture'', \textit{Pattern Recognition}, vol. 41, no. 12, pp. 3592-3599, 2008.
+
+\bibitem{13} C. Aggarwal, Y. Zhao and P. Yu, ``On Clustering Graph Streams'', in \textit{Proceedings of the SIAM International Conference on Data Mining}, Columbos, OH, Apr. 2010.
+
+\bibitem{14} ---,  ``Outlier Detection in Graph Streams'', in \textit{Proceedings of the Internation Conference on Data Engineering, ICDE}, Hannover, Germany, Apr. 2011, pp. 399-409.
+
+\bibitem{METIS} G. Karypis and V. Kumar, ``A Fast and High Quality Multilevel Scheme for Partitioning Irregular Graphs'', in \textit{SIAM Journal of Scientific Computing}, vol. 20, no. 1, pp. 359-392, 1998.
+
+\bibitem{DynPar} M. Yuan, ``Dynamic Partitioning of Social Networks'', University of Illinois, Urbana, Illinois, 2012.
+
+\bibitem{StrHyp} G. Wing, ``Streaming Hypergraph Partition for Massive Graphs'', Kent State University, Dec. 2013.
+
+\bibitem{ProStr} m. Yuan, K. Wu, Y. Lu and G. Jacques-Silva, ``Efficient Processing of Streaming Graphs for Evolution-Aware Clustering'', in \textit{CIKM '13, Proceedings of the 22nd ACM international conference on Conference on information & knowledge management}, pp. 319-328, New York, 2013
+
+\end{thebibliography}
+
+\end{document}
