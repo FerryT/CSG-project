@@ -14,6 +14,8 @@ class Input {
 		virtual void Close() = 0;
 		//this executed the next update, this can be a delete or a insert
 		virtual void ExecuteNextUpdate() = 0;
+		//check if it is at the end of it's input
+		virtual bool IsEnd() = 0;
 };
 
 class FileInput: public Input {
@@ -25,6 +27,7 @@ class FileInput: public Input {
 	virtual void Open();
 	virtual void Close();
 	virtual void ExecuteNextUpdate();
+	virtual bool IsEnd();
 	
 	private:
 	struct File;
