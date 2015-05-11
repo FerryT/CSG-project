@@ -67,7 +67,9 @@ In the paper, a method for clustering online, streaming graphs is presented. A s
 
 The graph clustering problem has been a subject of extensive research, but mostly assuming an \textit{offline} setting where the entire graph is given beforehand. The paper presents an algorithm which is suitable to an online setting, and is capable of maintaining a decent graph clustering while updates are performed on the graph. 
 
-In \cite{11}, an alternative solution for clustering online graphs is presented. The algorithm uses the Erdös Réyni model. However, our paper claims their solution handles clusters better. Furthermore, in \cite{13} another alternative 
+In \cite{11} random sampling was used to solve this problem in a offline fashion. This random sampling was first used in this paper. In \cite{12} solves the same problem, but then in an online fashion, using an Erdös-Réyni model. Problem with this algorithm in \cite{12} is that it does not allow deletion or modification of the graph. Also it does not scale well with the number of clusters. The algorithm presented in  \cite{13} solves the same problem in an online fashion. This hash-compressed micro-clusters and find structurally similar graphs in a stream of large number of small graphs. In \cite{14} reservoir sampling is also used. This algorithm is called the AZY algorithm. Our paper is based on top of this algorithm. It can be seen as an extension. The AZY does not consider deletions in the graph.
+
+In \cite{DynPar} the algorithm presented in our paper is used for analyzing social network. The weighted graph is used, which is based on the chat frequency and access recency. In \cite{StrHyp} the algorithm is adapted for use with hypergraphs. The paper \cite{ProStr} describes another clustering algorithm similar to ours, only the query's aren't about a snapshot of the graph, but deletions in the past and additions in the future are taken into account with the clustering.
 
 %TODO complete, Michiel
 
