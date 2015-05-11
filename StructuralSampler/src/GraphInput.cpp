@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-#include "../headers/GraphInput.h"
+#include "GraphInput.h"
 
 #define BUFFER_SIZE 4096
 

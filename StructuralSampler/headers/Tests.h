@@ -13,22 +13,21 @@ public:
 };
 
 
+class QualityTest: Test {
+public:
+	int SnapshotSize = 10000;
+	virtual void RunTest(string outputFile) override;
+};
+
 /*
 
 //The classes that has to be implemented
 
-class QualityTest {
-public:
-	Algorithm* algorithm;
-	Input* input;
-	virtual void RunTest(string outputFile);
-};
+
 
 class ThroughputTest {
 public:
-	Algorithm* algorithm;
-	Input* input;
-	virtual void RunTest(string outputFile);
+	void RunTest(string outputFile);
 };
 */
 
