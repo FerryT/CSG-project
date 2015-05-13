@@ -10,11 +10,11 @@
 
 % URLs in citations
 \usepackage[hidelinks]{hyperref}
-\usepackage{biblatex}
+%\usepackage{biblatex}
 \bibliography{refs}
 % break at any character
-\setcounter{biburllcpenalty}{7000}
-\setcounter{biburlucpenalty}{8000}
+%\setcounter{biburllcpenalty}{7000}
+%\setcounter{biburlucpenalty}{8000}
 % cool colors
 % http://tex.stackexchange.com/a/847/56242
 \usepackage{xcolor}
@@ -46,7 +46,7 @@
 \textbf{Project part 2}}
 
 \author{
-Michiel Fortuin --- 812105 \\
+Michiel Fortuin --- 0812105 \\
 Fengjun Wang --- 0925350 \\
 Ferry Timmers --- 0637586 \\
 Myrthe van Delft --- 0657742}
@@ -59,9 +59,9 @@ Myrthe van Delft --- 0657742}
 \maketitle
 
 \section{Introduction}
-As part of the database and technolgoy course of 2014-2015, we have to investigate a research paper from the scientific community. For our project we were assigned the paper \papername (\cite{paper}). This paper presents an algorithm for `online' clustering of (large) streaming graphs. In this first progress report we will present a brief literature survey, the main outline of the results of the paper, and a rough estimate of the planning of the project. We may refer to \cite{paper} as `the paper' or `our paper'.
+As part of the database and technology course of 2014-2015, we have to investigate a research paper from the scientific community. For our project we were assigned the paper \papername \cite{paper}. This paper presents an algorithm for 'online' clustering of (large) streaming graphs. In this first progress report we will present a brief literature survey, the main outline of the results of the paper, and a rough estimate of the planning of the project. We may refer to \cite{paper} as `the paper' or `our paper'.
 
-\section{Literature Survey}, 
+\section{Literature Survey}
 %A brief literature survey, providing context and motivation for your paper.
 In the paper, a method for clustering online, streaming graphs is presented. A streaming graph is a graph where the updates to the graph are given in the form of a \textit{stream} of edge or vertex additions or deletions. Handling of such rapidly changing graphs is challenging because of its dynamic, online nature and massive scale. An algorithm thus would necessarily need to be incremental and extremely fast, and preferably amenable to parallel or distributed implementations. 
 
@@ -71,17 +71,13 @@ In \cite{11} random sampling was used to solve this problem in a offline fashion
 
 In \cite{DynPar} the algorithm presented in our paper is used for analyzing social network. The weighted graph is used, which is based on the chat frequency and access recency. In \cite{StrHyp} the algorithm is adapted for use with hypergraphs. The paper \cite{ProStr} describes another clustering algorithm similar to ours, only the query's aren't about a snapshot of the graph, but deletions in the past and additions in the future are taken into account with the clustering.
 
-%TODO complete, Michiel
-
-
-
 
 \section{The paper}
 The research problem is clustering large-scale and rapidly changing "streaming" graphs where the updates to a graph are given in form of a stream of vertex or edge additions and deletions. 
 
 The algorithm in the paper is proposed to solve the clustering problem and also satisfies 3 optimization requirements:
 \begin{itemize}
-\item[a] it should be simple to adjust to parallellizations and distributed environments
+\item[a] it should be simple to adjust to parallelizations and distributed environments
 \item[b] it should handle massive inputs, with a relatively low overall space complexity
 \item[c] it should handle high throughput streams, with a relatively low time complexity per update or query
 \end{itemize}
@@ -107,18 +103,13 @@ For both METIS and the Structural Sampler, applying a lower sampling threshold c
 The paper tests the performance of both the Structural Sampler and METIS on cit-HepPh and web-NotreDame, using different ratios for the number of queries versus the number of updates. 
 The throughput of the Structural Sampler out-performs METIS, increasingly so with an increasing query vs. update ratio, up to more an improvement more than 3 orders of magnitude.
 
-Furthermore, the paper tests Structural Sampler and METIS, with different clustering size bounds B, while fixing Query/UpdateRatio at 0.5, on the datasets DNS Edges and web-NotreDame.
+Furthermore, the paper tests Structural Sampler and METIS, with different clustering size bounds B, while fixing Query/Update-ratio at 0.5, on the datasets DNS Edges and web-NotreDame.
 The throughput of Structural Sampler out-performs METIS with more than 3 orders of magnitude. However, METIS has almost the same throughput for different values of the clustering size bounds B, while the performance of the Structural Sampler decreases as B increases. 
 
 Finally, the paper tests the throughput of Structural Sampler and METIS on cit-HepPh and DNS Edges, while adjusting the p-value. 
 The effect of the sampling threshold on METIS is very limited but it does give the same trend as the Structural Sampler approach. Both show that a lower sampling threshold increases performance. 
 
 \section{Planning}
-%A detailed, step by step plan for how your team will verify these claims. This plan must include the specific details of the test environment, tools, programming languages, data sets, etc., which you will use in validating the results of your paper. I expect that you will have already installed and tested all necessary tools/data before writing your report. Do not underestimate the work involved in setting up your experiment. 
-%You should design your verification methodology and planning in such a way that it can be completed by the end of May (at the very latest). As with setting up your study, do not underestimate the amount of time and effort which will be necessary for this verification.
-%A discussion of the progress your team has made towards validating the claims of the paper, following this plan.
-%TODO Myrthe: dates
-
 The planning of our project looks as follows. Depending on whether or not we receive the source code from the author, we will either execute with 3a (if we do receive the source code), or 3b (if we do not receive the source code).
 \begin{enumerate}
 \item[1] Mail the authors with a request for the source code. \textit{Completed}\item[2] Obtain the datasets used in the paper, as far as possible. \textit{Completed}
@@ -128,7 +119,7 @@ The planning of our project looks as follows. Depending on whether or not we rec
 \end{enumerate}
 \item[3-b] If we do not receive the source code from the authors in a timely manner, then:
 \begin{enumerate}
-\item[i] Implement the algortihm presented in the paper.
+\item[i] Implement the algorithm presented in the paper.
 \item[ii] Compare the quality results presented in the paper with those of METIS and our implementation.
 \item[iii] \textit{Expansion:} Compare the performance results presented in the paper with those of METIS and our implementation.
 \end{enumerate}
@@ -151,6 +142,7 @@ Here, we list the dates and deadlines we set out for ourselves, to ensure succes
 \hline
 24 May	&	Untested, but completed implementation of the algorithms\\
 		&	Completed preprocessing the datasets\\
+		&	Project part 3 \\
 \hline
 31 May	&	Completed and debugged implementation of the algorithms\\
 		& 	\textit{Start testing and preliminaries of the final report}\\
@@ -159,7 +151,7 @@ Here, we list the dates and deadlines we set out for ourselves, to ensure succes
 \hline
 14 June	&	Finished main experiments\\
 \hline
-21 June	&	Finished final report\\
+21 June	&	Finished final report (project part 4)\\
 \hline
 \end{tabular}
 
@@ -168,8 +160,7 @@ Currently, we have e-mailed the author and have been able to obtain three of the
 
 Furthermore, we have received a negative response from the author, and thus we will need to create our own implementation of the presented algorithm. However, we have been able to find an implementation of the METIS algorithm, and will use this implementation as a bench mark, and not write our own. 
 
-%TODO fill out some more
-
+Started on the implementation of the algorithm and the context of the algorithms.
 
 \subsection{Tools} 
 We have decided to use git as a code repository for the project, and we will write our code in C++. The development environment we will use is Visual Studio. For writing documents and such we will use \LaTeX. We might use additional benchmarking tools. Any additional datasets we will we need, we believe to be able to find on the internet. 
