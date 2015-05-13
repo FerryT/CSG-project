@@ -66,6 +66,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Algorithm.cpp" />
     <ClCompile Include="src\GraphInput.cpp" />
     <ClCompile Include="src\GraphManager.cpp" />
     <ClCompile Include="src\main.cpp" />
