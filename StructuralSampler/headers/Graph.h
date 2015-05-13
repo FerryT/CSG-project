@@ -6,7 +6,7 @@
 using namespace std;
 
 // a single vertex
-using vertex = int;
+typedef int vertex;
 
 // and edge from and to vertex
 struct edge {

@@ -22,7 +22,7 @@ class FileInput: public Input {
 	public:
 	const std::string filename;
 	
-	FileInput(const char *_filename) : filename(_filename) {}
+	FileInput(const char *fn) : filename(fn), file(0) {}
 	
 	virtual void Open();
 	virtual void Close();

@@ -28,8 +28,8 @@
 % courier font for monospace bold
 \usepackage{courier}
 % Libertine font
-\usepackage{libertine}
-\usepackage[libertine]{newtxmath}
+%\usepackage{libertine}
+%\usepackage[libertine]{newtxmath}
 
 
 % no indent and horizontal space
@@ -76,11 +76,42 @@ In \cite{DynPar} the algorithm presented in our paper is used for analyzing soci
 
 
 
-\section{Paper results}
-%A clear statement of the specific research problem(s) addressed in your paper.
-%A clear statement of the specific result(s) claimed in your paper.
-%TODO fill in
+\section{The paper}
+The research problem is clustering large-scale and rapidly changing "streaming" graphs where the updates to a graph are given in form of a stream of vertex or edge additions and deletions. 
 
+The algorithm in the paper is proposed to solve the clustering problem and also satisfies 3 optimization requirements:
+\begin{itemize}
+\item[a] it should be simple to adjust to parallellizations and distributed environments
+\item[b] it should handle massive inputs, with a relatively low overall space complexity
+\item[c] it should handle high throughput streams, with a relatively low time complexity per update or query
+\end{itemize}
+
+To test the algorithm, it is tested against two other clustering algorithms. The first is METIS, a standard clustering algorithm, with some slight modifications to make it suitable to an `online' environment. The second is AZY, a clustering algorithm which is suited to `online' environment, but with expected much worse performance. The tests are performed on 4 different datasets:
+\begin{itemize}
+\item[1] cit-HepPh, which shows a large increase in the number of vertices over time. This graph has (in total) $34k$ vertices and $420k$ edges.
+\item[2] web-NotreDame. This graph has (in total) $330k$ vertices and $1.5M$ edges.
+\item[3] replies, a very sparse and not well clustering graph. This graph has (in total) $1.9M$ vertices and $1.6M$ edges.
+\item[4] DNS Edges, containing many duplicate edges but with different time stamps. This graph has (in total) $180k$ vertices and $4.8M$ edges.
+\end{itemize}
+
+\subsection{Results}
+The performance of the algorithms is measured in two different aspects: quality and performance. Furthermore, some tuning experiments with adjusted p-values are done.
+
+\subsubsection{Quality}
+The paper tests the quality of the 4 datasets on the Structural Sampler, METIS, and AZY, with different clustering group size bounds, while fixing the sampling threshold parameter p at 1. The results show that the cut-size quality of the Structural Sampler is almost as well as METIS, which is assumed to be close to the best clustering. AZY performance significantly worse than both METIS and the Structural Sampler.
+
+Furthermore, the paper tests the cut-size quality of the Structural Sampler, METIS, and AZY on the cit-HepPh and DNS Edges datasets, using different p-values (the sampling threshold).
+For both METIS and the Structural Sampler, applying a lower sampling threshold could bring a worse clustering quality. However, the AZY is mostly uninfluenced by a lower sampling threshold. 
+
+\subsubsection{Performance}
+The paper tests the performance of both the Structural Sampler and METIS on cit-HepPh and web-NotreDame, using different ratios for the number of queries versus the number of updates. 
+The throughput of the Structural Sampler out-performs METIS, increasingly so with an increasing query vs. update ratio, up to more an improvement more than 3 orders of magnitude.
+
+Furthermore, the paper tests Structural Sampler and METIS, with different clustering size bounds B, while fixing Query/UpdateRatio at 0.5, on the datasets DNS Edges and web-NotreDame.
+The throughput of Structural Sampler out-performs METIS with more than 3 orders of magnitude. However, METIS has almost the same throughput for different values of the clustering size bounds B, while the performance of the Structural Sampler decreases as B increases. 
+
+Finally, the paper tests the throughput of Structural Sampler and METIS on cit-HepPh and DNS Edges, while adjusting the p-value. 
+The effect of the sampling threshold on METIS is very limited but it does give the same trend as the Structural Sampler approach. Both show that a lower sampling threshold increases performance. 
 
 \section{Planning}
 %A detailed, step by step plan for how your team will verify these claims. This plan must include the specific details of the test environment, tools, programming languages, data sets, etc., which you will use in validating the results of your paper. I expect that you will have already installed and tested all necessary tools/data before writing your report. Do not underestimate the work involved in setting up your experiment. 
@@ -90,8 +121,7 @@ In \cite{DynPar} the algorithm presented in our paper is used for analyzing soci
 
 The planning of our project looks as follows. Depending on whether or not we receive the source code from the author, we will either execute with 3a (if we do receive the source code), or 3b (if we do not receive the source code).
 \begin{enumerate}
-\item[1] Mail the authors with a request for the source code. \textit{Completed}
-\item[2] Obtain the datasets used in the paper, as far as possible. \textit{Completed}
+\item[1] Mail the authors with a request for the source code. \textit{Completed}\item[2] Obtain the datasets used in the paper, as far as possible. \textit{Completed}
 \item[3-a] If we are capable of obtaining the source code from the authors, then:
 \begin{enumerate}
 \item[i] Compare the performance and quality results presented in the paper with those of METIS and our implementation.
@@ -110,6 +140,29 @@ The planning of our project looks as follows. Depending on whether or not we rec
 \end{enumerate}
 \end{enumerate}
 
+\subsection{Time Schedule}
+Here, we list the dates and deadlines we set out for ourselves, to ensure successful completion of the project.
+
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Date}	&	\textbf{Deadline}\\
+\hline
+13 May	&	Finish scheduling report\\
+\hline
+24 May	&	Untested, but completed implementation of the algorithms\\
+		&	Completed preprocessing the datasets\\
+\hline
+31 May	&	Completed and debugged implementation of the algorithms\\
+		& 	\textit{Start testing and preliminaries of the final report}\\
+\hline
+7 June	&	Start discussing final presentation\\
+\hline
+14 June	&	Finished main experiments\\
+\hline
+21 June	&	Finished final report\\
+\hline
+\end{tabular}
+
 \subsection{Progress}
 Currently, we have e-mailed the author and have been able to obtain three of the four datasets used in the paper. The fourth dataset is from an IBM process, and we do not believe it to be possible to gain access to this dataset. 
 
@@ -121,27 +174,17 @@ Furthermore, we have received a negative response from the author, and thus we w
 \subsection{Tools} 
 We have decided to use git as a code repository for the project, and we will write our code in C++. The development environment we will use is Visual Studio. For writing documents and such we will use \LaTeX. We might use additional benchmarking tools. Any additional datasets we will we need, we believe to be able to find on the internet. 
 
-\begin{thebibliography}
+\begin{thebibliography}{99}
 \bibitem{paper} A. Eldawy, R. Khandekar and K. Wu, ``Clustering Streaming Graphs'', in \textit{32nd IEEE International Conference on Distributed Computing Systems}, 2012.
-
 \bibitem{1} A. Jain and R. Dubes, ``Algorithms for Clustering Data''. Prentice-Hall, 1988.
-
 \bibitem{11} D. Karger, ``Global Min-cuts in RNC, and Other Ramifications of a Simple Min-Cut Algorithm'', in \textit{ACM-SIAM Symposium on Discrete Algorithms}, Austin, TX, Jan. 1993, pp. 21-30.
-
 \bibitem{12} H. Zanghi, C. Ambroise and V. Miele, ``Fast Online Graph Clustering Via Erdos-Rényi Mixture'', \textit{Pattern Recognition}, vol. 41, no. 12, pp. 3592-3599, 2008.
-
 \bibitem{13} C. Aggarwal, Y. Zhao and P. Yu, ``On Clustering Graph Streams'', in \textit{Proceedings of the SIAM International Conference on Data Mining}, Columbos, OH, Apr. 2010.
-
 \bibitem{14} ---,  ``Outlier Detection in Graph Streams'', in \textit{Proceedings of the Internation Conference on Data Engineering, ICDE}, Hannover, Germany, Apr. 2011, pp. 399-409.
-
 \bibitem{METIS} G. Karypis and V. Kumar, ``A Fast and High Quality Multilevel Scheme for Partitioning Irregular Graphs'', in \textit{SIAM Journal of Scientific Computing}, vol. 20, no. 1, pp. 359-392, 1998.
-
 \bibitem{DynPar} M. Yuan, ``Dynamic Partitioning of Social Networks'', University of Illinois, Urbana, Illinois, 2012.
-
 \bibitem{StrHyp} G. Wing, ``Streaming Hypergraph Partition for Massive Graphs'', Kent State University, Dec. 2013.
-
-\bibitem{ProStr} m. Yuan, K. Wu, Y. Lu and G. Jacques-Silva, ``Efficient Processing of Streaming Graphs for Evolution-Aware Clustering'', in \textit{CIKM '13, Proceedings of the 22nd ACM international conference on Conference on information & knowledge management}, pp. 319-328, New York, 2013
-
+\bibitem{ProStr} m. Yuan, K. Wu, Y. Lu and G. Jacques-Silva, ``Efficient Processing of Streaming Graphs for Evolution-Aware Clustering'', in \textit{CIKM '13, Proceedings of the 22nd ACM international conference on Conference on information \& knowledge management}, pp. 319-328, New York, 2013
 \end{thebibliography}
 
 \end{document}

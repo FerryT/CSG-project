@@ -19,10 +19,8 @@ class Algorithm {
 		virtual int CountClusters() = 0;
 };
 
-/*
-
 // The classes that has to be implemented:
-
+/*
 
 class MetisAlgorithm {
 public:
@@ -32,7 +30,7 @@ public:
 	int FindClusterIndex(vertex u);
 	vector<vertex> FindCluster(vertex u);
 	int CountClusters();
-};
+};*/
 
 class StructuralSampler {
 public:
@@ -43,7 +41,5 @@ public:
 	vector<vertex> FindCluster(vertex u);
 	int CountClusters();
 };
-
-*/
 
 #endif
