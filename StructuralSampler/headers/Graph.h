@@ -21,6 +21,6 @@ struct edge {
 	}
 };
 
-using graph = vector<edge>;
+typedef vector<edge> graph;
 
 #endif

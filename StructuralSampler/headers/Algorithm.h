@@ -34,12 +34,12 @@ public:
 
 class StructuralSampler {
 public:
-	void Add(edge e);
-	void Remove(edge e);
+	virtual void Add(edge e);
+	virtual void Remove(edge e);
 
-	int FindClusterIndex(vertex u);
-	vector<vertex> FindCluster(vertex u);
-	int CountClusters();
+	virtual int FindClusterIndex(vertex u);
+	virtual vector<vertex> FindCluster(vertex u);
+	virtual int CountClusters();
 };
 
 #endif
