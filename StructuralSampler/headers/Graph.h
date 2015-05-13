@@ -15,6 +15,6 @@ struct edge {   // Declare PERSON struct type
 	float p;
 };
 
-using graph = vector<edge>;
+typedef vector<edge> graph;
 
 #endif
