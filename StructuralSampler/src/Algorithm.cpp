@@ -22,7 +22,7 @@ void StructuralSampler::Add(edge newEdge, structuralReservoir strReservoir, supp
 			currEdge = strReservoir.removeLast();
 			pos = currEdge.p;
 			supReservoir.insertEdge(currEdge);
-			manager.removeEdge(currEdge);
+			manager.removeEdgeExact(currEdge);
 		}
 		edge * searchResults = supReservoir.getEdges(pos);
 		int searchResultsLength = supReservoir.lastGetEdgesLength;
@@ -32,20 +32,42 @@ void StructuralSampler::Add(edge newEdge, structuralReservoir strReservoir, supp
 			manager.insertEdge(currEdge);
 			if (!manager.constraintSatisfied())
 			{
-				manager.removeEdge(currEdge);
+				manager.removeEdgeExact(currEdge);
 			}
 			else
 			{
-				supReservoir.removeEdge(currEdge);
+				supReservoir.removeEdgeExact(currEdge);
 				strReservoir.insertEdge(currEdge);
 			}
 		}
 	}
 }
 
-void StructuralSampler::Remove(edge e)
+void StructuralSampler::Remove(edge theEdge, structuralReservoir strReservoir, supportReservoir supReservoir, graphManager manager)
 {
-	//TODO
+	bool supSucces = supReservoir.removeEdge(theEdge);
+	if (strReservoir.hasEdge(theEdge))
+	{
+		float rmEdgeP = strReservoir.removeEdge(theEdge);
+		manager.removeEdge(theEdge);
+		edge * searchResults = supReservoir.getEdges(rmEdgeP);
+		int searchResultsLength = supReservoir.lastGetEdgesLength;
+		edge currEdge;
+		for (int i = 0; i < searchResultsLength; i++)
+		{
+			currEdge = searchResults[i];
+			manager.insertEdge(currEdge);
+			if (!manager.constraintSatisfied())
+			{
+				manager.removeEdgeExact(currEdge);
+			}
+			else
+			{
+				supReservoir.removeEdgeExact(currEdge);
+				strReservoir.insertEdge(currEdge);
+			}
+		}
+	}
 }
 
 int StructuralSampler::FindClusterIndex(vertex u)

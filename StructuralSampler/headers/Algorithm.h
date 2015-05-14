@@ -38,7 +38,7 @@ class StructuralSampler {
 public:
 	StructuralSampler();
 	virtual void Add(edge newEdge, structuralReservoir strReservoir, supportReservoir supReservoir, graphManager manager);
-	virtual void Remove(edge e);
+	virtual void Remove(edge theEdge, structuralReservoir strReservoir, supportReservoir supReservoir, graphManager manager);
 
 	virtual int FindClusterIndex(vertex u);
 	virtual vector<vertex> FindCluster(vertex u);
