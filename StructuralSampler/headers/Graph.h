@@ -23,4 +23,24 @@ struct edge {
 
 typedef vector<edge> graph;
 
+class structuralReservoir{
+private:
+	graph g;
+public:
+	void insertEdge(edge e);//insert edge such that the graph is sorted by the p-values of the edges
+	void removeEdge(edge e);//remove exactly this edge (equal including p-value, only remove 1 instance)
+	edge removeLast();//remove the edge from g with the highest p-value, and return this edge
+};
+
+class supportReservoir{
+private:
+	graph g;
+public:
+	int lastGetEdgesLength = 0;//the length of the array returned with the last call to getEdges
+
+	void insertEdge(edge e);//insert edge such that the graph is sorted by the p-values of the edges
+	void removeEdge(edge e);//remove exactly this edge (equal including p-value, only remove 1 instance)
+	edge * getEdges(float minP);//return all edges with p-values > minP, store the length of the array in lastGetEdgesLength
+};
+
 #endif
