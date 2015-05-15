@@ -7,6 +7,9 @@
 
 //An input 
 class Input {
+	protected:
+		Algorithm* Output;
+
 	public:
 		//Opens the input
 		virtual void Open() = 0;
@@ -16,22 +19,24 @@ class Input {
 		virtual void ExecuteNextUpdate() = 0;
 		//check if it is at the end of it's input
 		virtual bool IsEnd() = 0;
+		//sets the algorithm
+		void SetAlgorithm(Algorithm* algoritm);
 };
 
 class FileInput: public Input {
 	public:
-	const std::string filename;
+		const std::string filename;
 	
-	FileInput(const char *fn) : filename(fn), file(0) {}
+		FileInput(const char *fn) : filename(fn), file(0) {}
 	
-	virtual void Open();
-	virtual void Close();
-	virtual void ExecuteNextUpdate();
-	virtual bool IsEnd();
-	
+		virtual void Open();
+		virtual void Close();
+		virtual void ExecuteNextUpdate();
+		virtual bool IsEnd();
+
 	private:
-	struct File;
-	File *file;
+		struct File;
+		File *file;
 };
 
 /*

@@ -1,7 +1,9 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
+#include <unordered_map>
 #include "Graph.h"
+#include "GraphManager.h"
 
 class Algorithm {
 	public:
@@ -30,16 +32,17 @@ public:
 	int FindClusterIndex(vertex u);
 	vector<vertex> FindCluster(vertex u);
 	int CountClusters();
-};
+};*/
 
 class StructuralSampler {
 public:
-	void Add(edge e);
-	void Remove(edge e);
+	StructuralSampler();
+	virtual void Add(edge newEdge, structuralReservoir strReservoir, supportReservoir supReservoir, graphManager manager);
+	virtual void Remove(edge theEdge, structuralReservoir strReservoir, supportReservoir supReservoir, graphManager manager);
 
-	int FindClusterIndex(vertex u);
-	vector<vertex> FindCluster(vertex u);
-	int CountClusters();
+	virtual int FindClusterIndex(vertex u);
+	virtual vector<vertex> FindCluster(vertex u);
+	virtual int CountClusters();
 };
-*/
+
 #endif
