@@ -14,7 +14,8 @@ StructuralSampler::StructuralSampler()
 
 void StructuralSampler::Add(edge newEdge)
 {
-	double pos = (double) rand() / (double) RAND_MAX;
+	//TODO: sampling method, mentioned under C. 3)
+	float pos = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
 	newEdge.p = pos;
 	strReservoir.Add(newEdge);
 	manager.Add(newEdge);
@@ -74,31 +75,6 @@ void StructuralSampler::Remove(edge theEdge)
 			}
 		}
 	}
-}
-
-//------------------------------------------------------------------------------
-
-int StructuralSampler::FindClusterIndex(vertex u)
-{
-	//TODO
-	return 0;
-}
-
-//------------------------------------------------------------------------------
-
-vector<vertex> StructuralSampler::FindCluster(vertex u)
-{
-	//TODO
-	vector<vertex> result;
-	return result;
-}
-
-//------------------------------------------------------------------------------
-
-int StructuralSampler::CountClusters()
-{
-	//TODO
-	return 0;
 }
 
 //------------------------------------------------------------------------------
