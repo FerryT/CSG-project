@@ -7,7 +7,7 @@
 class GraphManager {
 	private:
 		// usage: the first integer is a node identifier. unordered_map<int,int> maintains a count to all the nodes it is connected to
-		unordered_map<int, unordered_map<int,int> > graph;
+		unordered_map<vertex, unordered_map<vertex,int> > graph;
 		// stores the clusters. the first item of a cluster is the representative of this cluster
 		vector< vector<vertex> > clusters;
 		// the B value mentioned in the paper
