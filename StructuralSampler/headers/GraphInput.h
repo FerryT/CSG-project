@@ -5,12 +5,15 @@
 
 #include "Algorithm.h"
 
+//------------------------------------------------------------------------------
+
 //An input 
 class Input {
 	protected:
-		Algorithm* Output;
+		Algorithm* algorithm;
 
 	public:
+		Input() : algorithm(0) {}
 		//Opens the input
 		virtual void Open() = 0;
 		//Closes the input
@@ -20,14 +23,24 @@ class Input {
 		//check if it is at the end of it's input
 		virtual bool IsEnd() = 0;
 		//sets the algorithm
-		void SetAlgorithm(Algorithm* algoritm);
+		void SetAlgorithm(Algorithm* alg) { algorithm = alg; }
 };
+
+//------------------------------------------------------------------------------
 
 class FileInput: public Input {
 	public:
 		const std::string filename;
 	
-		FileInput(const char *fn) : filename(fn), file(0) {}
+		FileInput(const char *fn) : Input(), filename(fn) {}
+};
+
+//------------------------------------------------------------------------------
+
+// METIS graph file input
+class MGraphFileInput: public FileInput {
+	public:
+		MGraphFileInput(const char *fn) : FileInput(fn), file(0) {}
 	
 		virtual void Open();
 		virtual void Close();
@@ -38,6 +51,25 @@ class FileInput: public Input {
 		struct File;
 		File *file;
 };
+
+//------------------------------------------------------------------------------
+
+// edge list file input
+class EdgeFileInput: public FileInput {
+	public:
+		EdgeFileInput(const char *fn) : FileInput(fn), file(0) {}
+	
+		virtual void Open();
+		virtual void Close();
+		virtual void ExecuteNextUpdate();
+		virtual bool IsEnd();
+
+	private:
+		struct File;
+		File *file;
+};
+
+//------------------------------------------------------------------------------
 
 /*
 
@@ -105,4 +137,6 @@ public:
 
 */
 
-#endif
+//------------------------------------------------------------------------------
+
+#endif // GRAPH_INPUT_H

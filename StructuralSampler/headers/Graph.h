@@ -6,13 +6,13 @@
 using namespace std;
 
 // a single vertex
-typedef int vertex;
+typedef unsigned long vertex;
 
 // and edge from and to vertex
 struct edge {
 	vertex v1;
 	vertex v2;
-	float p;
+	double p;
 
 
 	bool operator==(const edge& other) const
@@ -43,7 +43,7 @@ public:
 	void insertEdge(edge e);//insert edge such that the graph is sorted by the p-values of the edges
 	void removeEdgeExact(edge e);//remove exactly this edge (equal including p-value, only remove 1 instance)
 	bool removeEdge(edge e);//try to remove an edge equal to e excluding the p-value (only 1 instance), return true if edge was present and false otherwise
-	edge * getEdges(float minP);//return all edges with p-values > minP, store the length of the array in lastGetEdgesLength
+	edge * getEdges(double minP);//return all edges with p-values > minP, store the length of the array in lastGetEdgesLength
 };
 
 #endif
