@@ -29,8 +29,8 @@ public:
 	QualityTestCapture();
 	~QualityTestCapture();
 	
-	virtual void Add(edge e) override;
-	virtual void Remove(edge e) override;
+	virtual void Add(const edge &e) override;
+	virtual void Remove(const edge &e) override;
 
 	//The query methods:
 	virtual int FindClusterIndex(vertex u) override;

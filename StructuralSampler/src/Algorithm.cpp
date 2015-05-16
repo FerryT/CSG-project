@@ -3,78 +3,88 @@
 
 #include "Algorithm.h"
 
+//------------------------------------------------------------------------------
+
 StructuralSampler::StructuralSampler()
 {
 	srand(time(NULL));
 }
 
-void StructuralSampler::Add(edge newEdge, structuralReservoir strReservoir, supportReservoir supReservoir, graphManager manager)
+//------------------------------------------------------------------------------
+
+void StructuralSampler::Add(edge newEdge)
 {
 	double pos = (double) rand() / (double) RAND_MAX;
 	newEdge.p = pos;
-	strReservoir.insertEdge(newEdge);
-	manager.insertEdge(newEdge);
-	if (!manager.constraintSatisfied())
+	strReservoir.Add(newEdge);
+	manager.Add(newEdge);
+	if (!manager.ConstraintSatisfied())
 	{
 		edge currEdge;
-		while (!manager.constraintSatisfied())
+		while (!manager.ConstraintSatisfied())
 		{
-			currEdge = strReservoir.removeLast();
+			currEdge = strReservoir.RemoveLast();
 			pos = currEdge.p;
-			supReservoir.insertEdge(currEdge);
-			manager.removeEdgeExact(currEdge);
+			supReservoir.Add(currEdge);
+			manager.RemoveExact(currEdge);
 		}
-		edge * searchResults = supReservoir.getEdges(pos);
+		edge * searchResults = supReservoir.GetEdges(pos);
 		int searchResultsLength = supReservoir.lastGetEdgesLength;
 		for (int i = 0; i < searchResultsLength; i++)
 		{
 			currEdge = searchResults[i];
-			manager.insertEdge(currEdge);
-			if (!manager.constraintSatisfied())
+			manager.Add(currEdge);
+			if (!manager.ConstraintSatisfied())
 			{
-				manager.removeEdgeExact(currEdge);
+				manager.RemoveExact(currEdge);
 			}
 			else
 			{
-				supReservoir.removeEdgeExact(currEdge);
-				strReservoir.insertEdge(currEdge);
+				supReservoir.RemoveExact(currEdge);
+				strReservoir.Add(currEdge);
 			}
 		}
 	}
 }
 
-void StructuralSampler::Remove(edge theEdge, structuralReservoir strReservoir, supportReservoir supReservoir, graphManager manager)
+//------------------------------------------------------------------------------
+
+void StructuralSampler::Remove(edge theEdge)
 {
-	bool supSucces = supReservoir.removeEdge(theEdge);
-	if (strReservoir.hasEdge(theEdge))
+	bool supSucces = supReservoir.Remove(theEdge);
+	if (strReservoir.HasEdge(theEdge))
 	{
-		double rmEdgeP = strReservoir.removeEdge(theEdge);
-		manager.removeEdge(theEdge);
-		edge * searchResults = supReservoir.getEdges(rmEdgeP);
+		double rmEdgeP = strReservoir.Remove(theEdge);
+		manager.Remove(theEdge);
+		edge * searchResults = supReservoir.GetEdges(rmEdgeP);
 		int searchResultsLength = supReservoir.lastGetEdgesLength;
 		edge currEdge;
 		for (int i = 0; i < searchResultsLength; i++)
 		{
 			currEdge = searchResults[i];
-			manager.insertEdge(currEdge);
-			if (!manager.constraintSatisfied())
+			manager.Add(currEdge);
+			if (!manager.ConstraintSatisfied())
 			{
-				manager.removeEdgeExact(currEdge);
+				manager.RemoveExact(currEdge);
 			}
 			else
 			{
-				supReservoir.removeEdgeExact(currEdge);
-				strReservoir.insertEdge(currEdge);
+				supReservoir.RemoveExact(currEdge);
+				strReservoir.Add(currEdge);
 			}
 		}
 	}
 }
+
+//------------------------------------------------------------------------------
 
 int StructuralSampler::FindClusterIndex(vertex u)
 {
 	//TODO
 	return 0;
 }
+
+//------------------------------------------------------------------------------
 
 vector<vertex> StructuralSampler::FindCluster(vertex u)
 {
@@ -83,8 +93,12 @@ vector<vertex> StructuralSampler::FindCluster(vertex u)
 	return result;
 }
 
+//------------------------------------------------------------------------------
+
 int StructuralSampler::CountClusters()
 {
 	//TODO
 	return 0;
 }
+
+//------------------------------------------------------------------------------

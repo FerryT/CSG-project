@@ -57,7 +57,7 @@ QualityTestCapture::~QualityTestCapture()
 	delete this->_currentGraph;
 }
 
-void QualityTestCapture::Add(edge e)
+void QualityTestCapture::Add(const edge &e)
 {
 	this->RealAlgorithm->Add(e);
 	this->_currentGraph->push_back(e);
@@ -83,7 +83,7 @@ graph* QualityTestCapture::GetCompleteGraph()
 	return this->_currentGraph;
 }
 
-void QualityTestCapture::Remove(edge e)
+void QualityTestCapture::Remove(const edge &e)
 {
 	this->RealAlgorithm->Remove(e);
 	graph::iterator it = find(this->_currentGraph->begin(), this->_currentGraph->end(), e);
