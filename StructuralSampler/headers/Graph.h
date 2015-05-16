@@ -23,6 +23,6 @@ struct edge {
 	}
 };
 
-typedef vector<edge> graph;
+typedef vector<edge> Graph;
 
 #endif

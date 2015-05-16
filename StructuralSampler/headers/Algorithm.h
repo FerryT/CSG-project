@@ -40,7 +40,7 @@ class StructuralSampler : public Algorithm {
 		SupportReservoir supReservoir;
 		GraphManager manager;
 	public:
-		StructuralSampler();
+		StructuralSampler(int maxClusterSize);
 		virtual void Add(edge e);
 		virtual void Remove(edge e);
 		

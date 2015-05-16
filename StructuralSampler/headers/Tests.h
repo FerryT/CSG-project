@@ -22,7 +22,7 @@ public:
 
 class QualityTestCapture : Algorithm
 {
-	graph* _currentGraph;
+	Graph* _currentGraph;
 public:
 	Algorithm* RealAlgorithm;
 
@@ -37,7 +37,7 @@ public:
 	virtual vector<vertex> FindCluster(vertex u) override;
 	virtual int CountClusters() override;
 
-	graph* GetCompleteGraph();
+	Graph* GetCompleteGraph();
 };
 
 /*

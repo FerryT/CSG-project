@@ -7,7 +7,7 @@
 
 class Reservoir {
 	protected:
-		graph g;
+		Graph graph;
 	
 	public:
 		virtual void Add(const edge &e) = 0;
@@ -17,9 +17,6 @@ class Reservoir {
 //------------------------------------------------------------------------------
 
 class StructuralReservoir : public Reservoir {
-	private:
-		graph g;
-	
 	public:
 		//insert edge such that the graph is sorted by the p-values of the edges
 		void Add(const edge &e);
@@ -36,9 +33,6 @@ class StructuralReservoir : public Reservoir {
 //------------------------------------------------------------------------------
 
 class SupportReservoir : public Reservoir {
-	private:
-		graph g;
-	
 	public:
 		//the length of the array returned with the last call to getEdges
 		int lastGetEdgesLength = 0;

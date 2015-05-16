@@ -28,7 +28,7 @@ void QualityTest::RunTest(string outputFilename)
 			updates++;
 		}
 
-		graph* g = capture->GetCompleteGraph();
+		Graph* g = capture->GetCompleteGraph();
 
 		int cutSize = 0;
 		for (edge edge : *g)
@@ -49,7 +49,7 @@ void QualityTest::RunTest(string outputFilename)
 
 QualityTestCapture::QualityTestCapture()
 {
-	this->_currentGraph = new graph();
+	this->_currentGraph = new Graph();
 }
 
 QualityTestCapture::~QualityTestCapture()
@@ -78,7 +78,7 @@ int QualityTestCapture::CountClusters()
 	return this->RealAlgorithm->CountClusters();
 }
 
-graph* QualityTestCapture::GetCompleteGraph()
+Graph* QualityTestCapture::GetCompleteGraph()
 {
 	return this->_currentGraph;
 }
@@ -86,6 +86,6 @@ graph* QualityTestCapture::GetCompleteGraph()
 void QualityTestCapture::Remove(const edge &e)
 {
 	this->RealAlgorithm->Remove(e);
-	graph::iterator it = find(this->_currentGraph->begin(), this->_currentGraph->end(), e);
+	Graph::iterator it = find(this->_currentGraph->begin(), this->_currentGraph->end(), e);
 	this->_currentGraph->erase(it);
 }

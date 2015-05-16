@@ -5,7 +5,7 @@
 
 //------------------------------------------------------------------------------
 
-StructuralSampler::StructuralSampler()
+StructuralSampler::StructuralSampler(int maxClusterSize) : manager(maxClusterSize)
 {
 	srand(time(NULL));
 }
@@ -15,7 +15,7 @@ StructuralSampler::StructuralSampler()
 void StructuralSampler::Add(edge newEdge)
 {
 	//TODO: sampling method, mentioned under C. 3)
-	float pos = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	double pos = (double) rand() / (double) RAND_MAX;
 	newEdge.p = pos;
 	strReservoir.Add(newEdge);
 	manager.Add(newEdge);
