@@ -25,14 +25,14 @@ char *read_line(char *str, int num, FILE *fp)
 	while (*str && isblank(*str))
 		++str;
 	
-	if (*str == '%')
+	if (*str == delim)
 		return read_line<delim>(str, num, fp);
 	return str;
 }
 
-//------------------------------------------------------------------------------
+//==============================================================================
 
-struct FileInput::File
+struct MGraphFileInput::File
 {
 	FILE *fp;
 	char *buffer;
@@ -50,7 +50,7 @@ struct FileInput::File
 
 //------------------------------------------------------------------------------
 
-void FileInput::Open()
+void MGraphFileInput::Open()
 {
 	if (file)
 		Close();
@@ -79,6 +79,9 @@ void FileInput::Open()
 	if (!file->num_cons)
 		file->num_cons = 1;
 	
+	if (file->format)
+		throw "Graph files with weights are currently not supported.";
+	
 	// Reset buffer
 	file->ptr = file->buffer;
 	*file->ptr = 0;
@@ -86,7 +89,7 @@ void FileInput::Open()
 
 //------------------------------------------------------------------------------
 
-void FileInput::Close()
+void MGraphFileInput::Close()
 {
 	if (!file)
 		return;
@@ -99,7 +102,7 @@ void FileInput::Close()
 
 //------------------------------------------------------------------------------
 // Todo: support multiple formats
-void FileInput::ExecuteNextUpdate()
+void MGraphFileInput::ExecuteNextUpdate()
 {
 	if (!file)
 		return;
@@ -135,12 +138,92 @@ void FileInput::ExecuteNextUpdate()
 		printf("%d %d\n", file->index, dest); // debug
 	}
 	else // Probably hit end of line, try again
-		FileInput::ExecuteNextUpdate();
+		ExecuteNextUpdate();
 }
 
 //------------------------------------------------------------------------------
 
-bool FileInput::IsEnd()
+bool MGraphFileInput::IsEnd()
+{
+	return !file;
+}
+
+//==============================================================================
+
+struct EdgeFileInput::File
+{
+	FILE *fp;
+	char *buffer;
+};
+
+//------------------------------------------------------------------------------
+
+void EdgeFileInput::Open()
+{
+	if (file)
+		Close();
+	
+	FILE *fp = fopen(filename.c_str(), "rt");
+	if (!fp)
+		throw "Unable to open graph file for reading.";
+	
+	file = new File;
+	file->fp = fp;
+	file->buffer = new char[BUFFER_SIZE];
+}
+
+//------------------------------------------------------------------------------
+
+void EdgeFileInput::Close()
+{
+	if (!file)
+		return;
+	
+	fclose(file->fp);
+	delete[] file->buffer;
+	delete file;
+	file = NULL;
+}
+
+//------------------------------------------------------------------------------
+
+void EdgeFileInput::ExecuteNextUpdate()
+{
+	if (!file)
+		return;
+	
+	if (!read_line<'#'>(file->buffer, BUFFER_SIZE, file->fp))
+	{
+		// End of input
+		Close();
+		return;
+	}
+	
+	const char *ptr = file->buffer;
+	while (isspace(*ptr))
+		++ptr;
+	
+	if (*ptr == '\0')
+	{
+		// Empty line, try again
+		ExecuteNextUpdate();
+		return;
+	}
+	
+	unsigned long src, dst;
+	if (sscanf(ptr, "%lu %lu", &src, &dst) < 2)
+	{
+		// Error in input
+		throw "Invalid input detected whilst reading graph file.";
+	}
+	
+	// Todo: output (src,dst) as an edge.
+	printf("%lu %lu\n", src, dst); // debug
+}
+
+//------------------------------------------------------------------------------
+
+bool EdgeFileInput::IsEnd()
 {
 	return !file;
 }

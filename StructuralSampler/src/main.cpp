@@ -13,7 +13,7 @@ int main(int argc, char *argv[])
 	
 	try {
 		// debug [
-		FileInput file(argv[1]);
+		MGraphFileInput file(argv[1]);
 		file.Open();
 		while (!file.IsEnd())
 			file.ExecuteNextUpdate();
