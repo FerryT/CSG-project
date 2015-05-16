@@ -8,11 +8,15 @@ class GraphManager {
 	private:
 		//usage: the first integer is a node identifier. unordered_map<int,int> maintains a count to all the nodes it is connected to
 		unordered_map<int, unordered_map<int,int> > g;
+		//stores the clusters. the first item of a cluster is the representative of this cluster
+		vector< vector<vertex> > clusters;
 		
-		// updates the unionfind datastructure
-		void UpdateUnionFind();
+		void UnionClusters(int c1, int c2);
+		void AddEdgeToGraph(const edge &e);
+		void RemakeClusters(int c1, int c2);
+		void MergeClusters();
+	
 	public:
-		
 		// just insert the edge into the graph
 		void Add(const edge &e);
 		// remove exactly this edge (equal including p-value, only remove 1 instance)
