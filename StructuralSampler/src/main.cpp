@@ -5,14 +5,23 @@
 
 int main(int argc, char *argv[])
 {
-	// debug [
+	if (argc < 2)
 	{
-		FileInput file("../../sampledata/fruits");
+		printf("Usage:\n\tStructuralSampler <graph file>\t");
+		return EXIT_FAILURE;
+	}
+	
+	try {
+		// debug [
+		FileInput file(argv[1]);
 		file.Open();
 		while (!file.IsEnd())
 			file.ExecuteNextUpdate();
 		file.Close();
+		// debug ]
+	} catch (const char *msg) {
+		fprintf(stderr, "Fatal error:\n\t%s\n", msg);
+		return EXIT_FAILURE;
 	}
-	// debug ]
 	return EXIT_SUCCESS;
 }

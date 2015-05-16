@@ -11,6 +11,7 @@
 
 //------------------------------------------------------------------------------
 
+template <char delim>
 char *read_line(char *str, int num, FILE *fp)
 {
 	char *ret = fgets(str, num, fp);
@@ -25,7 +26,7 @@ char *read_line(char *str, int num, FILE *fp)
 		++str;
 	
 	if (*str == '%')
-		return read_line(str, num, fp);
+		return read_line<delim>(str, num, fp);
 	return str;
 }
 
@@ -54,13 +55,17 @@ void FileInput::Open()
 	if (file)
 		Close();
 	
+	FILE *fp = fopen(filename.c_str(), "rt");
+	if (!fp)
+		throw "Unable to open graph file for reading.";
+	
 	file = new File;
-	file->fp = fopen(filename.c_str(), "rt");
+	file->fp = fp;
 	file->buffer = new char[BUFFER_SIZE];
 	file->ptr = file->buffer;
 	file->index = 0;
 	
-	if (!read_line(file->buffer, BUFFER_SIZE, file->fp))
+	if (!read_line<'%'>(file->buffer, BUFFER_SIZE, file->fp))
 	{
 		Close();
 		return;
@@ -112,7 +117,7 @@ void FileInput::ExecuteNextUpdate()
 			Close();
 			return;
 		}
-		if (!read_line(file->buffer, BUFFER_SIZE, file->fp))
+		if (!read_line<'%'>(file->buffer, BUFFER_SIZE, file->fp))
 		{
 			// End of input
 			Close();
