@@ -1,15 +1,58 @@
 #include "GraphManager.h"
 
-graphManager::graphManager()
+graphManager::graphManager(int B)
 {
+	maxClusterSize = B;
 	//theGraph = {};
 	//theClusters = {};
 	//TODO?
 }
 
-void graphManager::mergeClusters()
+void graphManager::mergeClusters(int startCluster)
 {
-	//TODO
+	std::vector<vector<vertex>>::size_type i = startCluster;
+	while (i < theClusters.size())
+	{
+		vector<vertex> currentCluster = theClusters[i];
+		vector<vertex> currentClusterConnections;
+		int mergeWith = -1;
+		for (vector<vertex>::size_type j = 0; j < currentCluster.size(); j++)
+		{
+			for (pair<int,int> k : theGraph.at(theClusters[i][j]))
+			{
+				if (k.second>0)
+				{
+					int clusterOfk = FindClusterIndex(k.first);
+					if (clusterOfk != i)
+					{
+						mergeWith = clusterOfk;
+					}
+					if (mergeWith >= 0)
+					{
+						break;
+					}
+				}
+			}
+			if (mergeWith >= 0)
+			{
+				break;
+			}
+		}
+		
+		if (mergeWith >= 0)
+		{
+			UnionClusters(i, mergeWith);
+
+			if (mergeWith < i)
+			{
+				i--;
+			}
+		}
+		else
+		{
+			i++;
+		}
+	}
 }
 
 void graphManager::remakeClusters(int c1, int c2)
@@ -26,6 +69,10 @@ void graphManager::remakeClusters(int c1, int c2)
 	else if (!sameCluster)
 	{
 		theClusters.erase(theClusters.begin() + c2);
+		theClusters.erase(theClusters.begin() + c1);
+	}
+	else
+	{
 		theClusters.erase(theClusters.begin() + c1);
 	}
 
@@ -45,7 +92,12 @@ void graphManager::remakeClusters(int c1, int c2)
 		}
 	}
 
-	mergeClusters();
+	int startindex = theClusters.size()-theCluster1.size();
+	if (!sameCluster)
+	{
+		startindex -= theCluster2.size();
+	}
+	mergeClusters(startindex);
 }
 
 void graphManager::UnionClusters(int c1, int c2)
@@ -150,8 +202,14 @@ void graphManager::removeEdge(edge e)
 
 bool graphManager::constraintSatisfied()
 {
-	//TODO
-	return false;
+	for (std::vector<vector<vertex>>::size_type i = 0; i < theClusters.size(); i++)
+	{
+		if (theClusters[i].size()>maxClusterSize)
+		{
+			return false;
+		}
+	}
+	return true;
 }
 
 int graphManager::FindClusterIndex(vertex u)

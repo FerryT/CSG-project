@@ -7,13 +7,14 @@
 class graphManager{
 private:
 	vector< vector<vertex> > theClusters;//stores the clusters. the first item of a cluster is the representative of this cluster
-	void UnionClusters(int c1, int c2);
-	void AddEdgeToGraph(edge e);
-	void remakeClusters(int c1, int c2);
-	void mergeClusters();
+	void UnionClusters(int c1, int c2);//reconstructs theClusters such that the elements of c1 and c2 are merged at the end of the vector
+	void AddEdgeToGraph(edge e);//helperfunction to make adding edge function smaller
+	void remakeClusters(int c1, int c2);//deconstructs clusters at index c1 and c2 such that each vertex is in it's own cluster. If c1==c2 then only does this on cluster c1. Then, it reconstructs the clusters
+	void mergeClusters(int startCluster);//checks if any cluster after (and including) startCluster can/should be merged with any other cluster, since they are connected, and does so whenever two clusters are connected
+	int maxClusterSize;//the B value mentioned in the paper
 public:
 	unordered_map<int, unordered_map<int,int>> theGraph;//usage: the first integer is a node identifier. unordered_map<int,int> maintains a count to all the nodes it is connected to
-	graphManager();
+	graphManager(int B);
 	void insertEdge(edge e);//just insert the edge into the graph
 	void removeEdgeExact(edge e);//remove exactly this edge (equal including p-value, only remove 1 instance)
 	void removeEdge(edge e);//remove this edge (equal excluding p-value, only remove 1 instance)
