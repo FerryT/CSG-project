@@ -10,7 +10,7 @@ StructuralSampler::StructuralSampler()
 
 void StructuralSampler::Add(edge newEdge, structuralReservoir strReservoir, supportReservoir supReservoir, graphManager manager)
 {
-	float pos = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+	double pos = (double) rand() / (double) RAND_MAX;
 	newEdge.p = pos;
 	strReservoir.insertEdge(newEdge);
 	manager.insertEdge(newEdge);
@@ -48,7 +48,7 @@ void StructuralSampler::Remove(edge theEdge, structuralReservoir strReservoir, s
 	bool supSucces = supReservoir.removeEdge(theEdge);
 	if (strReservoir.hasEdge(theEdge))
 	{
-		float rmEdgeP = strReservoir.removeEdge(theEdge);
+		double rmEdgeP = strReservoir.removeEdge(theEdge);
 		manager.removeEdge(theEdge);
 		edge * searchResults = supReservoir.getEdges(rmEdgeP);
 		int searchResultsLength = supReservoir.lastGetEdgesLength;
