@@ -8,9 +8,10 @@
 //An input 
 class Input {
 	protected:
-		Algorithm* Output;
+		Algorithm* algorithm;
 
 	public:
+		Input() : algorithm(0) {}
 		//Opens the input
 		virtual void Open() = 0;
 		//Closes the input
@@ -20,14 +21,14 @@ class Input {
 		//check if it is at the end of it's input
 		virtual bool IsEnd() = 0;
 		//sets the algorithm
-		void SetAlgorithm(Algorithm* algoritm);
+		void SetAlgorithm(Algorithm* alg) { algorithm = alg; }
 };
 
 class FileInput: public Input {
 	public:
 		const std::string filename;
 	
-		FileInput(const char *fn) : filename(fn), file(0) {}
+		FileInput(const char *fn) : Input(), filename(fn), file(0) {}
 	
 		virtual void Open();
 		virtual void Close();

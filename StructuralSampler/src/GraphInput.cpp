@@ -141,7 +141,3 @@ bool FileInput::IsEnd()
 }
 
 //------------------------------------------------------------------------------
-void Input::SetAlgorithm(Algorithm* algoritm)
-{
-	this->Output = algoritm;
-}
