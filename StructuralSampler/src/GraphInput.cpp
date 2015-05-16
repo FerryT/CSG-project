@@ -134,7 +134,8 @@ void MGraphFileInput::ExecuteNextUpdate()
 	size_t dest = strtoul(file->ptr, &file->ptr, 10);
 	if (dest)
 	{
-		// Todo: output (file->index,dest) as an edge.
+		if (algorithm)
+			algorithm->Add(edge(file->index, dest));
 		printf("%d %d\n", file->index, dest); // debug
 	}
 	else // Probably hit end of line, try again
@@ -217,7 +218,8 @@ void EdgeFileInput::ExecuteNextUpdate()
 		throw "Invalid input detected whilst reading graph file.";
 	}
 	
-	// Todo: output (src,dst) as an edge.
+	if (algorithm)
+		algorithm->Add(edge(src, dst));
 	printf("%lu %lu\n", src, dst); // debug
 }
 

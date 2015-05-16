@@ -14,6 +14,8 @@ struct edge {
 	vertex v2;
 	double p;
 
+	edge() {}
+	edge(vertex u, vertex v) : v1(u), v2(v), p(0.0) {}
 
 	bool operator==(const edge& other) const
 	{
