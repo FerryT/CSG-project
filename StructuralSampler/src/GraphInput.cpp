@@ -135,7 +135,7 @@ void MGraphFileInput::ExecuteNextUpdate()
 	if (dest)
 	{
 		if (algorithm)
-			algorithm->Add(edge(file->index, dest));
+			algorithm->Add(Edge(file->index, dest));
 		printf("%d %d\n", file->index, dest); // debug
 	}
 	else // Probably hit end of line, try again
@@ -219,7 +219,7 @@ void EdgeFileInput::ExecuteNextUpdate()
 	}
 	
 	if (algorithm)
-		algorithm->Add(edge(src, dst));
+		algorithm->Add(Edge(src, dst));
 	printf("%lu %lu\n", src, dst); // debug
 }
 

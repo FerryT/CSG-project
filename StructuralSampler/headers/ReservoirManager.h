@@ -10,8 +10,8 @@ class Reservoir {
 		Graph graph;
 	
 	public:
-		virtual void Add(const edge &e) = 0;
-		virtual void RemoveExact(const edge &e) = 0;
+		virtual void Add(const Edge &e) = 0;
+		virtual void RemoveExact(const Edge &e) = 0;
 };
 
 //------------------------------------------------------------------------------
@@ -19,15 +19,15 @@ class Reservoir {
 class StructuralReservoir : public Reservoir {
 	public:
 		//insert edge such that the graph is sorted by the p-values of the edges
-		void Add(const edge &e);
+		void Add(const Edge &e);
 		//remove exactly this edge (equal including p-value, only remove 1 instance)
-		void RemoveExact(const edge &e);
+		void RemoveExact(const Edge &e);
 		//remove this edge (equal excluding p-value, only remove 1 instance), return the p-value of the removed edge
-		double Remove(const edge &e);
+		double Remove(const Edge &e);
 		//remove the edge from g with the highest p-value, and return this edge
-		edge RemoveLast();
+		Edge RemoveLast();
 		//returns if g contains an edge equal to e (excluding p-value)
-		bool HasEdge(const edge &e);
+		bool HasEdge(const Edge &e);
 };
 
 //------------------------------------------------------------------------------
@@ -38,13 +38,13 @@ class SupportReservoir : public Reservoir {
 		int lastGetEdgesLength = 0;
 	
 		//insert edge such that the graph is sorted by the p-values of the edges
-		void Add(const edge &e);
+		void Add(const Edge &e);
 		//remove exactly this edge (equal including p-value, only remove 1 instance)
-		void RemoveExact(const edge &e);
+		void RemoveExact(const Edge &e);
 		//try to remove an edge equal to e excluding the p-value (only 1 instance), return true if edge was present and false otherwise
-		bool Remove(const edge &e);
+		bool Remove(const Edge &e);
 		//return all edges with p-values > minP, store the length of the array in lastGetEdgesLength
-		edge *GetEdges(double minP);
+		Edge *GetEdges(double minP);
 };
 
 //------------------------------------------------------------------------------

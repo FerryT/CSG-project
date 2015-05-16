@@ -5,39 +5,46 @@
 #include "Algorithm.h"
 #include "GraphInput.h"
 
+//------------------------------------------------------------------------------
+
 class Test {
-public:
-	Algorithm* algorithm;
-	Input* input;
-	//Runs the tests and writes the results to an output file in CSV
-	virtual void RunTest(string outputFile) = 0;
+	public:
+		Algorithm* algorithm;
+		Input* input;
+		// Runs the tests and writes the results to an output file in CSV
+		virtual void RunTest(string outputFile) = 0;
 };
 
+//------------------------------------------------------------------------------
 
 class QualityTest: Test {
-public:
-	int SnapshotSize = 10000;
-	virtual void RunTest(string outputFile) override;
+	public:
+		int SnapshotSize = 10000;
+		virtual void RunTest(string outputFile) override;
 };
+
+//------------------------------------------------------------------------------
 
 class QualityTestCapture : Algorithm
 {
-	Graph* _currentGraph;
-public:
-	Algorithm* RealAlgorithm;
-
-	QualityTestCapture();
-	~QualityTestCapture();
+	private:
+		Graph* _currentGraph;
 	
-	virtual void Add(const edge &e) override;
-	virtual void Remove(const edge &e) override;
-
-	//The query methods:
-	virtual int FindClusterIndex(vertex u) override;
-	virtual vector<vertex> FindCluster(vertex u) override;
-	virtual int CountClusters() override;
-
-	Graph* GetCompleteGraph();
+	public:
+		Algorithm* RealAlgorithm;
+	
+		QualityTestCapture();
+		~QualityTestCapture();
+		
+		virtual void Add(const Edge &e) override;
+		virtual void Remove(const Edge &e) override;
+	
+		//The query methods:
+		virtual int FindClusterIndex(vertex u) override;
+		virtual vector<vertex> FindCluster(vertex u) override;
+		virtual int CountClusters() override;
+	
+		Graph* GetCompleteGraph();
 };
 
 /*
@@ -52,4 +59,6 @@ public:
 };
 */
 
-#endif
+//------------------------------------------------------------------------------
+
+#endif // TESTS_H

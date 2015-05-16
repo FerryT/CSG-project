@@ -12,7 +12,7 @@ StructuralSampler::StructuralSampler(int maxClusterSize) : manager(maxClusterSiz
 
 //------------------------------------------------------------------------------
 
-void StructuralSampler::Add(edge newEdge)
+void StructuralSampler::Add(Edge newEdge)
 {
 	//TODO: sampling method, mentioned under C. 3)
 	double pos = (double) rand() / (double) RAND_MAX;
@@ -21,7 +21,7 @@ void StructuralSampler::Add(edge newEdge)
 	manager.Add(newEdge);
 	if (!manager.ConstraintSatisfied())
 	{
-		edge currEdge;
+		Edge currEdge;
 		while (!manager.ConstraintSatisfied())
 		{
 			currEdge = strReservoir.RemoveLast();
@@ -29,7 +29,7 @@ void StructuralSampler::Add(edge newEdge)
 			supReservoir.Add(currEdge);
 			manager.RemoveExact(currEdge);
 		}
-		edge * searchResults = supReservoir.GetEdges(pos);
+		Edge * searchResults = supReservoir.GetEdges(pos);
 		int searchResultsLength = supReservoir.lastGetEdgesLength;
 		for (int i = 0; i < searchResultsLength; i++)
 		{
@@ -50,16 +50,16 @@ void StructuralSampler::Add(edge newEdge)
 
 //------------------------------------------------------------------------------
 
-void StructuralSampler::Remove(edge theEdge)
+void StructuralSampler::Remove(Edge theEdge)
 {
 	bool supSucces = supReservoir.Remove(theEdge);
 	if (strReservoir.HasEdge(theEdge))
 	{
 		double rmEdgeP = strReservoir.Remove(theEdge);
 		manager.Remove(theEdge);
-		edge * searchResults = supReservoir.GetEdges(rmEdgeP);
+		Edge * searchResults = supReservoir.GetEdges(rmEdgeP);
 		int searchResultsLength = supReservoir.lastGetEdgesLength;
-		edge currEdge;
+		Edge currEdge;
 		for (int i = 0; i < searchResultsLength; i++)
 		{
 			currEdge = searchResults[i];

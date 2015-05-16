@@ -3,63 +3,63 @@
 
 //------------------------------------------------------------------------------
 
-void StructuralReservoir::Add(const edge &e)
+void StructuralReservoir::Add(const Edge &e)
 {
 	// Todo: implement
 }
 
 //------------------------------------------------------------------------------
 
-void StructuralReservoir::RemoveExact(const edge &e)
+void StructuralReservoir::RemoveExact(const Edge &e)
 {
 	// Todo: implement
 }
 
 //------------------------------------------------------------------------------
 
-double StructuralReservoir::Remove(const edge &e)
+double StructuralReservoir::Remove(const Edge &e)
 {
 	// Todo: implement
 }
 
 //------------------------------------------------------------------------------
 
-edge StructuralReservoir::RemoveLast()
+Edge StructuralReservoir::RemoveLast()
 {
 	// Todo: implement
 }
 
 //------------------------------------------------------------------------------
 
-bool StructuralReservoir::HasEdge(const edge &e)
+bool StructuralReservoir::HasEdge(const Edge &e)
 {
 	// Todo: implement
 }
 
 //==============================================================================
 
-void SupportReservoir::Add(const edge &e)
+void SupportReservoir::Add(const Edge &e)
 {
 	// Todo: implement
 }
 
 //------------------------------------------------------------------------------
 
-void SupportReservoir::RemoveExact(const edge &e)
+void SupportReservoir::RemoveExact(const Edge &e)
 {
 	// Todo: implement
 }
 
 //------------------------------------------------------------------------------
 
-bool SupportReservoir::Remove(const edge &e)
+bool SupportReservoir::Remove(const Edge &e)
 {
 	// Todo: implement
 }
 
 //------------------------------------------------------------------------------
 
-edge *SupportReservoir::GetEdges(double minP)
+Edge *SupportReservoir::GetEdges(double minP)
 {
 	// Todo: implement
 }

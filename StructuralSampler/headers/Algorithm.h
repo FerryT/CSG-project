@@ -5,12 +5,14 @@
 #include "GraphManager.h"
 #include "ReservoirManager.h"
 
+//------------------------------------------------------------------------------
+
 class Algorithm {
 	public:
 		//adds an edge to the graph
-		virtual void Add(const edge &e) = 0;
+		virtual void Add(const Edge &e) = 0;
 		//removes an edge from the graph
-		virtual void Remove(const edge &e) = 0;
+		virtual void Remove(const Edge &e) = 0;
 		
 		// The query methods:
 		// Finds the cluster index
@@ -21,18 +23,22 @@ class Algorithm {
 		virtual int CountClusters() = 0;
 };
 
+//------------------------------------------------------------------------------
+
 // The classes that has to be implemented:
 /*
 
 class MetisAlgorithm {
 public:
-	void Add(const edge &e);
-	void Remove(const edge &e);
+	void Add(const Edge &e);
+	void Remove(const Edge &e);
 
 	int FindClusterIndex(vertex u);
 	vector<vertex> FindCluster(vertex u);
 	int CountClusters();
 };*/
+
+//------------------------------------------------------------------------------
 
 class StructuralSampler : public Algorithm {
 	private:
@@ -41,8 +47,8 @@ class StructuralSampler : public Algorithm {
 		GraphManager manager;
 	public:
 		StructuralSampler(int maxClusterSize);
-		virtual void Add(edge e);
-		virtual void Remove(edge e);
+		virtual void Add(Edge e);
+		virtual void Remove(Edge e);
 		
 		virtual int FindClusterIndex(vertex u)
 			{ return manager.FindClusterIndex(u); }
@@ -52,4 +58,6 @@ class StructuralSampler : public Algorithm {
 			{ return manager.CountClusters(); }
 };
 
-#endif
+//------------------------------------------------------------------------------
+
+#endif // ALGORITHM_H

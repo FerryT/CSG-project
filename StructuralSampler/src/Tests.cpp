@@ -6,6 +6,8 @@
 
 using namespace std;
 
+//------------------------------------------------------------------------------
+
 void QualityTest::RunTest(string outputFilename)
 {
 	ofstream output;
@@ -31,7 +33,7 @@ void QualityTest::RunTest(string outputFilename)
 		Graph* g = capture->GetCompleteGraph();
 
 		int cutSize = 0;
-		for (edge edge : *g)
+		for (Edge edge : *g)
 		{
 			vertex c1 = this->algorithm->FindClusterIndex(edge.v1);
 			vertex c2 = this->algorithm->FindClusterIndex(edge.v2);
@@ -47,45 +49,63 @@ void QualityTest::RunTest(string outputFilename)
 
 }
 
+//------------------------------------------------------------------------------
+
 QualityTestCapture::QualityTestCapture()
 {
 	this->_currentGraph = new Graph();
 }
+
+//------------------------------------------------------------------------------
 
 QualityTestCapture::~QualityTestCapture()
 {
 	delete this->_currentGraph;
 }
 
-void QualityTestCapture::Add(const edge &e)
+//------------------------------------------------------------------------------
+
+void QualityTestCapture::Add(const Edge &e)
 {
 	this->RealAlgorithm->Add(e);
 	this->_currentGraph->push_back(e);
 }
+
+//------------------------------------------------------------------------------
 
 int QualityTestCapture::FindClusterIndex(vertex u)
 {
 	return this->RealAlgorithm->FindClusterIndex(u);
 }
 
+//------------------------------------------------------------------------------
+
 vector<vertex> QualityTestCapture::FindCluster(vertex u)
 {
 	return this->RealAlgorithm->FindCluster(u);
 }
+
+//------------------------------------------------------------------------------
 
 int QualityTestCapture::CountClusters()
 {
 	return this->RealAlgorithm->CountClusters();
 }
 
+//------------------------------------------------------------------------------
+
 Graph* QualityTestCapture::GetCompleteGraph()
 {
 	return this->_currentGraph;
 }
 
-void QualityTestCapture::Remove(const edge &e)
+//------------------------------------------------------------------------------
+
+void QualityTestCapture::Remove(const Edge &e)
 {
 	this->RealAlgorithm->Remove(e);
 	Graph::iterator it = find(this->_currentGraph->begin(), this->_currentGraph->end(), e);
 	this->_currentGraph->erase(it);
 }
+
+//------------------------------------------------------------------------------

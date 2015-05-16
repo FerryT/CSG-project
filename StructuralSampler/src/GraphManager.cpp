@@ -126,7 +126,7 @@ void GraphManager::UnionClusters(int c1, int c2)
 
 //------------------------------------------------------------------------------
 
-void GraphManager::AddEdgeToGraph(const edge &e)
+void GraphManager::AddEdgeToGraph(const Edge &e)
 {
 	if (graph.count(e.v1 == 0))
 	{
@@ -159,7 +159,7 @@ void GraphManager::AddEdgeToGraph(const edge &e)
 
 //------------------------------------------------------------------------------
 
-void GraphManager::Add(const edge &e)
+void GraphManager::Add(const Edge &e)
 {
 	//update theGraph
 	AddEdgeToGraph(e);
@@ -191,14 +191,14 @@ void GraphManager::Add(const edge &e)
 
 //------------------------------------------------------------------------------
 
-void GraphManager::RemoveExact(const edge &e)
+void GraphManager::RemoveExact(const Edge &e)
 {
 	Remove(e);
 }
 
 //------------------------------------------------------------------------------
 
-void GraphManager::Remove(const edge &e)
+void GraphManager::Remove(const Edge &e)
 {
 	graph.at(e.v1).at(e.v2) += -1;
 	graph.at(e.v2).at(e.v1) += -1;
