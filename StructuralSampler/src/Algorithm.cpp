@@ -29,9 +29,8 @@ void StructuralSampler::Add(Edge newEdge)
 			supReservoir.Add(currEdge);
 			manager.RemoveExact(currEdge);
 		}
-		Edge * searchResults = supReservoir.GetEdges(pos);
-		int searchResultsLength = supReservoir.lastGetEdgesLength;
-		for (int i = 0; i < searchResultsLength; i++)
+		vector<Edge> searchResults = supReservoir.GetEdges(pos);
+		for (vector<Edge>::size_type i = 0; i < searchResults.size(); i++)
 		{
 			currEdge = searchResults[i];
 			manager.Add(currEdge);
@@ -57,10 +56,9 @@ void StructuralSampler::Remove(Edge theEdge)
 	{
 		double rmEdgeP = strReservoir.Remove(theEdge);
 		manager.Remove(theEdge);
-		Edge * searchResults = supReservoir.GetEdges(rmEdgeP);
-		int searchResultsLength = supReservoir.lastGetEdgesLength;
+		vector<Edge> searchResults = supReservoir.GetEdges(rmEdgeP);
 		Edge currEdge;
-		for (int i = 0; i < searchResultsLength; i++)
+		for (vector<Edge>::size_type i = 0; i < searchResults.size(); i++)
 		{
 			currEdge = searchResults[i];
 			manager.Add(currEdge);

@@ -21,6 +21,11 @@ struct Edge {
 	{
 		return v1 == other.v1 && v2 == other.v2;
 	}
+
+	bool operator!=(const Edge& other) const
+	{
+		return v1 != other.v1 || v2 != other.v2;
+	}
 };
 
 typedef vector<Edge> Graph;
