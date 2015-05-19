@@ -36,6 +36,21 @@ class Input {
 		void SetAlgorithm(Output* alg) { algorithm = alg; }
 };
 
+class StackInput: public Input, public Output
+{
+protected:
+	Input* input;
+public:
+	virtual void Add(const Edge& e) override;
+	virtual void Remove(const Edge& e) override;
+	virtual void Open() override;
+	virtual void Close() override;
+	virtual void ExecuteNextUpdate();
+	virtual bool IsEnd() override;
+
+	virtual void SetInternalInput(Input* input);
+};
+
 
 
 

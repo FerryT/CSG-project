@@ -231,3 +231,52 @@ bool EdgeFileInput::IsEnd()
 }
 
 //------------------------------------------------------------------------------
+
+void StackInput::Add(const Edge& e)
+{
+	this->algorithm->Add(e);
+}
+
+//------------------------------------------------------------------------------
+
+
+void StackInput::Remove(const Edge& e)
+{
+	this->algorithm->Remove(e);
+}
+
+//------------------------------------------------------------------------------
+
+void StackInput::Open()
+{
+	this->input->Open();
+}
+
+//------------------------------------------------------------------------------
+
+void StackInput::Close()
+{
+	this->input->Close();
+}
+
+//------------------------------------------------------------------------------
+
+void StackInput::ExecuteNextUpdate()
+{
+	this->input->ExecuteNextUpdate();
+}
+
+//------------------------------------------------------------------------------
+
+bool StackInput::IsEnd()
+{
+	return this->input->IsEnd();
+}
+
+//------------------------------------------------------------------------------
+
+void StackInput::SetInternalInput(Input* input)
+{
+	this->input = input;
+	input->SetAlgorithm(this);
+}

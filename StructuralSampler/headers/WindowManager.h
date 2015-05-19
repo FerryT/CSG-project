@@ -9,7 +9,7 @@ struct TimedEdge {
 	int time;
 };
 
-class SlideWindow: Input, Output
+class SlideWindow : public StackInput
 {
 	Input* input;
 	int timesteps = 0;
@@ -18,15 +18,28 @@ class SlideWindow: Input, Output
 public:
 	int windowSize = 0;
 
-	void Open() override;
-	void Close() override;
+	void ExecuteNextUpdate() override;
+	bool IsEnd() override;
+
+	void Add(const Edge& e) override;
+	void Remove(const Edge& e) override;
+};
+
+class TumblingWindow : public StackInput
+{
+	Input* input;
+	Graph window;
+	bool removal = false;
+
+public:
+	int windowSize = 0;
+
 	void ExecuteNextUpdate() override;
 	bool IsEnd() override;
 
 	void Add(const Edge& e) override;
 	void Remove(const Edge& e) override;
 
-	void SetInternalInput(Input* input);
 };
 
 
