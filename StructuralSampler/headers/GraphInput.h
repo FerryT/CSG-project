@@ -7,10 +7,19 @@
 
 //------------------------------------------------------------------------------
 
+//An Output
+class Output
+{
+	//adds an edge to the graph
+	virtual void Add(const Edge &e) = 0;
+	//removes an edge from the graph
+	virtual void Remove(const Edge &e) = 0;
+};
+
 //An input 
 class Input {
 	protected:
-		Algorithm* algorithm;
+		Output* algorithm;
 
 	public:
 		Input() : algorithm(0) {}
@@ -23,8 +32,11 @@ class Input {
 		//check if it is at the end of it's input
 		virtual bool IsEnd() = 0;
 		//sets the algorithm
-		void SetAlgorithm(Algorithm* alg) { algorithm = alg; }
+		void SetAlgorithm(Output* alg) { algorithm = alg; }
 };
+
+
+
 
 //------------------------------------------------------------------------------
 

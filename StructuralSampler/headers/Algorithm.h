@@ -4,16 +4,12 @@
 #include "Graph.h"
 #include "GraphManager.h"
 #include "ReservoirManager.h"
+#include "GraphInput.h"
 
 //------------------------------------------------------------------------------
 
-class Algorithm {
+class Algorithm: Output {
 	public:
-		//adds an edge to the graph
-		virtual void Add(const Edge &e) = 0;
-		//removes an edge from the graph
-		virtual void Remove(const Edge &e) = 0;
-		
 		// The query methods:
 		// Finds the cluster index
 		virtual int FindClusterIndex(vertex u) = 0;
