@@ -3,17 +3,18 @@
 
 #include <string>
 
-#include "Algorithm.h"
+#include "Graph.h"
 
 //------------------------------------------------------------------------------
 
 //An Output
 class Output
 {
-	//adds an edge to the graph
-	virtual void Add(const Edge &e) = 0;
-	//removes an edge from the graph
-	virtual void Remove(const Edge &e) = 0;
+	public:
+		//adds an edge to the graph
+		virtual void Add(const Edge &e) = 0;
+		//removes an edge from the graph
+		virtual void Remove(const Edge &e) = 0;
 };
 
 //An input 

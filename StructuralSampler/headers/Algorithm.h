@@ -1,14 +1,14 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
+#include "GraphInput.h"
 #include "Graph.h"
 #include "GraphManager.h"
 #include "ReservoirManager.h"
-#include "GraphInput.h"
 
 //------------------------------------------------------------------------------
 
-class Algorithm: Output {
+class Algorithm: public Output {
 	public:
 		// The query methods:
 		// Finds the cluster index
