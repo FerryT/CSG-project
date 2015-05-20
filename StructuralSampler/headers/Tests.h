@@ -17,7 +17,7 @@ class Test {
 
 //------------------------------------------------------------------------------
 
-class QualityTest: Test {
+class QualityTest: public Test {
 	public:
 		int SnapshotSize = 10000;
 		virtual void RunTest(string outputFile) override;
@@ -25,7 +25,7 @@ class QualityTest: Test {
 
 //------------------------------------------------------------------------------
 
-class QualityTestCapture : Algorithm
+class QualityTestCapture : public Algorithm
 {
 	private:
 		Graph* _currentGraph;
@@ -36,8 +36,8 @@ class QualityTestCapture : Algorithm
 		QualityTestCapture();
 		~QualityTestCapture();
 		
-		virtual void Add(const Edge &e) override;
-		virtual void Remove(const Edge &e) override;
+		virtual void Add(Edge e) override;
+		virtual void Remove(Edge e) override;
 	
 		//The query methods:
 		virtual int FindClusterIndex(vertex u) override;

@@ -21,8 +21,8 @@ public:
 	void ExecuteNextUpdate() override;
 	bool IsEnd() override;
 
-	void Add(const Edge& e) override;
-	void Remove(const Edge& e) override;
+	void Add(Edge e) override;
+	void Remove(Edge e) override;
 };
 
 class TumblingWindow : public StackInput
@@ -37,8 +37,8 @@ public:
 	void ExecuteNextUpdate() override;
 	bool IsEnd() override;
 
-	void Add(const Edge& e) override;
-	void Remove(const Edge& e) override;
+	void Add(Edge e) override;
+	void Remove(Edge e) override;
 
 };
 

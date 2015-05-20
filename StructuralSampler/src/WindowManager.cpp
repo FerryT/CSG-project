@@ -1,6 +1,6 @@
 #include "WindowManager.h"
 
-void SlideWindow::Add(const Edge& e)
+void SlideWindow::Add(Edge e)
 {
 	TimedEdge timed_edge;
 	timed_edge.e = e;
@@ -9,7 +9,7 @@ void SlideWindow::Add(const Edge& e)
 	this->algorithm->Add(e);
 }
 
-void SlideWindow::Remove(const Edge& e)
+void SlideWindow::Remove(Edge e)
 {
 }
 
@@ -61,12 +61,12 @@ bool TumblingWindow::IsEnd()
 	return StackInput::IsEnd() && window.empty();
 }
 
-void TumblingWindow::Add(const Edge& e)
+void TumblingWindow::Add(Edge e)
 {
 	this->window.push_back(e);
 	StackInput::ExecuteNextUpdate();
 }
 
-void TumblingWindow::Remove(const Edge& e)
+void TumblingWindow::Remove(Edge e)
 {
 }

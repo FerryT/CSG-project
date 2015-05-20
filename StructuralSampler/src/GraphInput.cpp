@@ -232,7 +232,7 @@ bool EdgeFileInput::IsEnd()
 
 //------------------------------------------------------------------------------
 
-void StackInput::Add(const Edge& e)
+void StackInput::Add(Edge e)
 {
 	this->algorithm->Add(e);
 }
@@ -240,7 +240,7 @@ void StackInput::Add(const Edge& e)
 //------------------------------------------------------------------------------
 
 
-void StackInput::Remove(const Edge& e)
+void StackInput::Remove(Edge e)
 {
 	this->algorithm->Remove(e);
 }

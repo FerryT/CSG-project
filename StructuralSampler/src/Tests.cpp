@@ -16,9 +16,10 @@ void QualityTest::RunTest(string outputFilename)
 
 	output << "updates,cutsize" << endl;
 
-	//todo set the output algorithm
 	QualityTestCapture* capture = new QualityTestCapture();
 	capture->RealAlgorithm = this->algorithm;
+
+	this->input->SetAlgorithm(capture);
 
 	int updates = 0;
 
@@ -65,7 +66,7 @@ QualityTestCapture::~QualityTestCapture()
 
 //------------------------------------------------------------------------------
 
-void QualityTestCapture::Add(const Edge &e)
+void QualityTestCapture::Add(Edge e)
 {
 	this->RealAlgorithm->Add(e);
 	this->_currentGraph->push_back(e);
@@ -101,7 +102,7 @@ Graph* QualityTestCapture::GetCompleteGraph()
 
 //------------------------------------------------------------------------------
 
-void QualityTestCapture::Remove(const Edge &e)
+void QualityTestCapture::Remove(Edge e)
 {
 	this->RealAlgorithm->Remove(e);
 	Graph::iterator it = find(this->_currentGraph->begin(), this->_currentGraph->end(), e);

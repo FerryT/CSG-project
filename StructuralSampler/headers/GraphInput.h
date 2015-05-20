@@ -12,9 +12,9 @@ class Output
 {
 	public:
 		//adds an edge to the graph
-		virtual void Add(const Edge &e) = 0;
+		virtual void Add(Edge e) = 0;
 		//removes an edge from the graph
-		virtual void Remove(const Edge &e) = 0;
+		virtual void Remove(Edge e) = 0;
 };
 
 //An input 
@@ -41,8 +41,8 @@ class StackInput: public Input, public Output
 protected:
 	Input* input;
 public:
-	virtual void Add(const Edge& e) override;
-	virtual void Remove(const Edge& e) override;
+	virtual void Add(Edge e) override;
+	virtual void Remove(Edge e) override;
 	virtual void Open() override;
 	virtual void Close() override;
 	virtual void ExecuteNextUpdate();
@@ -134,26 +134,6 @@ public:
 };
 
 class TwitterInput {
-public:
-	//Opens the input
-	void Open();
-	//Closes the input
-	void Close();
-	//this executed the next update, this can be a delete or a insert
-	void ExecuteNextUpdate();
-};
-
-class EulerNetworkInput {
-public:
-	//Opens the input
-	void Open();
-	//Closes the input
-	void Close();
-	//this executed the next update, this can be a delete or a insert
-	void ExecuteNextUpdate();
-};
-
-class ScaleFreeNetworkInput {
 public:
 	//Opens the input
 	void Open();
