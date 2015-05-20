@@ -21,7 +21,9 @@ class GraphManager {
 		void RemakeClusters(int c1, int c2);
 		// checks if any cluster after (and including) startCluster can/should be merged with any other cluster, since they are connected, and does so whenever two clusters are connected
 		void MergeClusters(int startCluster);
-	
+
+		//removes vertex v from the clusters, removing the cluster if it becomes empty
+		void removeFromCluster(int v);
 	public:
 		GraphManager(int max) : maxClusterSize(max) {}
 		

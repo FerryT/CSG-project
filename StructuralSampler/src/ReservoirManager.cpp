@@ -6,12 +6,23 @@
 void StructuralReservoir::Add(const Edge &e)
 {
 	//assume graph is sorted by p-values allready
-	int location = 0;
-	while (graph.at(location).p < e.p && location<graph.size())
+	if (graph.size() == 0)
 	{
-		location++;
+		graph.push_back(e);
 	}
-	graph.insert(graph.begin()+location, e);
+	else
+	{
+		int location = 0;
+		while (location<graph.size())
+		{
+			if (graph.at(location).p >= e.p)
+			{
+				break;
+			}
+			location++;
+		}
+		graph.insert(graph.begin()+location, e);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -78,12 +89,19 @@ bool StructuralReservoir::HasEdge(const Edge &e)
 void SupportReservoir::Add(const Edge &e)
 {
 	//assume graph is sorted by p-values allready
-	int location = 0;
-	while (graph.at(location).p < e.p && location<graph.size())
+	if (graph.size() == 0)
 	{
-		location++;
+		graph.push_back(e);
 	}
-	graph.insert(graph.begin() + location, e);
+	else
+	{
+		int location = 0;
+		while (graph.at(location).p < e.p && location<graph.size())
+		{
+			location++;
+		}
+		graph.insert(graph.begin() + location, e);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -108,8 +126,12 @@ void SupportReservoir::RemoveExact(const Edge &e)
 bool SupportReservoir::Remove(const Edge &e)
 {
 	int location = 0;
-	while (graph.at(location) != e && location<graph.size())
+	while (location < graph.size())
 	{
+		if (graph.at(location) == e)
+		{
+			break;
+		}
 		location++;
 	}
 	if (location >= graph.size())
@@ -130,8 +152,12 @@ vector<Edge> SupportReservoir::GetEdges(double minP)
 {
 	int start = 0;
 
-	while (graph.at(start).p < minP && start < graph.size())
+	while (start < graph.size())
 	{
+		if (graph.at(start).p >= minP)
+		{
+			break;
+		}
 		start++;
 	}
 	vector<Edge> result;
