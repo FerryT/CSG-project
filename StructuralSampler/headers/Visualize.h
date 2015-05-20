@@ -11,6 +11,15 @@ public:
 	void RunTest(string outputFile) override;
 };
 
+class VisualizeResults : public Test
+{
+public:
+	int runTillUpdate = 10000;
+	bool CallDot = false;
+	VisualizeResults(int runTillUpdate);
+	void RunTest(string outputFile) override;
+};
+
 class NullOutput: public Output
 {
 public:
