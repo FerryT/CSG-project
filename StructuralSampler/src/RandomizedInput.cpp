@@ -12,12 +12,12 @@ EulerNetworkInput::EulerNetworkInput(int nodes, float insertDeleteRatio, int max
 	this->nodes = nodes;
 	this->insertDeleteRatio = insertDeleteRatio;
 
-	this->NotInCurrentGraph.reserve(nodes*nodes);
-	this->CurrentGraph.reserve(nodes*nodes);
+	this->NotInCurrentGraph.reserve(nodes*(nodes / 2 - 1) + nodes / 2);
+	this->CurrentGraph.reserve(nodes*(nodes / 2 - 1) + nodes / 2);
 
 	for (int i = 0; i < nodes; i++)
 	{
-		for (int j = 0; j < nodes; j++)
+		for (int j = i+1; j < nodes; j++)
 		{
 			this->NotInCurrentGraph.push_back(Edge(i, j));
 		}
@@ -82,7 +82,8 @@ ScaleFreeNetworkInput::ScaleFreeNetworkInput(int nodes, float insertDeleteRatio,
 		this->NotInCurrentGraph[i].reserve(nodes);
 		for (int j = 0; j < nodes; j++)
 		{
-			this->NotInCurrentGraph[i].push_back(j);
+			if (j != i)
+				this->NotInCurrentGraph[i].push_back(j);
 		}
 		this->NodeDegree[i] = 1;
 	}

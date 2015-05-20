@@ -80,6 +80,7 @@
     <ClCompile Include="src\RandomizedInput.cpp" />
     <ClCompile Include="src\ReservoirManager.cpp" />
     <ClCompile Include="src\Tests.cpp" />
+    <ClCompile Include="src\Visualize.cpp" />
     <ClCompile Include="src\WindowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +91,7 @@
     <ClInclude Include="headers\RandomizedInput.h" />
     <ClInclude Include="headers\ReservoirManager.h" />
     <ClInclude Include="headers\Tests.h" />
+    <ClInclude Include="headers\Visualize.h" />
     <ClInclude Include="headers\WindowManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

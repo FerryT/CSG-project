@@ -25,24 +25,17 @@ class QualityTest: public Test {
 
 //------------------------------------------------------------------------------
 
-class QualityTestCapture : public Algorithm
+class CaptureStackInput : public StackInput
 {
 	private:
 		Graph* _currentGraph;
 	
 	public:
-		Algorithm* RealAlgorithm;
-	
-		QualityTestCapture();
-		~QualityTestCapture();
+		CaptureStackInput();
+		~CaptureStackInput();
 		
 		virtual void Add(Edge e) override;
 		virtual void Remove(Edge e) override;
-	
-		//The query methods:
-		virtual int FindClusterIndex(vertex u) override;
-		virtual vector<vertex> FindCluster(vertex u) override;
-		virtual int CountClusters() override;
 	
 		Graph* GetCompleteGraph();
 };

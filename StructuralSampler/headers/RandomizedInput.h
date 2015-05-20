@@ -42,28 +42,4 @@ public:
 	bool IsEnd() override;
 };
 
-/*
-
-class EulerNetworkInput {
-public:
-//Opens the input
-void Open();
-//Closes the input
-void Close();
-//this executed the next update, this can be a delete or a insert
-void ExecuteNextUpdate();
-};
-
-class ScaleFreeNetworkInput {
-public:
-//Opens the input
-void Open();
-//Closes the input
-void Close();
-//this executed the next update, this can be a delete or a insert
-void ExecuteNextUpdate();
-};
-
-*/
-
 #endif // RANDOMIZED_INPUT_H
