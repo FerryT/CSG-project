@@ -19,6 +19,7 @@ class Test {
 
 class QualityTest: public Test {
 	public:
+		QualityTest(int snapshotSize);
 		int SnapshotSize = 10000;
 		virtual void RunTest(string outputFile) override;
 };

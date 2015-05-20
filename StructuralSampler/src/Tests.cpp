@@ -8,6 +8,11 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
+QualityTest::QualityTest(int snapshotSize)
+{
+	this->SnapshotSize = snapshotSize;
+}
+
 void QualityTest::RunTest(string outputFilename)
 {
 	ofstream output;
@@ -22,6 +27,8 @@ void QualityTest::RunTest(string outputFilename)
 
 	int updates = 0;
 
+	cout << "Start quality test..." << endl;
+
 	while (!this->input->IsEnd())
 	{
 		for (int i = 0; !this->input->IsEnd() && i < this->SnapshotSize; i++)
@@ -29,6 +36,8 @@ void QualityTest::RunTest(string outputFilename)
 			capture->ExecuteNextUpdate();
 			updates++;
 		}
+
+		cout << updates << " updates done, saving results..." << endl;
 
 		Graph* g = capture->GetCompleteGraph();
 
@@ -42,10 +51,10 @@ void QualityTest::RunTest(string outputFilename)
 		}
 
 		output << updates << "," << cutSize << endl;
-
 	}
 
 	output.close();
+	cout << "Done" << endl;
 
 }
 
