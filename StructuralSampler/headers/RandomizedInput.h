@@ -21,6 +21,27 @@ public:
 	bool IsEnd() override;
 };
 
+
+class ScaleFreeNetworkInput : public Input {
+private:
+	int nodes;
+	float insertDeleteRatio;
+	Graph CurrentGraph;
+	vector<int>* NotInCurrentGraph;
+	int maxUpdates;
+	int currentUpdates;
+	int* NodeDegree; 
+	int totalDegree;
+public:
+	ScaleFreeNetworkInput(int nodes, float insertDeleteRatio, int maxUpdates);
+	~ScaleFreeNetworkInput();
+
+	void Open() override;
+	void Close() override;
+	void ExecuteNextUpdate() override;
+	bool IsEnd() override;
+};
+
 /*
 
 class EulerNetworkInput {
