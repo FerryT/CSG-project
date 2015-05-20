@@ -332,8 +332,12 @@ void GraphManager::removeFromCluster(int v)
 	}
 }
 
+//------------------------------------------------------------------------------
 
-
+vector<vertex> GraphManager::GetCluster(int index)
+{
+	return clusters[index];
+}
 
 
 

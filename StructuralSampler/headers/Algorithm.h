@@ -54,6 +54,8 @@ class StructuralSampler : public Algorithm {
 			{ return manager.FindCluster(u); }
 		virtual int CountClusters()
 			{ return manager.CountClusters(); }
+		virtual vector<vertex> GetCluster(int index)
+		{ return manager.GetCluster(index); }
 };
 
 //------------------------------------------------------------------------------
