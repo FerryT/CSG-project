@@ -21,28 +21,25 @@ public:
 	bool IsEnd() override;
 };
 
-/*
 
-class EulerNetworkInput {
+class ScaleFreeNetworkInput : public Input {
+private:
+	int nodes;
+	float insertDeleteRatio;
+	Graph CurrentGraph;
+	vector<int>* NotInCurrentGraph;
+	int maxUpdates;
+	int currentUpdates;
+	int* NodeDegree; 
+	int totalDegree;
 public:
-//Opens the input
-void Open();
-//Closes the input
-void Close();
-//this executed the next update, this can be a delete or a insert
-void ExecuteNextUpdate();
-};
+	ScaleFreeNetworkInput(int nodes, float insertDeleteRatio, int maxUpdates);
+	~ScaleFreeNetworkInput();
 
-class ScaleFreeNetworkInput {
-public:
-//Opens the input
-void Open();
-//Closes the input
-void Close();
-//this executed the next update, this can be a delete or a insert
-void ExecuteNextUpdate();
+	void Open() override;
+	void Close() override;
+	void ExecuteNextUpdate() override;
+	bool IsEnd() override;
 };
-
-*/
 
 #endif // RANDOMIZED_INPUT_H

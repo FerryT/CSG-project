@@ -8,6 +8,11 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
+QualityTest::QualityTest(int snapshotSize)
+{
+	this->SnapshotSize = snapshotSize;
+}
+
 void QualityTest::RunTest(string outputFilename)
 {
 	ofstream output;
@@ -16,20 +21,23 @@ void QualityTest::RunTest(string outputFilename)
 
 	output << "updates,cutsize" << endl;
 
-	QualityTestCapture* capture = new QualityTestCapture();
-	capture->RealAlgorithm = this->algorithm;
-
-	this->input->SetAlgorithm(capture);
+	CaptureStackInput* capture = new CaptureStackInput();
+	capture->SetInternalInput(input);
+	capture->SetAlgorithm(this->algorithm);
 
 	int updates = 0;
+
+	cout << "Start quality test..." << endl;
 
 	while (!this->input->IsEnd())
 	{
 		for (int i = 0; !this->input->IsEnd() && i < this->SnapshotSize; i++)
 		{
-			this->input->ExecuteNextUpdate();
+			capture->ExecuteNextUpdate();
 			updates++;
 		}
+
+		cout << updates << " updates done, saving results..." << endl;
 
 		Graph* g = capture->GetCompleteGraph();
 
@@ -43,68 +51,47 @@ void QualityTest::RunTest(string outputFilename)
 		}
 
 		output << updates << "," << cutSize << endl;
-
 	}
 
 	output.close();
+	cout << "Done" << endl;
 
 }
 
 //------------------------------------------------------------------------------
 
-QualityTestCapture::QualityTestCapture()
+CaptureStackInput::CaptureStackInput()
 {
 	this->_currentGraph = new Graph();
 }
 
 //------------------------------------------------------------------------------
 
-QualityTestCapture::~QualityTestCapture()
+CaptureStackInput::~CaptureStackInput()
 {
 	delete this->_currentGraph;
 }
 
 //------------------------------------------------------------------------------
 
-void QualityTestCapture::Add(Edge e)
+void CaptureStackInput::Add(Edge e)
 {
-	this->RealAlgorithm->Add(e);
+	this->algorithm->Add(e);
 	this->_currentGraph->push_back(e);
 }
 
 //------------------------------------------------------------------------------
 
-int QualityTestCapture::FindClusterIndex(vertex u)
-{
-	return this->RealAlgorithm->FindClusterIndex(u);
-}
-
-//------------------------------------------------------------------------------
-
-vector<vertex> QualityTestCapture::FindCluster(vertex u)
-{
-	return this->RealAlgorithm->FindCluster(u);
-}
-
-//------------------------------------------------------------------------------
-
-int QualityTestCapture::CountClusters()
-{
-	return this->RealAlgorithm->CountClusters();
-}
-
-//------------------------------------------------------------------------------
-
-Graph* QualityTestCapture::GetCompleteGraph()
+Graph* CaptureStackInput::GetCompleteGraph()
 {
 	return this->_currentGraph;
 }
 
 //------------------------------------------------------------------------------
 
-void QualityTestCapture::Remove(Edge e)
+void CaptureStackInput::Remove(Edge e)
 {
-	this->RealAlgorithm->Remove(e);
+	this->algorithm->Remove(e);
 	Graph::iterator it = find(this->_currentGraph->begin(), this->_currentGraph->end(), e);
 	this->_currentGraph->erase(it);
 }
