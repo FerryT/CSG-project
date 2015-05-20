@@ -10,6 +10,9 @@
 
 class Algorithm: public Output {
 	public:
+		virtual void Add(Edge e);
+		virtual void Remove(Edge e);
+
 		// The query methods:
 		// Finds the cluster index
 		virtual int FindClusterIndex(vertex u) = 0;
@@ -21,18 +24,21 @@ class Algorithm: public Output {
 
 //------------------------------------------------------------------------------
 
-// The classes that has to be implemented:
-/*
+class Metis : public Algorithm {
+	public:
+		Metis(int numClusters);
+		virtual ~Metis();
 
-class MetisAlgorithm {
-public:
-	void Add(const Edge &e);
-	void Remove(const Edge &e);
+		virtual void Add(Edge e);
+		virtual void Remove(Edge e);
 
-	int FindClusterIndex(vertex u);
-	vector<vertex> FindCluster(vertex u);
-	int CountClusters();
-};*/
+		virtual int FindClusterIndex(vertex u);
+		virtual vector<vertex> FindCluster(vertex u);
+		virtual int CountClusters();
+	private:
+		struct Data;
+		Data *data;
+};
 
 //------------------------------------------------------------------------------
 

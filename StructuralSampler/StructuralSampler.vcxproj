@@ -40,7 +40,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ReferencePath>$(ProjectDir);</ReferencePath>
-    <IncludePath>headers;$(IncludePath)</IncludePath>
+    <IncludePath>headers;$(IncludePath);libs\metis\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>headers;$(IncludePath)</IncludePath>
