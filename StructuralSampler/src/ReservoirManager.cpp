@@ -36,7 +36,7 @@ void StructuralReservoir::RemoveExact(const Edge &e)
 double StructuralReservoir::Remove(const Edge &e)
 {
 	int location = 0;
-	while (graph.at(location) != e && location<graph.size())
+	while (graph[location] != e && location<graph.size())
 	{
 		location++;
 	}
@@ -45,7 +45,9 @@ double StructuralReservoir::Remove(const Edge &e)
 		//e is not in the graph
 		throw new exception("error while removing exact edge from structural reservoir");
 	}
+	double p = graph[location].p;
 	graph.erase(graph.begin() + location);
+	return p;
 }
 
 //------------------------------------------------------------------------------
@@ -113,9 +115,13 @@ bool SupportReservoir::Remove(const Edge &e)
 	if (location >= graph.size())
 	{
 		//e is not in the graph
-		throw new exception("error while removing exact edge from structural reservoir");
+		return false;
 	}
-	graph.erase(graph.begin() + location);
+	else
+	{
+		graph.erase(graph.begin() + location);
+		return true;
+	}
 }
 
 //------------------------------------------------------------------------------
