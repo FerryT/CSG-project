@@ -17,6 +17,8 @@ class Algorithm: public Output {
 		virtual vector<vertex> FindCluster(vertex u) = 0;
 		// returns the number of clusters
 		virtual int CountClusters() = 0;
+		// gets all vertices of cluster
+		virtual vector<vertex> GetCluster(int index) = 0;
 };
 
 //------------------------------------------------------------------------------
