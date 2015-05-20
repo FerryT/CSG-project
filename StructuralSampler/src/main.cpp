@@ -5,14 +5,23 @@
 #include "Algorithm.h"
 #include "RandomizedInput.h"
 #include "Tests.h"
+#include "Visualize.h"
+#include <iostream>
+
 int main(int argc, char *argv[])
 {
 	Input* input = new EulerNetworkInput(100, 0.75, 1000);
 	Algorithm* alg = new StructuralSampler(10);
-	Test* test = new QualityTest();
+	Test* test = new QualityTest(100);
 	test->algorithm = alg;
 	test->input = input;
 	test->RunTest("testResult.csv");
+
+	/*Input* input = new ScaleFreeNetworkInput(100, 1, 200);
+	OutputVisualization* test = new OutputVisualization();
+	test->CallDot = true;
+	test->input = input;
+	test->RunTest("testGraph.png");*/
 
 	return EXIT_SUCCESS;
 /*	if (argc < 2)
