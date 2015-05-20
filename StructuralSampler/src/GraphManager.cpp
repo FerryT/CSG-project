@@ -128,12 +128,12 @@ void GraphManager::UnionClusters(int c1, int c2)
 
 void GraphManager::AddEdgeToGraph(const Edge &e)
 {
-	if (graph.count(e.v1 == 0))
+	if (graph.count(e.v1) == 0)
 	{
 		graph.insert({ e.v1, {} });
 	}
 
-	if (graph.count(e.v2 == 0))
+	if (graph.count(e.v2) == 0)
 	{
 		graph.insert({ e.v2, {} });
 	}
@@ -200,12 +200,61 @@ void GraphManager::RemoveExact(const Edge &e)
 
 void GraphManager::Remove(const Edge &e)
 {
-	graph.at(e.v1).at(e.v2) += -1;
-	graph.at(e.v2).at(e.v1) += -1;
+	graph.at(e.v1).at(e.v2) -= 1;
+	graph.at(e.v2).at(e.v1) -= 1;
+	bool remakeC1 = true;
+	bool remakeC2 = true;
 
-	// Todo: fix this (function does not exist?)
-	//RemakeCluster(FindClusterIndex(e.v1));
-	//RemakeCluster(FindClusterIndex(e.v2));
+	if (graph.at(e.v1).at(e.v2) == 0)
+	{
+		graph.at(e.v1).erase(e.v2);
+		if (graph.at(e.v1).size() == 0)
+		{
+			graph.erase(e.v1);
+			removeFromCluster(e.v1);
+			remakeC1 = false;
+		}
+	}
+
+	if (e.v1 != e.v2)
+	{
+		if (graph.at(e.v2).at(e.v1) == 0)
+		{
+			graph.at(e.v2).erase(e.v1);
+			if (graph.at(e.v2).size() == 0)
+			{
+				graph.erase(e.v2);
+				removeFromCluster(e.v2);
+				remakeC2 = false;
+			}
+		}
+	}
+
+	if (remakeC1 && remakeC2)
+	{
+		if (e.v1 != e.v2)
+		{
+			RemakeClusters(FindClusterIndex(e.v1), FindClusterIndex(e.v2));
+		}
+		else
+		{
+			int i = FindClusterIndex(e.v1);
+			RemakeClusters(i, i);
+		}
+	}
+	else
+	{
+		if (remakeC1)
+		{
+			int i = FindClusterIndex(e.v1);
+			RemakeClusters(i,i);
+		}
+		else if (remakeC2)
+		{
+			int i = FindClusterIndex(e.v2);
+			RemakeClusters(i, i);
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -228,7 +277,7 @@ int GraphManager::FindClusterIndex(vertex u)
 {
 	for (std::vector< vector<vertex> >::size_type i =0; i != clusters.size(); i++)
 	{
-		for (std::vector< vector<vertex> >::size_type j = 0; j != clusters[i].size(); j++)
+		for (std::vector<vertex>::size_type j = 0; j != clusters[i].size(); j++)
 		{
 			if (clusters[i][j] == u)
 			{
@@ -255,3 +304,50 @@ int GraphManager::CountClusters()
 }
 
 //------------------------------------------------------------------------------
+
+void GraphManager::removeFromCluster(int v)
+{
+	vector< vector<vertex> >::size_type cluster = -1;
+	vector<vertex>::size_type location = -1;
+	for (std::vector< vector<vertex> >::size_type i = 0; i != clusters.size(); i++)
+	{
+		for (std::vector<vertex>::size_type j = 0; j != clusters[i].size(); j++)
+		{
+			if (clusters[i][j] == v)
+			{
+				cluster = i;
+				location = j;
+				break;
+			}
+		}
+		if (cluster != -1)
+		{
+			break;
+		}
+	}
+	clusters.at(cluster).erase(clusters.at(cluster).begin() + location);
+	if (clusters.at(cluster).size() == 0)
+	{
+		clusters.erase(clusters.begin() + cluster);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

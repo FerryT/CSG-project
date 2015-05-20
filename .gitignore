@@ -135,3 +135,5 @@ sympy-plots-for-*.tex/
 /StructuralSampler/Release
 /StructuralSampler/obj
 /StructuralSampler/bin
+/StructuralSampler/*.csv
+
