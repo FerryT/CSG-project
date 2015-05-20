@@ -96,8 +96,12 @@ void SupportReservoir::Add(const Edge &e)
 	else
 	{
 		int location = 0;
-		while (graph.at(location).p < e.p && location<graph.size())
+		while (location<graph.size())
 		{
+			if (!graph.at(location).p < e.p)
+			{
+				break;
+			}
 			location++;
 		}
 		graph.insert(graph.begin() + location, e);
@@ -164,6 +168,7 @@ vector<Edge> SupportReservoir::GetEdges(double minP)
 	while (start < graph.size())
 	{
 		result.push_back(graph.at(start));
+		start++;
 	}
 	return result;
 }

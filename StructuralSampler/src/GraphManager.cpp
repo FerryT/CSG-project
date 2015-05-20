@@ -210,24 +210,37 @@ void GraphManager::Remove(const Edge &e)
 		graph.at(e.v1).erase(e.v2);
 		if (graph.at(e.v1).size() == 0)
 		{
+			graph.erase(e.v1);
 			removeFromCluster(e.v1);
 			remakeC1 = false;
 		}
 	}
 
-	if (graph.at(e.v2).at(e.v1) == 0)
+	if (e.v1 != e.v2)
 	{
-		graph.at(e.v2).erase(e.v1);
-		if (graph.at(e.v2).size() == 0)
+		if (graph.at(e.v2).at(e.v1) == 0)
 		{
-			removeFromCluster(e.v2);
-			remakeC2 = false;
+			graph.at(e.v2).erase(e.v1);
+			if (graph.at(e.v2).size() == 0)
+			{
+				graph.erase(e.v2);
+				removeFromCluster(e.v2);
+				remakeC2 = false;
+			}
 		}
 	}
 
 	if (remakeC1 && remakeC2)
 	{
-		RemakeClusters(FindClusterIndex(e.v1), FindClusterIndex(e.v2));
+		if (e.v1 != e.v2)
+		{
+			RemakeClusters(FindClusterIndex(e.v1), FindClusterIndex(e.v2));
+		}
+		else
+		{
+			int i = FindClusterIndex(e.v1);
+			RemakeClusters(i, i);
+		}
 	}
 	else
 	{
