@@ -24,6 +24,7 @@ void QualityTest::RunTest(string outputFilename)
 	CaptureStackInput* capture = new CaptureStackInput();
 	capture->SetInternalInput(input);
 	capture->SetAlgorithm(this->algorithm);
+	capture->Open();
 
 	int updates = 0;
 
@@ -53,6 +54,7 @@ void QualityTest::RunTest(string outputFilename)
 		output << updates << "," << cutSize << endl;
 	}
 
+	capture->Close();
 	output.close();
 	cout << "Done" << endl;
 

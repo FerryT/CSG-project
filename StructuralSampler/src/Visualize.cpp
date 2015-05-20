@@ -30,6 +30,7 @@ void OutputVisualization::RunTest(string outputFilename)
 	CaptureStackInput* capture = new CaptureStackInput();
 	capture->SetInternalInput(input);
 	capture->SetAlgorithm(nullOutput);
+	capture->Open();
 
 	while (!this->input->IsEnd())
 	{
@@ -54,6 +55,7 @@ void OutputVisualization::RunTest(string outputFilename)
 
 	output << "}" << endl;
 
+	capture->Close();
 	output.close();
 }
 
@@ -68,7 +70,7 @@ void VisualizeResults::RunTest(string outputFilename)
 
 	if (CallDot)
 	{
-		string dotCall = "dot -Tpng -Kneato -o" + outputFilename;
+		string dotCall = "dot -Tpng -o" + outputFilename;
 		FILE* dot = _popen(dotCall.c_str(), "wt");
 		output = ofstream(dot);
 	}
@@ -83,6 +85,7 @@ void VisualizeResults::RunTest(string outputFilename)
 	CaptureStackInput* capture = new CaptureStackInput();
 	capture->SetInternalInput(input);
 	capture->SetAlgorithm(this->algorithm);
+	capture->Open();
 
 	int updates = 0;
 
@@ -94,11 +97,16 @@ void VisualizeResults::RunTest(string outputFilename)
 
 	Graph* g = capture->GetCompleteGraph();
 
+	set<vertex> vertices;
+
 	for (Edge edge : *g)
 	{
-
 		vertex c1 = this->algorithm->FindClusterIndex(edge.v1);
 		vertex c2 = this->algorithm->FindClusterIndex(edge.v2);
+
+		vertices.insert(edge.v1);
+		vertices.insert(edge.v2);
+
 		if (c1 != c2)
 			output << edge.v1 << " -- " << edge.v2 << "[color=red];" << endl;
 		else
@@ -115,8 +123,13 @@ void VisualizeResults::RunTest(string outputFilename)
 		}
 		output << "}" << endl;
 	}
-	
 
+	for (vertex v : vertices)
+	{
+		output << v << " [label=\"\",shape=point];" << endl;
+	}
+	
+	capture->Close();
 	output << "}" << endl;
 	output.close();
 }
