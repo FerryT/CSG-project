@@ -1,4 +1,5 @@
 #include "RandomizedInput.h"
+#include <algorithm>
 #include <random>
 #include <time.h>
 

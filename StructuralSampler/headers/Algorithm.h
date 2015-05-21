@@ -10,8 +10,8 @@
 
 class Algorithm: public Output {
 	public:
-		virtual void Add(Edge e);
-		virtual void Remove(Edge e);
+		virtual void Add(Edge e) = 0;
+		virtual void Remove(Edge e) = 0;
 
 		// The query methods:
 		// Finds the cluster index
