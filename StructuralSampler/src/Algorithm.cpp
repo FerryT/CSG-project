@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 #include <algorithm>
 
 #include "metis.h"
@@ -21,13 +22,12 @@ struct Metis::Data
 	Data(int numClusters)
 		: num_nodes(0), num_edges(0), num_clusters(numClusters),
 		node_indices(NULL), edges(NULL), clustering(NULL) {}
-	Data(const Data &other) :
-		num_nodes(other.num_nodes),
-		num_edges(other.num_edges),
-		num_clusters(other.num_clusters),
-		node_indices(other.node_indices),
-		edges(other.edges),
-		clustering(other.clustering) {}
+	const Data &operator =(const Data &other)
+	{
+		if (&other != this)
+			memcpy(this, &other, sizeof (Data));
+		return *this;
+	}
 };
 
 //------------------------------------------------------------------------------
@@ -49,22 +49,44 @@ Metis::~Metis()
 
 void Metis::Add(Edge e)
 {
+	// Prepare next graph memory footprint
 	Data next = *data;
-
 	next.num_nodes = std::max((vertex) data->num_nodes, std::max(e.v1, e.v2));
 	next.num_edges = data->num_edges + 2;
-	idx_t *new_node_indices = data->node_indices;
-	idx_t *new_edges = data->edges;
-	idx_t *new_clustering = data->clustering;
 
-	new_edges = new idx_t[next.num_edges];
+	next.edges = new idx_t[next.num_edges];
 	if (!data->num_nodes || (next.num_nodes != data->num_nodes))
 	{
-		new_node_indices = new idx_t[next.num_nodes];
-		new_clustering = new idx_t[next.num_nodes];
+		next.node_indices = new idx_t[next.num_nodes];
+		next.clustering = new idx_t[next.num_nodes];
 	}
-
 	
+	// Copy graph
+	idx_t v1, v2;
+	if (e.v1 == e.v2)
+		throw "Error while adding edges using the Metis algorithm: self-loop detected (which is not supported).";
+	else if (e.v1 < e.v2)
+	{
+		v1 = e.v1;
+		v2 = e.v2;
+	}
+	else
+	{
+		v1 = e.v2;
+		v2 = e.v1;
+	}
+	
+	// Todo: node indices, edges
+	// Todo: call metis
+
+	// Clean up previous graph memory footprint
+	if (data->node_indices && (next.node_indices != data->node_indices))
+		delete[] data->node_indices;
+	if (data->clustering && (next.clustering != data->clustering))
+		delete[] data->clustering;
+	if (data->edges)
+		delete[] data->edges;
+	*data = next;
 }
 
 //------------------------------------------------------------------------------
@@ -77,18 +99,28 @@ void Metis::Remove(Edge e)
 
 int Metis::FindClusterIndex(vertex u)
 {
+	return (int) data->clustering[u];
 }
 
 //------------------------------------------------------------------------------
 
 vector<vertex> Metis::FindCluster(vertex u)
 {
+	idx_t cluster = data->clustering[u];
+	
+	vector<vertex> vs;
+	for (idx_t v = data->num_nodes - 1; v >= 0; --v)
+		if (data->clustering[v] == cluster)
+			vs.push_back(v);
+	
+	return vs;
 }
 
 //------------------------------------------------------------------------------
 
 int Metis::CountClusters()
 {
+	return data->num_clusters;
 }
 
 //==============================================================================
