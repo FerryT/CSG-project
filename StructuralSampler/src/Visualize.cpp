@@ -59,6 +59,23 @@ void OutputVisualization::RunTest(string outputFilename)
 	output.close();
 }
 
+void VisualizeResults::ParseArguments(const vector<string>& arguments)
+{
+	if (arguments.size() == 0)
+	{
+		return;
+	}
+	else if (arguments.size() == 2)
+	{
+		this->runTillUpdate = atoi(arguments[0].c_str());
+		this->CallDot = arguments[1] == "1";
+	}
+	else
+	{
+		throw "Can't parse the parameters for quality test, parameters are <updates> <0|1 for a dot call>";
+	}
+}
+
 VisualizeResults::VisualizeResults(int runTillUpdate)
 {
 	this->runTillUpdate = runTillUpdate;
@@ -89,7 +106,7 @@ void VisualizeResults::RunTest(string outputFilename)
 
 	int updates = 0;
 
-	for (int i = 0; !this->input->IsEnd() && i < this->runTillUpdate; i++)
+	for (int i = 0; !this->input->IsEnd() && (i < this->runTillUpdate || this->runTillUpdate == -1); i++)
 	{
 		capture->ExecuteNextUpdate();
 		updates++;

@@ -5,6 +5,7 @@
 #include "Graph.h"
 #include "GraphManager.h"
 #include "ReservoirManager.h"
+#include <iostream>
 
 //------------------------------------------------------------------------------
 
@@ -19,6 +20,9 @@ class Algorithm: public Output {
 		virtual int CountClusters() = 0;
 		// gets all vertices of cluster
 		virtual vector<vertex> GetCluster(int index) = 0;
+
+		//parses arguments for configuration
+		virtual void ParseArguments(const vector<string>& arguments) { std::cout << "arguments for this algorithm are not yet parsed" << std::endl; }
 };
 
 //------------------------------------------------------------------------------

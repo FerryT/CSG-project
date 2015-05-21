@@ -8,10 +8,34 @@ using namespace std;
 
 //------------------------------------------------------------------------------
 
+void QualityTest::ParseArguments(const vector<string>& arguments)
+{
+	if (arguments.size() == 0)
+	{
+		return;
+	}
+	else if (arguments.size() == 1)
+	{
+		this->SnapshotSize = atoi(arguments[0].c_str());
+	}
+	else
+	{
+		throw "Can't parse the parameters for quality test the only argument is the snapshot size";
+	}
+}
+
+QualityTest::QualityTest()
+{
+}
+
+//------------------------------------------------------------------------------
+
 QualityTest::QualityTest(int snapshotSize)
 {
 	this->SnapshotSize = snapshotSize;
 }
+
+//------------------------------------------------------------------------------
 
 void QualityTest::RunTest(string outputFilename)
 {
