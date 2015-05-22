@@ -9,6 +9,7 @@
 #include <iostream>
 #include <algorithm>
 #include <WindowManager.h>
+#include <ctime>
 
 enum Component { ComInput, ComStackInput, ComAlgorithm, ComTest, ComOutput };
 
@@ -152,8 +153,7 @@ Algorithm* CreateAlgorithm(ComponentDescription desc)
 	}
 	else if (desc.name == "StructuralSampler")
 	{
-		cout << "cluster size is set on 10" << endl;
-		result = new StructuralSampler(10);
+		result = new StructuralSampler();
 	}
 	else
 	{
@@ -225,6 +225,8 @@ string GetOutputFilename(ComponentDescription desc)
 
 int main(int argc, char *argv[])
 {
+	srand(time(NULL));
+
 	try
 	{
 		vector<ComponentDescription> arguments = GetDescriptions(argc, argv);

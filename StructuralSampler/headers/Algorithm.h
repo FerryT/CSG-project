@@ -48,7 +48,9 @@ class StructuralSampler : public Algorithm {
 		SupportReservoir supReservoir;
 		GraphManager manager;
 	public:
+		StructuralSampler();
 		StructuralSampler(int maxClusterSize);
+		
 		virtual void Add(Edge e);
 		virtual void Remove(Edge e);
 		
@@ -60,6 +62,8 @@ class StructuralSampler : public Algorithm {
 			{ return manager.CountClusters(); }
 		virtual vector<vertex> GetCluster(int index)
 		{ return manager.GetCluster(index); }
+
+		void ParseArguments(const vector<string>& arguments) override;
 };
 
 //------------------------------------------------------------------------------

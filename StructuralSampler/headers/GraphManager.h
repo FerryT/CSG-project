@@ -9,9 +9,7 @@ class GraphManager {
 		// usage: the first integer is a node identifier. unordered_map<int,int> maintains a count to all the nodes it is connected to
 		unordered_map<vertex, unordered_map<vertex,int> > graph;
 		// stores the clusters. the first item of a cluster is the representative of this cluster
-		vector< vector<vertex> > clusters;
-		// the B value mentioned in the paper
-		const int maxClusterSize;
+		vector< vector<vertex> > clusters;		
 		
 		// reconstructs theClusters such that the elements of c1 and c2 are merged at the end of the vector
 		void UnionClusters(int c1, int c2);
@@ -25,7 +23,11 @@ class GraphManager {
 		//removes vertex v from the clusters, removing the cluster if it becomes empty
 		void removeFromCluster(int v);
 	public:
+		// the B value mentioned in the paper
+		int maxClusterSize;
+
 		GraphManager(int max) : maxClusterSize(max) {}
+		GraphManager() : maxClusterSize(10) {}
 		
 		// just insert the edge into the graph
 		void Add(const Edge &e);
