@@ -42,7 +42,7 @@ void EulerNetworkInput::ExecuteNextUpdate()
 		this->CurrentGraph.push_back(e);
 		this->NotInCurrentGraph.erase(this->NotInCurrentGraph.begin()+item);
 
-		this->algorithm->Add(e);
+		this->output->Add(e);
 	}
 	else
 	{
@@ -52,7 +52,7 @@ void EulerNetworkInput::ExecuteNextUpdate()
 		this->NotInCurrentGraph.push_back(e);
 		this->CurrentGraph.erase(this->CurrentGraph.begin() + item);
 
-		this->algorithm->Remove(e);
+		this->output->Remove(e);
 	}
 
 	this->currentUpdates++;
@@ -155,7 +155,7 @@ void ScaleFreeNetworkInput::ExecuteNextUpdate()
 		Edge e = Edge(from, to);
 		this->CurrentGraph.push_back(e);
 
-		this->algorithm->Add(e);
+		this->output->Add(e);
 	}
 	else
 	{
@@ -170,7 +170,7 @@ void ScaleFreeNetworkInput::ExecuteNextUpdate()
 		this->NodeDegree[e.v2]--;
 		this->totalDegree -= 2;
 
-		this->algorithm->Remove(e);
+		this->output->Remove(e);
 	}
 
 	this->currentUpdates++;

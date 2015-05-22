@@ -29,7 +29,7 @@ void OutputVisualization::RunTest(string outputFilename)
 	NullOutput* nullOutput = new NullOutput();
 	CaptureStackInput* capture = new CaptureStackInput();
 	capture->SetInternalInput(input);
-	capture->SetAlgorithm(nullOutput);
+	capture->SetOutput(nullOutput);
 	capture->Open();
 
 	while (!this->input->IsEnd())
@@ -101,7 +101,7 @@ void VisualizeResults::RunTest(string outputFilename)
 
 	CaptureStackInput* capture = new CaptureStackInput();
 	capture->SetInternalInput(input);
-	capture->SetAlgorithm(this->algorithm);
+	capture->SetOutput(this->algorithm);
 	capture->Open();
 
 	int updates = 0;

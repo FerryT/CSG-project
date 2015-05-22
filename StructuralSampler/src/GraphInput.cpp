@@ -134,8 +134,8 @@ void MGraphFileInput::ExecuteNextUpdate()
 	size_t dest = strtoul(file->ptr, &file->ptr, 10);
 	if (dest)
 	{
-		if (algorithm)
-			algorithm->Add(Edge(file->index, dest));
+		if (output)
+			output->Add(Edge(file->index, dest));
 		printf("%d %d\n", file->index, dest); // debug
 	}
 	else // Probably hit end of line, try again
@@ -218,8 +218,8 @@ void EdgeFileInput::ExecuteNextUpdate()
 		throw "Invalid input detected whilst reading graph file.";
 	}
 	
-	if (algorithm)
-		algorithm->Add(Edge(src, dst));
+	if (output)
+		output->Add(Edge(src, dst));
 	printf("%lu %lu\n", src, dst); // debug
 }
 
@@ -234,7 +234,7 @@ bool EdgeFileInput::IsEnd()
 
 void StackInput::Add(Edge e)
 {
-	this->algorithm->Add(e);
+	this->output->Add(e);
 }
 
 //------------------------------------------------------------------------------
@@ -242,7 +242,7 @@ void StackInput::Add(Edge e)
 
 void StackInput::Remove(Edge e)
 {
-	this->algorithm->Remove(e);
+	this->output->Remove(e);
 }
 
 //------------------------------------------------------------------------------
@@ -278,5 +278,5 @@ bool StackInput::IsEnd()
 void StackInput::SetInternalInput(Input* input)
 {
 	this->input = input;
-	input->SetAlgorithm(this);
+	input->SetOutput(this);
 }

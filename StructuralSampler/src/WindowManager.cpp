@@ -6,7 +6,7 @@ void SlideWindow::Add(Edge e)
 	timed_edge.e = e;
 	timed_edge.time = this->timesteps;
 	this->window.push(timed_edge);
-	this->algorithm->Add(e);
+	this->output->Add(e);
 }
 
 void SlideWindow::Remove(Edge e)
@@ -17,7 +17,7 @@ void SlideWindow::ExecuteNextUpdate()
 {
 	if (!this->window.empty() && this->timesteps - this->window.front().time > this->windowSize)
 	{
-		this->algorithm->Remove(this->window.front().e);
+		this->output->Remove(this->window.front().e);
 		this->window.pop();
 	}
 	else
@@ -47,7 +47,7 @@ void TumblingWindow::ExecuteNextUpdate()
 
 	if (removal == true)
 	{
-		this->algorithm->Remove(window.back());
+		this->output->Remove(window.back());
 		window.pop_back();
 	}
 	else

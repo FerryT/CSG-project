@@ -47,7 +47,7 @@ void QualityTest::RunTest(string outputFilename)
 
 	CaptureStackInput* capture = new CaptureStackInput();
 	capture->SetInternalInput(input);
-	capture->SetAlgorithm(this->algorithm);
+	capture->SetOutput(this->algorithm);
 	capture->Open();
 
 	int updates = 0;
@@ -102,7 +102,7 @@ CaptureStackInput::~CaptureStackInput()
 
 void CaptureStackInput::Add(Edge e)
 {
-	this->algorithm->Add(e);
+	this->output->Add(e);
 	this->_currentGraph->push_back(e);
 }
 
@@ -117,7 +117,7 @@ Graph* CaptureStackInput::GetCompleteGraph()
 
 void CaptureStackInput::Remove(Edge e)
 {
-	this->algorithm->Remove(e);
+	this->output->Remove(e);
 	Graph::iterator it = find(this->_currentGraph->begin(), this->_currentGraph->end(), e);
 	this->_currentGraph->erase(it);
 }

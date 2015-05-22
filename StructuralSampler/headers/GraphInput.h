@@ -21,10 +21,10 @@ class Output
 //An input 
 class Input {
 	protected:
-		Output* algorithm;
+		Output* output;
 
 	public:
-		Input() : algorithm(0) {}
+		Input() : output(0) {}
 		//Opens the input
 		virtual void Open() = 0;
 		//Closes the input
@@ -34,7 +34,7 @@ class Input {
 		//check if it is at the end of it's input
 		virtual bool IsEnd() = 0;
 		//sets the algorithm
-		void SetAlgorithm(Output* alg) { algorithm = alg; }
+		void SetOutput(Output* output) { this->output = output; }
 
 		//parses arguments for configuration
 		virtual void ParseArguments(const vector<string>& arguments) { std::cout << "arguments for this input/stackinput are not yet parsed" << std::endl; }
