@@ -7,24 +7,29 @@
 #include "Visualize.h"
 #include "Tests.h"
 
+#ifdef _MSC_VER
+#	define popen _popen
+#	define pclose _pclose
+#endif
+
 void OutputVisualization::RunTest(string outputFilename)
 {
-	ofstream output;
+	FILE *output;
 
 	if (CallDot)
 	{
 		string dotCall = "dot -Tpng -Kneato -o" + outputFilename;
-		FILE* dot = _popen(dotCall.c_str(), "wt");
-		output = ofstream(dot);
+		output = popen(dotCall.c_str(), "wt");
 	}
 	else
 	{
-		output.open(outputFilename, ios::out);
+		output = fopen(outputFilename.c_str(), "wt");
 	}
+	
+	if (!output)
+		throw "Unable to open stream while visualizing.";
 
-	output << "graph G {" << endl;
-
-	output << "splines = false;" << endl;
+	fputs("graph G {\n\tsplines = false;\n", output);
 
 	NullOutput* nullOutput = new NullOutput();
 	CaptureStackInput* capture = new CaptureStackInput();
@@ -43,20 +48,23 @@ void OutputVisualization::RunTest(string outputFilename)
 
 	for (Edge edge : *g)
 	{
-		output << edge.v1 << " -- " << edge.v2 << ";" << endl;
+		fprintf(output, "\t%ul -- %ul;\n", edge.v1, edge.v2);
 		vertices.insert(edge.v1);
 		vertices.insert(edge.v2);
 	}
 
 	for (vertex v : vertices)
 	{
-		output << v << " [label=\"\",shape=point];" << endl;
+		fprintf(output, "\t%ul [label=\"\",shape=point];\n", v);
 	}
 
-	output << "}" << endl;
+	fputs("}\n", output);
 
 	capture->Close();
-	output.close();
+	if (CallDot)
+		pclose(output);
+	else
+		fclose(output);
 }
 
 void VisualizeResults::ParseArguments(const vector<string>& arguments)
@@ -83,21 +91,22 @@ VisualizeResults::VisualizeResults(int runTillUpdate)
 
 void VisualizeResults::RunTest(string outputFilename)
 {
-	ofstream output;
+	FILE *output;
 
 	if (CallDot)
 	{
 		string dotCall = "dot -Tpng -o" + outputFilename;
-		FILE* dot = _popen(dotCall.c_str(), "wt");
-		output = ofstream(dot);
+		output = popen(dotCall.c_str(), "wt");
 	}
 	else
 	{
-		output.open(outputFilename, ios::out);
+		output = fopen(outputFilename.c_str(), "wt");
 	}
+	
+	if (!output)
+		throw "Unable to open stream while visualizing.";
 
-	output << "graph G {" << endl;
-	output << "splines = false;" << endl;
+	fputs("graph G {\n\tsplines = false;\n", output);
 
 	CaptureStackInput* capture = new CaptureStackInput();
 	capture->SetInternalInput(input);
@@ -124,29 +133,30 @@ void VisualizeResults::RunTest(string outputFilename)
 		vertices.insert(edge.v1);
 		vertices.insert(edge.v2);
 
-		if (c1 != c2)
-			output << edge.v1 << " -- " << edge.v2 << "[color=red];" << endl;
-		else
-			output << edge.v1 << " -- " << edge.v2 << ";" << endl;
+		fprintf(output, "\t%ul -- %ul %s;\n",
+			edge.v1, edge.v2, c1 != c2 ? "[color=red]" : "");
 	}
 
 	for (int i = 0; i < this->algorithm->CountClusters(); i++)
 	{
-		output << "subgraph cluster" << i << " {" << endl;
+		fprintf(output, "\tsubgraph cluster %d {\n", i);
 		vector<vertex> c = this->algorithm->GetCluster(i);
 		for (vertex v : c)
 		{
-			output << v << ";" << endl;
+			fprintf(output, "\t\t%ul;\n", v);
 		}
-		output << "}" << endl;
+		fputs("\t}\n", output);
 	}
 
 	for (vertex v : vertices)
 	{
-		output << v << " [label=\"\",shape=point];" << endl;
+		fprintf(output, "\t%ul [label=\"\",shape=point];\n", v);
 	}
 	
 	capture->Close();
-	output << "}" << endl;
-	output.close();
+	fputs("}\n", output);
+	if (CallDot)
+		pclose(output);
+	else
+		fclose(output);
 }

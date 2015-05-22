@@ -1,15 +1,16 @@
 
 #include <cstdlib>
+#include <iostream>
+#include <algorithm>
+#include <ctime>
+#include <cstring>
 
-#include "GraphInput.h" // debug
+#include "GraphInput.h"
 #include "Algorithm.h"
 #include "RandomizedInput.h"
 #include "Tests.h"
 #include "Visualize.h"
-#include <iostream>
-#include <algorithm>
-#include <WindowManager.h>
-#include <ctime>
+#include "WindowManager.h"
 
 enum Component { ComInput, ComStackInput, ComAlgorithm, ComTest, ComOutput };
 

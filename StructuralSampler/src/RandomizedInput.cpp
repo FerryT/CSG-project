@@ -1,6 +1,8 @@
-#include "RandomizedInput.h"
 #include <random>
+#include <algorithm>
 #include <time.h>
+
+#include "RandomizedInput.h"
 
 EulerNetworkInput::EulerNetworkInput(int nodes, float insertDeleteRatio, int maxUpdates)
 {
