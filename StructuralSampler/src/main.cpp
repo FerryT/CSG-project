@@ -123,13 +123,11 @@ Input* CreateInput(ComponentDescription desc)
 	}
 	else if (desc.name == "mgraph")
 	{
-		throw "Input does not work yet from command line";
-		result = new MGraphFileInput("");
+		result = new MGraphFileInput();
 	}
 	else if (desc.name == "graph")
 	{
-		throw "Input does not work yet from command line";
-		result = new EdgeFileInput("");
+		result = new EdgeFileInput();
 	}
 	else
 	{

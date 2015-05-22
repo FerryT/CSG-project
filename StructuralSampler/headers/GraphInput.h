@@ -62,9 +62,13 @@ public:
 
 class FileInput: public Input {
 	public:
-		const std::string filename;
+		std::string filename;
 	
 		FileInput(const char *fn) : Input(), filename(fn) {}
+		FileInput() : Input() {}
+
+		void ParseArguments(const vector<string>& arguments) override;
+
 };
 
 //------------------------------------------------------------------------------
@@ -73,6 +77,7 @@ class FileInput: public Input {
 class MGraphFileInput: public FileInput {
 	public:
 		MGraphFileInput(const char *fn) : FileInput(fn), file(0) {}
+		MGraphFileInput() : FileInput(), file(0) {}
 	
 		virtual void Open();
 		virtual void Close();
@@ -90,7 +95,8 @@ class MGraphFileInput: public FileInput {
 class EdgeFileInput: public FileInput {
 	public:
 		EdgeFileInput(const char *fn) : FileInput(fn), file(0) {}
-	
+		EdgeFileInput() : FileInput(), file(0) {}
+
 		virtual void Open();
 		virtual void Close();
 		virtual void ExecuteNextUpdate();

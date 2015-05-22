@@ -280,3 +280,17 @@ void StackInput::SetInternalInput(Input* input)
 	this->input = input;
 	input->SetOutput(this);
 }
+
+//------------------------------------------------------------------------------
+
+void FileInput::ParseArguments(const vector<string>& arguments)
+{
+	if (arguments.size() == 1)
+	{
+		this->filename = arguments[0];
+	}
+	else
+	{
+		throw "Can't parse the parameters for file input the only argument is the filename";
+	}
+}
