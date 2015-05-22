@@ -4,8 +4,6 @@
 
 EulerNetworkInput::EulerNetworkInput(int nodes, float insertDeleteRatio, int maxUpdates)
 {
-	srand(time(NULL));
-
 	this->maxUpdates = maxUpdates;
 	this->currentUpdates = 0;
 
@@ -83,8 +81,6 @@ void EulerNetworkInput::ParseArguments(const vector<string>& arguments)
 
 ScaleFreeNetworkInput::ScaleFreeNetworkInput(int nodes, float insertDeleteRatio, int maxUpdates)
 {
-	srand(time(NULL));
-
 	this->maxUpdates = maxUpdates;
 	this->currentUpdates = 0;
 
