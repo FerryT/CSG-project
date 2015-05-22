@@ -338,20 +338,3 @@ vector<vertex> GraphManager::GetCluster(int index)
 {
 	return clusters[index];
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
