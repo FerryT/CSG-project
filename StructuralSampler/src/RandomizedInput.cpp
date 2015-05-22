@@ -63,6 +63,24 @@ bool EulerNetworkInput::IsEnd()
 	return this->currentUpdates >= this->maxUpdates;
 }
 
+void EulerNetworkInput::ParseArguments(const vector<string>& arguments)
+{
+	if (arguments.size() == 0)
+	{
+		return;
+	}
+	else if (arguments.size() == 3)
+	{
+		this->nodes = atoi(arguments[0].c_str());
+		this->insertDeleteRatio = atof(arguments[1].c_str());
+		this->maxUpdates = atoi(arguments[2].c_str());
+	}
+	else
+	{
+		throw "Can't parse the parameters for EulerNetworkInput, parameters are <nodes> <insert delete ratio> <updates>";
+	}
+}
+
 ScaleFreeNetworkInput::ScaleFreeNetworkInput(int nodes, float insertDeleteRatio, int maxUpdates)
 {
 	srand(time(NULL));
@@ -161,4 +179,22 @@ void ScaleFreeNetworkInput::ExecuteNextUpdate()
 bool ScaleFreeNetworkInput::IsEnd()
 {
 	return this->currentUpdates >= this->maxUpdates;
+}
+
+void ScaleFreeNetworkInput::ParseArguments(const vector<string>& arguments)
+{
+	if (arguments.size() == 0)
+	{
+		return;
+	}
+	else if (arguments.size() == 3)
+	{
+		this->nodes = atoi(arguments[0].c_str());
+		this->insertDeleteRatio = atof(arguments[1].c_str());
+		this->maxUpdates = atoi(arguments[2].c_str());
+	}
+	else
+	{
+		throw "Can't parse the parameters for ScaleFreeNetworkInput, parameters are <nodes> <insert delete ratio> <updates>";
+	}
 }

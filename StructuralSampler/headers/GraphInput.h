@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Graph.h"
+#include <iostream>
 
 //------------------------------------------------------------------------------
 
@@ -34,6 +35,9 @@ class Input {
 		virtual bool IsEnd() = 0;
 		//sets the algorithm
 		void SetAlgorithm(Output* alg) { algorithm = alg; }
+
+		//parses arguments for configuration
+		virtual void ParseArguments(const vector<string>& arguments) { std::cout << "arguments for this input/stackinput are not yet parsed" << std::endl; }
 };
 
 class StackInput: public Input, public Output
