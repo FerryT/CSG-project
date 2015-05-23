@@ -237,6 +237,19 @@ int main(int argc, char *argv[])
 		Algorithm* alg = CreateAlgorithm(*find_if(arguments.begin(), arguments.end(), IsType<ComAlgorithm>));
 		Test* test = CreateTest(*find_if(arguments.begin(), arguments.end(), IsType<ComTest>));
 		string outputfilename = GetOutputFilename(*find_if(arguments.begin(), arguments.end(), IsType<ComOutput>));
+		auto item = arguments.begin();
+
+		item = find_if(item, arguments.end(), IsType<ComStackInput>);
+		while (item != arguments.end())
+		{
+			StackInput* stackInput = CreateStackInput(*item);
+			stackInput->SetInternalInput(input);
+			input = stackInput;
+
+			item = find_if(item, arguments.end(), IsType<ComStackInput>);
+		}
+
+		
 		test->algorithm = alg;
 		test->input = input;
 		test->RunTest(outputfilename);

@@ -20,12 +20,11 @@ StructuralSampler::StructuralSampler() : manager(10)
 void StructuralSampler::Add(Edge newEdge)
 {
 	//TODO: sampling method, mentioned under C. 3)
-	double pos = (double) rand() / (double) RAND_MAX;
-	newEdge.p = pos;
 	strReservoir.Add(newEdge);
 	manager.Add(newEdge);
 	if (!manager.ConstraintSatisfied())
 	{
+		double pos;
 		Edge currEdge;
 		while (!manager.ConstraintSatisfied())
 		{
