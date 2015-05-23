@@ -11,6 +11,7 @@
 #include "Tests.h"
 #include "Visualize.h"
 #include "WindowManager.h"
+#include "StackInputs.h"
 
 enum Component { ComInput, ComStackInput, ComAlgorithm, ComTest, ComOutput };
 
@@ -206,6 +207,10 @@ StackInput* CreateStackInput(ComponentDescription desc)
 	{
 		result = new TumblingWindow();
 	}
+	else if (desc.name == "FilterEdges")
+	{
+		result = new FilterEdges();
+	}
 	else
 	{
 		throw "StackInput does not exist";
@@ -246,7 +251,7 @@ int main(int argc, char *argv[])
 			stackInput->SetInternalInput(input);
 			input = stackInput;
 
-			item = find_if(item, arguments.end(), IsType<ComStackInput>);
+			item = find_if(item+1, arguments.end(), IsType<ComStackInput>);
 		}
 
 		
