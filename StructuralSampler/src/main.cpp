@@ -242,14 +242,14 @@ int main(int argc, char *argv[])
 		Algorithm* alg = CreateAlgorithm(*find_if(arguments.begin(), arguments.end(), IsType<ComAlgorithm>));
 		Test* test = CreateTest(*find_if(arguments.begin(), arguments.end(), IsType<ComTest>));
 		string outputfilename = GetOutputFilename(*find_if(arguments.begin(), arguments.end(), IsType<ComOutput>));
+		
+		vector<StackInput*> stackInputs;
 		auto item = arguments.begin();
-
 		item = find_if(item, arguments.end(), IsType<ComStackInput>);
 		while (item != arguments.end())
 		{
 			StackInput* stackInput = CreateStackInput(*item);
-			stackInput->SetInternalInput(input);
-			input = stackInput;
+			stackInputs.push_back(stackInput);
 
 			item = find_if(item+1, arguments.end(), IsType<ComStackInput>);
 		}
@@ -257,6 +257,7 @@ int main(int argc, char *argv[])
 		
 		test->algorithm = alg;
 		test->input = input;
+		test->stackinputs = stackInputs;
 		test->RunTest(outputfilename);
 	}
 	catch (const char *msg) 

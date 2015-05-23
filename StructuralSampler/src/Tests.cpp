@@ -46,9 +46,15 @@ void QualityTest::RunTest(string outputFilename)
 	output << "updates,cutsize" << endl;
 
 	CaptureStackInput* capture = new CaptureStackInput();
-	capture->SetInternalInput(input);
-	capture->SetOutput(this->algorithm);
-	capture->Open();
+	capture->SetInternalInput(this->input);
+	Input* input = capture;
+	for (StackInput* stackinput: this->stackinputs)
+	{
+		stackinput->SetInternalInput(input);
+		input = stackinput;
+	}
+	input->SetOutput(this->algorithm);
+	input->Open();
 
 	int updates = 0;
 
@@ -56,9 +62,9 @@ void QualityTest::RunTest(string outputFilename)
 
 	while (!this->input->IsEnd())
 	{
-		for (int i = 0; !this->input->IsEnd() && i < this->SnapshotSize; i++)
+		for (int i = 0; !input->IsEnd() && i < this->SnapshotSize; i++)
 		{
-			capture->ExecuteNextUpdate();
+			input->ExecuteNextUpdate();
 			updates++;
 		}
 
