@@ -48,14 +48,14 @@ void OutputVisualization::RunTest(string outputFilename)
 
 	for (Edge edge : *g)
 	{
-		fprintf(output, "\t%ul -- %ul;\n", edge.v1, edge.v2);
+		fprintf(output, "\t%lu -- %lu;\n", edge.v1, edge.v2);
 		vertices.insert(edge.v1);
 		vertices.insert(edge.v2);
 	}
 
 	for (vertex v : vertices)
 	{
-		fprintf(output, "\t%ul [label=\"\",shape=point];\n", v);
+		fprintf(output, "\t%lu [label=\"\",shape=point];\n", v);
 	}
 
 	fputs("}\n", output);
@@ -120,7 +120,7 @@ void VisualizeResults::RunTest(string outputFilename)
 		capture->ExecuteNextUpdate();
 		updates++;
 	}
-
+	
 	Graph* g = capture->GetCompleteGraph();
 
 	set<vertex> vertices;
@@ -133,28 +133,29 @@ void VisualizeResults::RunTest(string outputFilename)
 		vertices.insert(edge.v1);
 		vertices.insert(edge.v2);
 
-		fprintf(output, "\t%ul -- %ul %s;\n",
+		fprintf(output, "\t%lu -- %lu %s;\n",
 			edge.v1, edge.v2, c1 != c2 ? "[color=red]" : "");
 	}
-
+	
 	for (int i = 0; i < this->algorithm->CountClusters(); i++)
 	{
-		fprintf(output, "\tsubgraph cluster %d {\n", i);
+		fprintf(output, "\tsubgraph cluster%d {\n", i);
 		vector<vertex> c = this->algorithm->GetCluster(i);
 		for (vertex v : c)
 		{
-			fprintf(output, "\t\t%ul;\n", v);
+			fprintf(output, "\t\t%lu;\n", v);
 		}
 		fputs("\t}\n", output);
 	}
-
+	
 	for (vertex v : vertices)
 	{
-		fprintf(output, "\t%ul [label=\"\",shape=point];\n", v);
+		fprintf(output, "\t%lu [label=\"\",shape=point];\n", v);
 	}
 	
 	capture->Close();
 	fputs("}\n", output);
+
 	if (CallDot)
 		pclose(output);
 	else
