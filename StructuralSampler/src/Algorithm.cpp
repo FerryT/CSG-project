@@ -65,7 +65,7 @@ void Metis::Data::UpdateClusters()
 	if (cached)
 		return;
 	
-	Debug();
+	/** /Debug();//*/
 	
 	idx_t ncon = 1;
 	idx_t nparts = num_clusters;
@@ -134,8 +134,8 @@ void Metis::Add(Edge e)
 {
 	idx_t v1, v2;
 	if (e.v1 == e.v2)
-		throw "Error while adding edges using the Metis algorithm:"
-			"self-loop detected (which is not supported).";
+		throw "Metis error: self-loop detected while adding edges"
+			"(which is not supported).";
 	else if (e.v1 < e.v2)
 	{
 		v1 = e.v1;
@@ -191,11 +191,11 @@ void Metis::Add(Edge e)
 		}
 		{
 			// Update edges
-			data->num_edges += 2;
 			idx_t i = data->node_indices[v1 + 1];
 			idx_t j = data->node_indices[v2 + 1];
 			idx_t k = data->num_edges;
 			
+			data->num_edges += 2;
 			idx_t *old_edges = data->edges;
 			data->edges = new idx_t[data->num_edges];
 			
@@ -221,10 +221,76 @@ void Metis::Add(Edge e)
 }
 
 //------------------------------------------------------------------------------
-
+// Note: untested
 void Metis::Remove(Edge e)
 {
-	throw "[Metis::Remove] unimplemented!";
+	idx_t v1, v2;
+	if (e.v1 == e.v2)
+		throw "Metis error: self-loop detected while removing edges"
+			"(which is not supported).";
+	else if (e.v1 < e.v2)
+	{
+		v1 = e.v1;
+		v2 = e.v2;
+	}
+	else
+	{
+		v1 = e.v2;
+		v2 = e.v1;
+	}
+	
+	if (v1 >= data->num_nodes || v2 >= data->num_nodes)
+		throw "Metis error: tried to remove an unexisting edge.";
+	
+	idx_t i = data->node_indices[v1];
+	while (data->edges[i] != v2)
+		if (i >= data->node_indices[v1 + 1])
+			throw "Metis error: tried to remove an unexisting edge.";
+	
+	idx_t j = data->node_indices[v2];
+	while (data->edges[j] != v1)
+		if (j >= data->node_indices[v2 + 1])
+			throw "Metis error: tried to remove an unexisting edge.";
+	
+	if (data->num_nodes == 1)
+	{
+		// First edge added
+		data->num_nodes = 0;
+		data->num_edges = 0;
+		delete[] data->node_indices;
+		delete[] data->edges;
+		delete[] data->clustering;
+		data->node_indices = NULL;
+		data->edges = NULL;
+		data->clustering = NULL;
+	}
+	else
+	{
+		{
+			// Update edges
+			idx_t k = data->num_edges;
+			
+			data->num_edges -= 2;
+			idx_t *old_edges = data->edges;
+			data->edges = new idx_t[data->num_edges];
+			
+			memcpy(data->edges, old_edges, i * sizeof (idx_t));
+			memcpy(data->edges + i, old_edges + i + 1, (j - i - 1) * sizeof (idx_t));
+			memcpy(data->edges + j, old_edges + j - 1, (k - j - 1) * sizeof (idx_t));
+			
+			delete[] old_edges;
+		}
+		{
+			// Update node indices
+			idx_t i = v1 + 1;
+			while (i <= v2)
+				data->node_indices[i++] -= 1;
+			while (i <= data->num_nodes)
+				data->node_indices[i++] -= 2;
+		}
+	}
+	
+	data->cached = false;
 }
 
 //------------------------------------------------------------------------------
