@@ -37,6 +37,7 @@ class Metis : public Algorithm {
 		virtual int FindClusterIndex(vertex u);
 		virtual vector<vertex> FindCluster(vertex u);
 		virtual int CountClusters();
+		virtual vector<vertex> GetCluster(int index);
 	private:
 		struct Data;
 		Data *data;
