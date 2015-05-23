@@ -134,8 +134,8 @@ void MGraphFileInput::ExecuteNextUpdate()
 	size_t dest = strtoul(file->ptr, &file->ptr, 10);
 	if (dest)
 	{
-		if (algorithm && (file->index < dest))
-			algorithm->Add(Edge(file->index - 1, dest - 1));
+		if (output && (file->index < dest))
+			output->Add(Edge(file->index - 1, dest - 1));
 	}
 	else // Probably hit end of line, try again
 		ExecuteNextUpdate();
@@ -217,8 +217,8 @@ void EdgeFileInput::ExecuteNextUpdate()
 		throw "Invalid input detected whilst reading graph file.";
 	}
 	
-	if (algorithm)
-		algorithm->Add(Edge(src, dst));
+	if (output)
+		output->Add(Edge(src, dst));
 }
 
 //------------------------------------------------------------------------------
@@ -232,7 +232,7 @@ bool EdgeFileInput::IsEnd()
 
 void StackInput::Add(Edge e)
 {
-	this->algorithm->Add(e);
+	this->output->Add(e);
 }
 
 //------------------------------------------------------------------------------
@@ -240,7 +240,7 @@ void StackInput::Add(Edge e)
 
 void StackInput::Remove(Edge e)
 {
-	this->algorithm->Remove(e);
+	this->output->Remove(e);
 }
 
 //------------------------------------------------------------------------------
@@ -276,5 +276,21 @@ bool StackInput::IsEnd()
 void StackInput::SetInternalInput(Input* input)
 {
 	this->input = input;
-	input->SetAlgorithm(this);
+	input->SetOutput(this);
 }
+
+//------------------------------------------------------------------------------
+
+void FileInput::ParseArguments(const vector<string>& arguments)
+{
+	if (arguments.size() == 1)
+	{
+		this->filename = arguments[0];
+	}
+	else
+	{
+		throw "Can't parse the parameters for file input the only argument is the filename";
+	}
+}
+
+//------------------------------------------------------------------------------

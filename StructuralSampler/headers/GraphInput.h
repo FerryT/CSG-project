@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Graph.h"
+#include <iostream>
 
 //------------------------------------------------------------------------------
 
@@ -20,10 +21,10 @@ class Output
 //An input 
 class Input {
 	protected:
-		Output* algorithm;
+		Output* output;
 
 	public:
-		Input() : algorithm(0) {}
+		Input() : output(0) {}
 		//Opens the input
 		virtual void Open() = 0;
 		//Closes the input
@@ -33,7 +34,10 @@ class Input {
 		//check if it is at the end of it's input
 		virtual bool IsEnd() = 0;
 		//sets the algorithm
-		void SetAlgorithm(Output* alg) { algorithm = alg; }
+		void SetOutput(Output* output) { this->output = output; }
+
+		//parses arguments for configuration
+		virtual void ParseArguments(const vector<string>& arguments) { std::cout << "arguments for this input/stackinput are not yet parsed" << std::endl; }
 };
 
 class StackInput: public Input, public Output
@@ -45,7 +49,7 @@ public:
 	virtual void Remove(Edge e) override;
 	virtual void Open() override;
 	virtual void Close() override;
-	virtual void ExecuteNextUpdate();
+	virtual void ExecuteNextUpdate() override;
 	virtual bool IsEnd() override;
 
 	virtual void SetInternalInput(Input* input);
@@ -58,9 +62,13 @@ public:
 
 class FileInput: public Input {
 	public:
-		const std::string filename;
+		std::string filename;
 	
 		FileInput(const char *fn) : Input(), filename(fn) {}
+		FileInput() : Input() {}
+
+		void ParseArguments(const vector<string>& arguments) override;
+
 };
 
 //------------------------------------------------------------------------------
@@ -69,6 +77,7 @@ class FileInput: public Input {
 class MGraphFileInput: public FileInput {
 	public:
 		MGraphFileInput(const char *fn) : FileInput(fn), file(0) {}
+		MGraphFileInput() : FileInput(), file(0) {}
 	
 		virtual void Open();
 		virtual void Close();
@@ -86,7 +95,8 @@ class MGraphFileInput: public FileInput {
 class EdgeFileInput: public FileInput {
 	public:
 		EdgeFileInput(const char *fn) : FileInput(fn), file(0) {}
-	
+		EdgeFileInput() : FileInput(), file(0) {}
+
 		virtual void Open();
 		virtual void Close();
 		virtual void ExecuteNextUpdate();

@@ -4,6 +4,7 @@
 #include "Graph.h"
 #include "Algorithm.h"
 #include "GraphInput.h"
+#include <iostream>
 
 //------------------------------------------------------------------------------
 
@@ -11,14 +12,19 @@ class Test {
 	public:
 		Algorithm* algorithm;
 		Input* input;
+		vector<StackInput*> stackinputs;
 		// Runs the tests and writes the results to an output file in CSV
 		virtual void RunTest(string outputFile) = 0;
+		//parses arguments for configuration
+		virtual void ParseArguments(const vector<string>& arguments) { std::cout << "arguments for this test are not yet parsed" << std::endl; }
 };
 
 //------------------------------------------------------------------------------
 
 class QualityTest: public Test {
 	public:
+		void ParseArguments(const vector<string>& arguments) override;
+		QualityTest();
 		QualityTest(int snapshotSize);
 		int SnapshotSize = 10000;
 		virtual void RunTest(string outputFile) override;

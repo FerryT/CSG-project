@@ -5,6 +5,7 @@
 #include "Graph.h"
 #include "GraphManager.h"
 #include "ReservoirManager.h"
+#include <iostream>
 
 //------------------------------------------------------------------------------
 
@@ -22,6 +23,9 @@ class Algorithm: public Output {
 		virtual int CountClusters() = 0;
 		// gets all vertices of cluster
 		virtual vector<vertex> GetCluster(int index) = 0;
+
+		//parses arguments for configuration
+		virtual void ParseArguments(const vector<string>& arguments) { std::cout << "arguments for this algorithm are not yet parsed" << std::endl; }
 };
 
 //------------------------------------------------------------------------------
@@ -51,7 +55,9 @@ class StructuralSampler : public Algorithm {
 		SupportReservoir supReservoir;
 		GraphManager manager;
 	public:
+		StructuralSampler();
 		StructuralSampler(int maxClusterSize);
+		
 		virtual void Add(Edge e);
 		virtual void Remove(Edge e);
 		
@@ -63,6 +69,8 @@ class StructuralSampler : public Algorithm {
 			{ return manager.CountClusters(); }
 		virtual vector<vertex> GetCluster(int index)
 		{ return manager.GetCluster(index); }
+
+		void ParseArguments(const vector<string>& arguments) override;
 };
 
 //------------------------------------------------------------------------------

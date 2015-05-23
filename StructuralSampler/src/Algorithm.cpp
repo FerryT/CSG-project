@@ -346,7 +346,12 @@ vector<vertex> Metis::GetCluster(int index)
 
 StructuralSampler::StructuralSampler(int maxClusterSize) : manager(maxClusterSize)
 {
-	srand(time(NULL));
+}
+
+//------------------------------------------------------------------------------
+
+StructuralSampler::StructuralSampler() : manager(10)
+{
 }
 
 //------------------------------------------------------------------------------
@@ -354,12 +359,11 @@ StructuralSampler::StructuralSampler(int maxClusterSize) : manager(maxClusterSiz
 void StructuralSampler::Add(Edge newEdge)
 {
 	//TODO: sampling method, mentioned under C. 3)
-	double pos = (double) rand() / (double) RAND_MAX;
-	newEdge.p = pos;
 	strReservoir.Add(newEdge);
 	manager.Add(newEdge);
 	if (!manager.ConstraintSatisfied())
 	{
+		double pos;
 		Edge currEdge;
 		while (!manager.ConstraintSatisfied())
 		{
@@ -411,6 +415,22 @@ void StructuralSampler::Remove(Edge theEdge)
 				strReservoir.Add(currEdge);
 			}
 		}
+	}
+}
+
+void StructuralSampler::ParseArguments(const vector<string>& arguments)
+{
+	if (arguments.size() == 0)
+	{
+		return;
+	}
+	else if (arguments.size() == 1)
+	{
+		this->manager.maxClusterSize = atoi(arguments[0].c_str());
+	}
+	else
+	{
+		throw "Can't parse the parameters for quality test the only argument is the snapshot size";
 	}
 }
 
