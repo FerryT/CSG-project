@@ -1,6 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 
+#include <cstdlib>
 #include <vector>
 
 using namespace std;
