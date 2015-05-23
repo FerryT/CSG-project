@@ -196,3 +196,4 @@ void ScaleFreeNetworkInput::ParseArguments(const vector<string>& arguments)
 		throw "Can't parse the parameters for ScaleFreeNetworkInput, parameters are <nodes> <insert delete ratio> <updates>";
 	}
 }
+
