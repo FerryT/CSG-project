@@ -160,20 +160,26 @@ Here, we list the dates and deadlines we set out for ourselves, to ensure succes
 \hline
 \end{tabular}
 
-\subsection{Progress 13-05}
+\subsection{Progress until 13-05}
 Currently, we have e-mailed the author and have been able to obtain three of the four datasets used in the paper. The fourth dataset is from an IBM process, and we do not believe it to be possible to gain access to this dataset. 
 
 Furthermore, we have received a negative response from the author, and thus we will need to create our own implementation of the presented algorithm. However, we have been able to find an implementation of the METIS algorithm, and will use this implementation as a bench mark, and not write our own. 
 
 Started on the implementation of the algorithm and the context of the algorithms.
 
-\subsection{Progress 25-05}
-At this point in time, we have finished writing the implementation of the structural sampler architecture. Our implementation reports the cutsize of the clusters at certain intervals, which is the measure of quality used for the clusters in the paper. However, the code runs quite slowly, so we still wish to optimize the code somewhat via profiling.
-
-Furthermore, we have started integrating the code of METIS with our project. We expect this to be finished on the 25th, up to a few remaining bugs.
-
 \subsection{Tools} 
 We have decided to use git as a code repository for the project, and we will write our code in C++. The development environment we will use is Visual Studio. For writing documents and such we will use \LaTeX. We might use additional benchmarking tools. Any additional datasets we will we need, we believe to be able to find on the internet. 
+
+\pagebreak
+\section{Progress update 25-05}
+At this point in time, we have finished writing the implementation of the structural sampler architecture. Our implementation reports the cutsize of the clusters at certain intervals, which is the measure of quality used for the clusters in the paper. However, the code runs quite slowly, so we still wish to optimize the code somewhat via profiling. 
+
+We have also made the program report the clusters in a GraphViz compatible notation. Some of the datasets we used are small enough that we can view the clusters created by the program using these GraphViz visualizations. Furthermore, we are working on a command line interface to automate testing, which is progressing nicely.
+
+Also, we have started integrating the code of METIS with our project. This seems to be working, but we need to test the implementation a little bit more.
+
+\subsection{Future}
+We are progressing nicely along the lines of our original planning. It seems that we may have sufficient time left to also implement performance reporting, which would allow us to perform expansion 3-b-iii. Furthermore, we are working on testing a few extra datasets (4-i), as well as measuring the quality on additional p-values (4-ii).
 
 \begin{thebibliography}{99}
 \bibitem{paper} A. Eldawy, R. Khandekar and K. Wu, ``Clustering Streaming Graphs'', in \textit{32nd IEEE International Conference on Distributed Computing Systems}, 2012.
