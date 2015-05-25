@@ -134,9 +134,8 @@ void MGraphFileInput::ExecuteNextUpdate()
 	size_t dest = strtoul(file->ptr, &file->ptr, 10);
 	if (dest)
 	{
-		if (output)
-			output->Add(Edge(file->index, dest));
-		printf("%d %d\n", file->index, dest); // debug
+		if (output && (file->index < dest))
+			output->Add(Edge(file->index - 1, dest - 1));
 	}
 	else // Probably hit end of line, try again
 		ExecuteNextUpdate();
@@ -220,7 +219,6 @@ void EdgeFileInput::ExecuteNextUpdate()
 	
 	if (output)
 		output->Add(Edge(src, dst));
-	printf("%lu %lu\n", src, dst); // debug
 }
 
 //------------------------------------------------------------------------------
@@ -294,3 +292,5 @@ void FileInput::ParseArguments(const vector<string>& arguments)
 		throw "Can't parse the parameters for file input the only argument is the filename";
 	}
 }
+
+//------------------------------------------------------------------------------

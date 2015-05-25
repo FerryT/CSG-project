@@ -12,6 +12,7 @@ class Test {
 	public:
 		Algorithm* algorithm;
 		Input* input;
+		vector<StackInput*> stackinputs;
 		// Runs the tests and writes the results to an output file in CSV
 		virtual void RunTest(string outputFile) = 0;
 		//parses arguments for configuration

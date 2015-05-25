@@ -40,7 +40,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ReferencePath>$(ProjectDir);</ReferencePath>
-    <IncludePath>headers;$(IncludePath)</IncludePath>
+    <IncludePath>headers;$(IncludePath);libs\metis\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>headers;$(IncludePath)</IncludePath>
@@ -79,6 +79,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\RandomizedInput.cpp" />
     <ClCompile Include="src\ReservoirManager.cpp" />
+    <ClCompile Include="src\StackInputs.cpp" />
     <ClCompile Include="src\Tests.cpp" />
     <ClCompile Include="src\Visualize.cpp" />
     <ClCompile Include="src\WindowManager.cpp" />
@@ -90,6 +91,7 @@
     <ClInclude Include="headers\GraphManager.h" />
     <ClInclude Include="headers\RandomizedInput.h" />
     <ClInclude Include="headers\ReservoirManager.h" />
+    <ClInclude Include="headers\StackInputs.h" />
     <ClInclude Include="headers\Tests.h" />
     <ClInclude Include="headers\Visualize.h" />
     <ClInclude Include="headers\WindowManager.h" />

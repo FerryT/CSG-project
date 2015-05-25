@@ -49,7 +49,7 @@ public:
 	virtual void Remove(Edge e) override;
 	virtual void Open() override;
 	virtual void Close() override;
-	virtual void ExecuteNextUpdate();
+	virtual void ExecuteNextUpdate() override;
 	virtual bool IsEnd() override;
 
 	virtual void SetInternalInput(Input* input);
