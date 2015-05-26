@@ -129,7 +129,8 @@ void CaptureStackInput::Remove(Edge e)
 {
 	this->output->Remove(e);
 	Graph::iterator it = find(this->_currentGraph->begin(), this->_currentGraph->end(), e);
-	this->_currentGraph->erase(it);
+	if (it != this->_currentGraph->end())
+		this->_currentGraph->erase(it);
 }
 
 //------------------------------------------------------------------------------
