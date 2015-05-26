@@ -43,7 +43,7 @@
 \usepackage{tabularx}
 
 \title{Database Technology [2ID35] \\
-\textbf{Project part 2}}
+\textbf{Project part 3}}
 
 \author{
 Michiel Fortuin --- 0812105 \\
@@ -172,14 +172,14 @@ We have decided to use git as a code repository for the project, and we will wri
 
 \pagebreak
 \section{Progress update 25-05}
-At this point in time, we have finished writing the implementation of the structural sampler architecture. Our implementation reports the cutsize of the clusters at certain intervals, which is the measure of quality used for the clusters in the paper. However, the code runs quite slowly, so we still wish to optimize the code somewhat via profiling. 
+At this point in time, we have finished writing the implementation of the structural sampler architecture. Our implementation reports the cutsize of the clusters at certain intervals, which is the measure of quality used for the clusters in the paper. However, currently the code runs a bit too slow to enable us to test the large datasets we wish to use. Therefore, we are planning to optimize the code by identifying chokepoints via profiling. 
 
-We have also made the program report the clusters in a GraphViz compatible notation. Some of the datasets we used are small enough that we can view the clusters created by the program using these GraphViz visualizations. Furthermore, we are working on a command line interface to automate testing, which is progressing nicely.
+We have also made the program capable of reporting the clusters in a GraphViz compatible notation. Some of the datasets we used are small enough that we can view the clusters created by the program using these GraphViz visualizations. Furthermore, we are working on a command line interface to automate testing.
 
-Also, we have started integrating the code of METIS with our project. This seems to be working, but we need to test the implementation a little bit more.
+Also, we have started integrating the code of METIS with our project. This integration is almost complete.
 
 \subsection{Future}
-We are progressing nicely along the lines of our original planning. It seems that we may have sufficient time left to also implement performance reporting, which would allow us to perform expansion 3-b-iii. Furthermore, we are working on testing a few extra datasets (4-i), as well as measuring the quality on additional p-values (4-ii).
+We are progressing nicely along the lines of our original planning. It seems that we may have sufficient time left to also implement performance reporting, which would allow us to perform expansion 3-b-iii. Furthermore, we are working on testing a few extra datasets (4-i), as well as measuring the quality on additional p-values (4-ii). Our main priority currently is to finish the coding part of the project by the 31st of May, so that we may begin testing and writing our final report.
 
 \begin{thebibliography}{99}
 \bibitem{paper} A. Eldawy, R. Khandekar and K. Wu, ``Clustering Streaming Graphs'', in \textit{32nd IEEE International Conference on Distributed Computing Systems}, 2012.
