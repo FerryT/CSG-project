@@ -241,8 +241,6 @@ void BAModelInput::FindNextEdge()
 		this->currentDestinationNode++;
 		if (this->currentDestinationNode == this->currentSourceNode)
 		{
-			cout << "------------------------------------------" << endl;
-			cout << "for node " << this->currentSourceNode << endl;
 			this->currentDestinationNode = 0;
 			this->currentSourceNode++;
 			if (this->currentSourceNode == this->nodes)
@@ -256,11 +254,7 @@ void BAModelInput::FindNextEdge()
 		double prob = static_cast<double>(this->NodeDegree[this->currentDestinationNode]) / static_cast<double>(this->totalDegree);
 		if (sample < prob)
 		{
-			cout << "add " << this->currentDestinationNode << endl;
 			return;
-		}
-		else
-		{
 		}
 	}
 }
