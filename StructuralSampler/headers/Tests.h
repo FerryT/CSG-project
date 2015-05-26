@@ -5,6 +5,7 @@
 #include "Algorithm.h"
 #include "GraphInput.h"
 #include <iostream>
+#include <ctime>
 
 //------------------------------------------------------------------------------
 

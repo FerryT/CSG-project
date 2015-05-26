@@ -40,6 +40,7 @@ QualityTest::QualityTest(int snapshotSize)
 void QualityTest::RunTest(string outputFilename)
 {
 	ofstream output;
+	clock_t start;
 
 	output.open(outputFilename, ios::out);
 
@@ -59,6 +60,7 @@ void QualityTest::RunTest(string outputFilename)
 	int updates = 0;
 
 	cout << "Start quality test..." << endl;
+	start = clock();
 
 	while (!this->input->IsEnd())
 	{
@@ -83,6 +85,8 @@ void QualityTest::RunTest(string outputFilename)
 
 		output << updates << "," << cutSize << endl;
 	}
+
+	output << "Processing time: " << (clock() - start) / (double)CLOCKS_PER_SEC << " seconds";
 
 	capture->Close();
 	output.close();
