@@ -197,3 +197,98 @@ void ScaleFreeNetworkInput::ParseArguments(const vector<string>& arguments)
 	}
 }
 
+BAModelInput::BAModelInput(int nodes)
+{
+	this->nodes = nodes;
+	this->NodeDegree = new int[nodes];
+	this->totalDegree = 0;
+	this->currentSourceNode = 1;
+	this->currentDestinationNode = 0;
+
+	for (int i = 0; i < nodes; i++)
+	{
+		this->NodeDegree[i] = 0;
+	}
+}
+
+BAModelInput::~BAModelInput()
+{
+	delete this->NodeDegree;
+}
+
+void BAModelInput::Open()
+{
+}
+
+void BAModelInput::Close()
+{
+}
+
+void BAModelInput::ExecuteNextUpdate()
+{
+	this->output->Add(Edge(this->currentSourceNode, this->currentDestinationNode));
+	this->NodeDegree[this->currentSourceNode]++;
+	this->NodeDegree[this->currentDestinationNode]++;
+	this->totalDegree += 2;
+
+	this->FindNextEdge();
+}
+
+void BAModelInput::FindNextEdge()
+{
+	while (true)
+	{
+		this->currentDestinationNode++;
+		if (this->currentDestinationNode == this->currentSourceNode)
+		{
+			cout << "------------------------------------------" << endl;
+			cout << "for node " << this->currentSourceNode << endl;
+			this->currentDestinationNode = 0;
+			this->currentSourceNode++;
+			if (this->currentSourceNode == this->nodes)
+			{
+				//end of input
+				return;
+			}
+		}
+
+		double sample = static_cast<double>(rand()) / static_cast<double>(RAND_MAX);
+		double prob = static_cast<double>(this->NodeDegree[this->currentDestinationNode]) / static_cast<double>(this->totalDegree);
+		if (sample < prob)
+		{
+			cout << "add " << this->currentDestinationNode << endl;
+			return;
+		}
+		else
+		{
+		}
+	}
+}
+
+bool BAModelInput::IsEnd()
+{
+	return this->currentSourceNode >= this->nodes;
+}
+
+void BAModelInput::ParseArguments(const vector<string>& arguments)
+{
+	if (arguments.size() == 0)
+	{
+		return;
+	}
+	else if (arguments.size() == 1)
+	{
+		this->nodes = atoi(arguments[0].c_str());
+
+		delete this->NodeDegree;
+		this->NodeDegree = new int[this->nodes];
+		for (int i = 0; i < nodes; i++)
+		{
+			this->NodeDegree[i] = 0;
+		}
+	}
+	else
+	{
+		throw "Can't parse the parameters for BAModelInput, parameters are <nodes>";
+	}
+}

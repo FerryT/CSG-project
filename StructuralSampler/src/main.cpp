@@ -124,6 +124,10 @@ Input* CreateInput(ComponentDescription desc)
 	{
 		result = new ScaleFreeNetworkInput();
 	}
+	else if (desc.name == "BAModel")
+	{
+		result = new BAModelInput();
+	}
 	else if (desc.name == "mgraph")
 	{
 		result = new MGraphFileInput();

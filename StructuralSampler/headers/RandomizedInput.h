@@ -48,4 +48,26 @@ public:
 	void ParseArguments(const vector<string>& arguments) override;
 };
 
+class BAModelInput : public Input {
+private:
+	int nodes;
+	int* NodeDegree;
+	int totalDegree;
+	int currentSourceNode;
+	int currentDestinationNode;
+
+	void FindNextEdge();
+public:
+	BAModelInput() : BAModelInput(100) {};
+	BAModelInput(int nodes);
+	~BAModelInput();
+
+	void Open() override;
+	void Close() override;
+	void ExecuteNextUpdate() override;
+	bool IsEnd() override;
+
+	void ParseArguments(const vector<string>& arguments) override;
+};
+
 #endif // RANDOMIZED_INPUT_H
