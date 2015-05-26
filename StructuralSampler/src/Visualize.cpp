@@ -148,7 +148,7 @@ void VisualizeResults::RunTest(string outputFilename)
 
 		string color;
 		string style;
-		if (!isSampled)
+		if (isSampled)
 		{
 			style = "solid";
 		}
