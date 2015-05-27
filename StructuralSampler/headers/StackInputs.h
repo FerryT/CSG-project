@@ -5,7 +5,9 @@
 
 class FilterEdges : public StackInput
 {
+	Graph g;
 public:
+	void Remove(Edge e) override;
 	void Add(Edge e) override;
 	double Filter = 0;
 	void ParseArguments(const vector<string>& arguments) override;

@@ -1,10 +1,21 @@
 #include "StackInputs.h"
 
+void FilterEdges::Remove(Edge e)
+{
+	Graph::iterator it = find(this->g.begin(), this->g.end(), e);
+	if (it != this->g.end())
+	{
+		this->g.erase(it);
+		StackInput::Remove(e);
+	}
+}
+
 void FilterEdges::Add(Edge e)
 {
 	if (e.p > this->Filter)
 	{
 		StackInput::Add(e);
+		this->g.push_back(e);
 	}
 }
 
