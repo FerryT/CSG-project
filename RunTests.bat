@@ -9,13 +9,6 @@ rd /s /q %cluster_output%
 echo creating dir
 mkdir %cluster_output%
 
-
-echo running Poisson with different p values
-
-echo name;10;30;50;70;90;>> "%cluster_output%\QualityClusterSize.csv"
-echo|set /p=Poisson;>> "%cluster_output%\QualityClusterSize.csv"
-%cluster_application% -CI Poisson 100 0.90 500 -CA StructuralSampler 10 -CA StructuralSampler 30 -CA StructuralSampler 50 -CA StructuralSampler 70 -CA StructuralSampler 90 -CT Quality 100 -CO "%cluster_output%\QualityClusterSize.csv"
-echo|set /p=Metis;>> "%cluster_output%\QualityClusterSize.csv"
-%cluster_application% -CI Poisson 100 0.90 500 -CA Metis 10 -CA Metis 30 -CA Metis 50 -CA Metis 70 -CA Metis 90 -CT Quality 100 -CO "%cluster_output%\QualityClusterSize.csv"
-
-@echo on
+call RunMultipleQualityTests %cluster_output%\QualityClusterSizePoission1000.csv 100 -CI Poisson 100 1 1000
+call RunMultipleQualityTests %cluster_output%\QualityClusterSizeBAModel100.csv 100 -CI BAModel 100
+call RunMultipleQualityTests %cluster_output%\QualityClusterSizeFruits.csv 100 -CI mgraph %cluster_datasets%\fruits
