@@ -12,9 +12,12 @@
 #	define pclose _pclose
 #endif
 #include <algorithm>
+#include <CommandLineHelper.h>
 
 void OutputVisualization::RunTest(string outputFilename)
 {
+	this->input = CreateInput(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComInput>));
+
 	FILE *output;
 
 	if (CallDot)
@@ -92,6 +95,10 @@ VisualizeResults::VisualizeResults(int runTillUpdate)
 
 void VisualizeResults::RunTest(string outputFilename)
 {
+	this->input = CreateInput(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComInput>));
+	this->algorithm = CreateAlgorithm(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComAlgorithm>));
+	this->stackinputs = CreateStackInputs(this->descriptions);
+
 	FILE *output;
 
 	if (CallDot)
