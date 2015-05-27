@@ -1,5 +1,9 @@
 @echo off
 
+echo Datasets are at the folowing location %cluster_datasets%
+echo The application that is run in the test is as follows %cluster_application%
+echo The results will be in %cluster_output%
+
 echo Removing old results
 rd /s /q %cluster_output%
 echo creating dir

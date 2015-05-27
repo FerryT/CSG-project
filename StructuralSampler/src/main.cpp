@@ -155,7 +155,7 @@ Algorithm* CreateAlgorithm(ComponentDescription desc)
 
 	if (desc.name == "Metis")
 	{
-		throw "Metis is not implemented yet.";
+		result = new Metis(10);
 	}
 	else if (desc.name == "StructuralSampler")
 	{
