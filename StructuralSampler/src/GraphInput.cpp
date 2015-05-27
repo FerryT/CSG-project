@@ -200,9 +200,17 @@ void EdgeFileInput::ExecuteNextUpdate()
 	}
 	
 	const char *ptr = file->buffer;
+	bool removing = false;
 	while (isspace(*ptr))
 		++ptr;
 	
+	if (*ptr == '!')
+	{
+		removing = true;
+		while (isspace(*ptr))
+			++ptr;
+	}
+
 	if (*ptr == '\0')
 	{
 		// Empty line, try again
@@ -218,7 +226,12 @@ void EdgeFileInput::ExecuteNextUpdate()
 	}
 	
 	if (output)
-		output->Add(Edge(src, dst));
+	{
+		if (removing)
+			output->Remove(Edge(src, dst));
+		else
+			output->Add(Edge(src, dst));
+	}
 }
 
 //------------------------------------------------------------------------------
