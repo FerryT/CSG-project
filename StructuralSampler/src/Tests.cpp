@@ -131,7 +131,7 @@ void QualityTest::RunTest(string outputFilename)
 	output << endl;
 	output.close();
 
-	cout << "Done testing, writing results..." << endl;
+	cout << "Finished writing" << endl;
 }
 
 //------------------------------------------------------------------------------

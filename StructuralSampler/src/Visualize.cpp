@@ -136,6 +136,8 @@ void VisualizeResults::RunTest(string outputFilename)
 	{
 		input->ExecuteNextUpdate();
 		updates++;
+		if (updates % 10 == 0)
+			cout << "update " << updates << endl;
 	}
 	
 	Graph* g = capture->GetCompleteGraph();
@@ -145,9 +147,6 @@ void VisualizeResults::RunTest(string outputFilename)
 
 	for (Edge edge : *g)
 	{
-		vertex c1 = this->algorithm->FindClusterIndex(edge.v1);
-		vertex c2 = this->algorithm->FindClusterIndex(edge.v2);
-
 		bool isSampled = find_if(g2->begin(), g2->end(), [edge](Edge edge2){ return edge2 == edge; }) != g2->end();
 
 		vertices.insert(edge.v1);
@@ -158,19 +157,25 @@ void VisualizeResults::RunTest(string outputFilename)
 		if (isSampled)
 		{
 			style = "solid";
+
+			vertex c1 = this->algorithm->FindClusterIndex(edge.v1);
+			vertex c2 = this->algorithm->FindClusterIndex(edge.v2);
+
+			if (c1 != c2)
+			{
+				color = "red";
+			}
+			else
+			{
+				color = "blue";
+			}
 		}
 		else
 		{
 			style = "dashed";
-		}
-		if (c1 != c2)
-		{
-			color = "red";
-		}
-		else
-		{
 			color = "black";
 		}
+		
 
 		fprintf(output, "\t%lu -- %lu [color=%s,style=%s];\n",
 			edge.v1, edge.v2, color.c_str(), style.c_str());
