@@ -98,7 +98,7 @@ void SupportReservoir::Add(const Edge &e)
 		int location = 0;
 		while (location<graph.size())
 		{
-			if (!graph.at(location).p < e.p)
+			if (!(graph.at(location).p < e.p))
 			{
 				break;
 			}
