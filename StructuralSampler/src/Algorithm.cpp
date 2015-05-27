@@ -130,6 +130,14 @@ Metis::~Metis()
 
 //------------------------------------------------------------------------------
 
+void Metis::SetNumClusters(int numClusters)
+{
+	if (data)
+		data->num_clusters = numClusters;
+}
+
+//------------------------------------------------------------------------------
+
 void Metis::Add(Edge e)
 {
 	idx_t v1, v2;

@@ -35,6 +35,8 @@ class Metis : public Algorithm {
 		Metis(int numClusters);
 		virtual ~Metis();
 
+		virtual void SetNumClusters(int numClusters);
+
 		virtual void Add(Edge e);
 		virtual void Remove(Edge e);
 
