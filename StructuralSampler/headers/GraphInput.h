@@ -34,7 +34,7 @@ class Input {
 		//check if it is at the end of it's input
 		virtual bool IsEnd() = 0;
 		//sets the algorithm
-		void SetOutput(Output* output) { this->output = output; }
+		virtual void SetOutput(Output* output) { this->output = output; }
 
 		//parses arguments for configuration
 		virtual void ParseArguments(const vector<string>& arguments) { std::cout << "arguments for this input/stackinput are not yet parsed" << std::endl; }

@@ -79,6 +79,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\Algorithm.cpp" />
+    <ClCompile Include="src\CommandLineHelper.cpp" />
     <ClCompile Include="src\GraphInput.cpp" />
     <ClCompile Include="src\GraphManager.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -91,6 +92,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\Algorithm.h" />
+    <ClInclude Include="headers\CommandLineHelper.h" />
+    <ClInclude Include="headers\ComponentDescription.h" />
     <ClInclude Include="headers\Graph.h" />
     <ClInclude Include="headers\GraphInput.h" />
     <ClInclude Include="headers\GraphManager.h" />

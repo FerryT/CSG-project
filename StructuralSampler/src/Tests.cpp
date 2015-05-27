@@ -3,8 +3,21 @@
 #include <algorithm>
 
 #include "../headers/Tests.h"
+#include <CommandLineHelper.h>
 
 using namespace std;
+
+inline bool exists_test(const std::string& name) {
+	ifstream f(name.c_str());
+	if (f.good()) {
+		f.close();
+		return true;
+	}
+	else {
+		f.close();
+		return false;
+	}
+}
 
 //------------------------------------------------------------------------------
 
@@ -37,61 +50,88 @@ QualityTest::QualityTest(int snapshotSize)
 
 //------------------------------------------------------------------------------
 
+struct QualityResult
+{
+	int Sumation = 0;
+	int count = 0;
+};
+
 void QualityTest::RunTest(string outputFilename)
 {
-	ofstream output;
-	clock_t start;
+	vector<QualityResult> results;
 
-	output.open(outputFilename, ios::out);
-
-	output << "updates,cutsize" << endl;
+	Input* realInput = CreateInput(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComInput>));
+	vector<StackInput*> stackInputs = CreateStackInputs(this->descriptions);
+	vector<Algorithm*> algorithms = CreateAlgorithms(this->descriptions);
 
 	CaptureStackInput* capture = new CaptureStackInput();
-	capture->SetInternalInput(this->input);
+	capture->SetInternalInput(realInput);
 	Input* input = capture;
-	for (StackInput* stackinput: this->stackinputs)
+	for (StackInput* stackinput : stackInputs)
 	{
 		stackinput->SetInternalInput(input);
 		input = stackinput;
 	}
-	input->SetOutput(this->algorithm);
-	input->Open();
-
+	SplitStackInput* split = new SplitStackInput();
+	split->SetInternalInput(input);
+	split->Open();
+	
+	for (int i = 0; i < algorithms.size(); i++)
+	{
+		split->SetOutput(algorithms[i]);
+		results.push_back(QualityResult());
+	}
+		
 	int updates = 0;
 
 	cout << "Start quality test..." << endl;
-	start = clock();
 
-	while (!this->input->IsEnd())
+	while (!split->IsEnd())
 	{
-		for (int i = 0; !input->IsEnd() && i < this->SnapshotSize; i++)
+		for (int i = 0; !split->IsEnd() && i < this->SnapshotSize; i++)
 		{
 			input->ExecuteNextUpdate();
 			updates++;
 		}
 
-		cout << updates << " updates done, saving results..." << endl;
+		cout << updates << " updates done, continuing ..." << endl;
 
 		Graph* g = capture->GetCompleteGraph();
 
-		int cutSize = 0;
-		for (Edge edge : *g)
+		for (int i = 0; i < algorithms.size(); i++)
 		{
-			vertex c1 = this->algorithm->FindClusterIndex(edge.v1);
-			vertex c2 = this->algorithm->FindClusterIndex(edge.v2);
-			if (c1 != c2)
-				cutSize++;
-		}
+			int cutSize = 0;
+			for (Edge edge : *g)
+			{
+				vertex c1 = algorithms[i]->FindClusterIndex(edge.v1);
+				vertex c2 = algorithms[i]->FindClusterIndex(edge.v2);
+				if (c1 != c2)
+					cutSize++;
+			}
 
-		output << updates << "," << cutSize << endl;
+			results[i].Sumation += cutSize;
+			results[i].count += 1;
+		}
 	}
 
-	output << "Processing time: " << (clock() - start) / (double)CLOCKS_PER_SEC << " seconds";
+	split->Close();
 
-	capture->Close();
+	cout << "Done testing, writing results..." << endl;
+
+	bool exist = exists_test(outputFilename);
+
+	//writes results
+	ofstream output;
+	if (exist)
+		output.open(outputFilename, ios::out | ios::ate | ios::app);
+	else
+		output.open(outputFilename, ios::out);
+	for (int i = 0; i < algorithms.size(); i++)
+		output << static_cast<float>(results[i].Sumation) / static_cast<float>(results[i].count) << ";";
+	output << endl;
 	output.close();
-	cout << "Done" << endl;
 
+	cout << "Done testing, writing results..." << endl;
 }
 
 //------------------------------------------------------------------------------
@@ -134,3 +174,47 @@ void CaptureStackInput::Remove(Edge e)
 }
 
 //------------------------------------------------------------------------------
+void SplitStackInput::SetOutput(Output* output)
+{
+	this->outputs.push_back(output);
+}
+
+void SplitStackInput::Open()
+{
+	if (this->is_open == false)
+	{
+		this->is_open = true;
+		this->input->Open();
+	}
+}
+
+void SplitStackInput::Close()
+{
+	if (this->is_open == true)
+	{
+		this->is_open = false;
+		this->input->Close();
+	}
+}
+
+void SplitStackInput::ExecuteNextUpdate()
+{
+	this->input->ExecuteNextUpdate();
+}
+
+bool SplitStackInput::IsEnd()
+{
+	return this->input->IsEnd();
+}
+
+void SplitStackInput::Add(Edge e)
+{
+	for (Output* o : this->outputs)
+		o->Add(e);
+}
+
+void SplitStackInput::Remove(Edge e)
+{
+	for (Output* o : this->outputs)
+		o->Remove(e);
+}

@@ -6,12 +6,14 @@
 #include "GraphInput.h"
 #include <iostream>
 #include <ctime>
+#include "ComponentDescription.h"
 
 //------------------------------------------------------------------------------
 
 class Test {
 	public:
 		Algorithm* algorithm;
+		vector<ComponentDescription> descriptions;
 		Input* input;
 		vector<StackInput*> stackinputs;
 		// Runs the tests and writes the results to an output file in CSV
@@ -27,7 +29,7 @@ class QualityTest: public Test {
 		void ParseArguments(const vector<string>& arguments) override;
 		QualityTest();
 		QualityTest(int snapshotSize);
-		int SnapshotSize = 10000;
+		int SnapshotSize = 10000; 
 		virtual void RunTest(string outputFile) override;
 };
 
@@ -46,6 +48,22 @@ class CaptureStackInput : public StackInput
 		virtual void Remove(Edge e) override;
 	
 		Graph* GetCompleteGraph();
+};
+
+
+class SplitStackInput : public StackInput
+{
+private: 
+	vector<Output*> outputs;
+	bool is_open = false;
+public:
+	void SetOutput(Output* output) override;
+	void Open() override;
+	void Close() override;
+	void ExecuteNextUpdate() override;
+	bool IsEnd() override;
+	void Add(Edge e) override;
+	void Remove(Edge e) override;
 };
 
 /*
