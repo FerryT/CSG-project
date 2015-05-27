@@ -303,6 +303,24 @@ void Metis::Remove(Edge e)
 
 //------------------------------------------------------------------------------
 
+void Metis::ParseArguments(const vector<string>& arguments)
+{
+	if (arguments.size() == 0)
+	{
+		return;
+	}
+	else if (arguments.size() == 1)
+	{
+		this->SetNumClusters(atoi(arguments[0].c_str()));
+	}
+	else
+	{
+		throw "Can't parse the parameters for Metis the only argument is num clusters";
+	}
+}
+
+//------------------------------------------------------------------------------
+
 int Metis::FindClusterIndex(vertex u)
 {
 	if (u >= data->num_nodes)
@@ -438,7 +456,7 @@ void StructuralSampler::ParseArguments(const vector<string>& arguments)
 	}
 	else
 	{
-		throw "Can't parse the parameters for quality test the only argument is the snapshot size";
+		throw "Can't parse the parameters for StructuralSampler the only argument is the max cluster size";
 	}
 }
 

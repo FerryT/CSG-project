@@ -40,6 +40,8 @@ class Metis : public Algorithm {
 		virtual void Add(Edge e);
 		virtual void Remove(Edge e);
 
+		void ParseArguments(const vector<string>& arguments) override;
+
 		virtual int FindClusterIndex(vertex u);
 		virtual vector<vertex> FindCluster(vertex u);
 		virtual int CountClusters();
