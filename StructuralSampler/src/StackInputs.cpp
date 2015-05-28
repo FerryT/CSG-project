@@ -1,3 +1,5 @@
+#include <algorithm>
+
 #include "StackInputs.h"
 
 void FilterEdges::Remove(Edge e)

@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <StackInputs.h>
 #include <CommandLineHelper.h>
 #include <RandomizedInput.h>
