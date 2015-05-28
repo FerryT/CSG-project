@@ -229,7 +229,7 @@ void Metis::Add(Edge e)
 }
 
 //------------------------------------------------------------------------------
-// Note: untested
+
 void Metis::Remove(Edge e)
 {
 	idx_t v1, v2;
@@ -252,17 +252,17 @@ void Metis::Remove(Edge e)
 	
 	idx_t i = data->node_indices[v1];
 	while (data->edges[i] != v2)
-		if (i >= data->node_indices[v1 + 1])
+		if (i++ >= data->node_indices[v1 + 1])
 			throw "Metis error: tried to remove an unexisting edge.";
 	
 	idx_t j = data->node_indices[v2];
 	while (data->edges[j] != v1)
-		if (j >= data->node_indices[v2 + 1])
+		if (j++ >= data->node_indices[v2 + 1])
 			throw "Metis error: tried to remove an unexisting edge.";
 	
 	if (data->num_nodes == 1)
 	{
-		// First edge added
+		// Last edge removed
 		data->num_nodes = 0;
 		data->num_edges = 0;
 		delete[] data->node_indices;
@@ -284,7 +284,7 @@ void Metis::Remove(Edge e)
 			
 			memcpy(data->edges, old_edges, i * sizeof (idx_t));
 			memcpy(data->edges + i, old_edges + i + 1, (j - i - 1) * sizeof (idx_t));
-			memcpy(data->edges + j, old_edges + j - 1, (k - j - 1) * sizeof (idx_t));
+			memcpy(data->edges + j - 1, old_edges + j + 1, (k - j - 1) * sizeof (idx_t));
 			
 			delete[] old_edges;
 		}
