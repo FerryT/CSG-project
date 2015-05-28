@@ -22,26 +22,16 @@ int main(int argc, char *argv[])
 	{
 		vector<ComponentDescription> arguments = GetDescriptions(argc, argv);
 
-		//Input* input = CreateInput(*find_if(arguments.begin(), arguments.end(), IsType<ComInput>));
-		//Algorithm* alg = CreateAlgorithm(*find_if(arguments.begin(), arguments.end(), IsType<ComAlgorithm>));
-		Test* test = CreateTest(*find_if(arguments.begin(), arguments.end(), IsType<ComTest>));
-		string outputfilename = GetOutputFilename(*find_if(arguments.begin(), arguments.end(), IsType<ComOutput>));
-		
-		/*vector<StackInput*> stackInputs;
-		auto item = arguments.begin();
-		item = find_if(item, arguments.end(), IsType<ComStackInput>);
-		while (item != arguments.end())
-		{
-			StackInput* stackInput = CreateStackInput(*item);
-			stackInputs.push_back(stackInput);
+		auto testDescription = find_if(arguments.begin(), arguments.end(), IsType<ComTest>);
+		if (testDescription == arguments.end())
+			throw "Need atleast a single test in the command line";
+		Test* test = CreateTest(*testDescription);
 
-			item = find_if(item+1, arguments.end(), IsType<ComStackInput>);
-		}*/
-
+		auto outputDescription = find_if(arguments.begin(), arguments.end(), IsType<ComOutput>);
+		if (outputDescription == arguments.end())
+			throw "Need atleast a single output in the command line";
+		string outputfilename = GetOutputFilename(*outputDescription);
 		
-		//test->algorithm = alg;
-		//test->input = input;
-		//test->stackinputs = stackInputs;
 		test->descriptions = arguments;
 		test->RunTest(outputfilename);
 	}
@@ -50,7 +40,6 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Fatal error:\n\t%s\n", msg);
 		cout << "Basic usage: StructuralSampler -CI <input> [parameters] -CA <algorithm> [parameters] -CT <test> [parameters] -CO <output file>" << endl;
 		cout << "Example usage: StructuralSampler -CI Poisson 100 0.80 400 -CA StructuralSampler 10 -CT VisualizeResult 100 1 -CO testresult.png" << endl;
-		getchar();
 		return EXIT_FAILURE;
 	}
 	return EXIT_SUCCESS;
