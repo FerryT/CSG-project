@@ -218,3 +218,101 @@ void SplitStackInput::Remove(Edge e)
 	for (Output* o : this->outputs)
 		o->Remove(e);
 }
+
+void ThroughputTest::ParseArguments(const vector<string>& arguments)
+{
+	if (arguments.size() == 2)
+	{
+		this->queries = atoi(arguments[0].c_str());
+		this->updates = atoi(arguments[1].c_str());
+	}
+	else
+	{
+		throw "Can't parse the parameters for throughput test, arguments are <queries> <updates>";
+	}
+}
+
+ThroughputTest::ThroughputTest()
+{
+}
+
+ThroughputTest::ThroughputTest(int updates, int queries)
+{
+	this->updates = updates;
+	this->queries = queries;
+}
+
+void ThroughputTest::RunTest(string outputFilename)
+{
+	cout << "Start performance test..." << endl;
+
+	Input* realInput = CreateInput(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComInput>));
+	vector<StackInput*> stackInputs = CreateStackInputs(this->descriptions);
+	Algorithm* algorithm = CreateAlgorithm(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComAlgorithm>));
+
+	Input* input = realInput;
+	for (StackInput* stackinput : stackInputs)
+	{
+		stackinput->SetInternalInput(input);
+		input = stackinput;
+	}
+	input->SetOutput(algorithm);
+	
+	int totalUpdates = 0;
+	
+	clock_t start = clock();
+	while (!input->IsEnd())
+	{
+		for (int i = 0; !input->IsEnd() && i < this->updates; i++)
+		{
+			input->ExecuteNextUpdate();
+			totalUpdates++;
+		}
+
+		for (int i = 0; !input->IsEnd() && i < this->queries; i++)
+		{
+			int clusterCount = algorithm->CountClusters();
+			int c1i = rand() % clusterCount;
+			int c2i = rand() % clusterCount;
+
+			vector<vertex> c1 = algorithm->GetCluster(c1i);
+			vector<vertex> c2 = algorithm->GetCluster(c2i);
+
+			int v1 = rand() % c1.size();
+			int v2 = rand() % c2.size();
+
+			algorithm->FindClusterIndex(v1);
+			algorithm->FindClusterIndex(v2);
+
+			//check if v1c and v2c are the same, but unneccary because performance test
+		}
+	}
+	clock_t end = clock();
+
+	cout << "Done testing, writing results..." << endl;
+
+	bool exist = exists_test(outputFilename);
+
+	//writes results
+	ofstream output;
+	if (exist)
+		output.open(outputFilename, ios::out | ios::ate | ios::app);
+	else
+		output.open(outputFilename, ios::out);
+	
+	clock_t  diff = end-start;
+	if (diff != 0)
+	{
+		float diffSec = static_cast<float>(diff) / CLOCKS_PER_SEC;
+		float throughput = updates/diffSec;
+		output << throughput;
+	}
+	else
+	{
+		output << "-1";
+	}
+	
+	output.close();
+
+	cout << "Finished writing" << endl;
+}
