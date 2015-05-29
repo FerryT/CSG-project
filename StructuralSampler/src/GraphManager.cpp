@@ -75,8 +75,7 @@ struct GraphManager::Data
 
 void GraphManager::Data::AddCluster(const vertex &v)
 {
-	Cluster newCluster;
-	pool.insert(std::pair < vertex, Cluster *>(v, &newCluster));
+	pool[v] = new Cluster(&ids);
 }
 
 //------------------------------------------------------------------------------
@@ -97,10 +96,7 @@ bool GraphManager::Data::InCluster(const vertex &v) const
 
 void GraphManager::Data::MergeCluster(const vertex &v1, const vertex &v2)
 {
-	Cluster * Cluster1 = pool.find(v1)->second;
-	Cluster * Cluster2 = pool.find(v2)->second;
-
-	(*Cluster1) += Cluster2;
+	(*pool[v1]) += pool[v2];
 }
 
 //==============================================================================

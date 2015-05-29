@@ -15,21 +15,13 @@ struct Edge {
 	vertex v2;
 	double p;
 
-	Edge()
-	{
-		this->p = static_cast<double>(rand()) / static_cast<double>(RAND_MAX);
-	}
-	Edge(vertex u, vertex v) : v1(u), v2(v)
-	{
-		this->p = static_cast<double>(rand()) / static_cast<double>(RAND_MAX);
-	}
-	Edge(vertex u, vertex v, double p) : v1(u), v2(v), p(p) {  }
+	Edge(vertex u, vertex v);
+	Edge(vertex u, vertex v, double p) : v1(u < v ? u : v), v2(u < v ? v : u), p(p) {  }
 
 	bool operator==(const Edge& other) const
 	{
 		return v1 == other.v1 && v2 == other.v2;
 	}
-
 	bool operator!=(const Edge& other) const
 	{
 		return v1 != other.v1 || v2 != other.v2;
