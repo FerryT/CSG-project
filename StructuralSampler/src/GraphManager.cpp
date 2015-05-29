@@ -75,15 +75,26 @@ struct GraphManager::Data
 
 void GraphManager::Data::AddCluster(const vertex &v)
 {
-	Cluster newCluster;
-	pool.insert(std::pair < vertex, Cluster *>(v, &newCluster));
+	pool[v] = new Cluster(&ids);
 }
 
 //------------------------------------------------------------------------------
 
 void GraphManager::Data::RemoveCluster(const vertex &v)
 {
-	
+	clusterid cid = (clusterid) *pool[v];
+	for (ClusterPool::iterator it = pool.begin(); it != pool.end();)
+	{
+		if ((clusterid) (*it->second) == cid)
+		{
+			delete(it->second);
+			pool.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
