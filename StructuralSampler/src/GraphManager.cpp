@@ -5,23 +5,36 @@
 //------------------------------------------------------------------------------
 
 class Cluster;
+typedef unsigned long clusterid;
 typedef std::map<vertex, Cluster *> ClusterPool;
+typedef std::map<Cluster *, clusterid> ClusterIDPool;
 
 //==============================================================================
 
 class Cluster
 {
 	public:
-		Cluster() : parent(this) {}
-		~Cluster() {}
-
+		Cluster(ClusterIDPool *ids) : parent(this), pool(ids)
+		{
+			(*pool)[this] = pool->size();
+		}
+		~Cluster()
+		{
+			pool->erase(this);
+			reindex();
+		}
 		Cluster *operator +=(Cluster *other)
 		{
 			merge(other);
 			return this;
 		}
+		operator clusterid()
+		{
+			return (*pool)[this];
+		}
 	private:
 		Cluster *parent;
+		ClusterIDPool *pool;
 
 		Cluster *find()
 		{
@@ -33,6 +46,15 @@ class Cluster
 		void merge(Cluster *other)
 		{
 			parent = other;
+			pool->erase(this);
+			reindex();
+		}
+
+		void reindex()
+		{
+			clusterid id = 0;
+			for (ClusterIDPool::iterator it = pool->begin(); it != pool->end(); ++it)
+				it->second = id++;
 		}
 };
 
@@ -41,6 +63,7 @@ class Cluster
 struct GraphManager::Data
 {
 	ClusterPool pool;
+	ClusterIDPool ids;
 
 	void AddCluster(const vertex &v);
 	void RemoveCluster(const vertex &v);
