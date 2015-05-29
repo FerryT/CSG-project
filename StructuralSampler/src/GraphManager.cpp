@@ -5,7 +5,6 @@
 //------------------------------------------------------------------------------
 
 class Cluster;
-typedef unsigned long clusterid;
 typedef std::map<vertex, Cluster *> ClusterPool;
 typedef std::map<Cluster *, clusterid> ClusterIDPool;
 

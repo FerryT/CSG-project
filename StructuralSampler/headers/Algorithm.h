@@ -1,11 +1,15 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
+#include <vector>
+#include <string>
+
 #include "GraphInput.h"
 #include "Graph.h"
 #include "GraphManager.h"
 #include "ReservoirManager.h"
-#include <iostream>
+
+typedef std::vector<std::string> Strings;
 
 //------------------------------------------------------------------------------
 
@@ -16,36 +20,36 @@ class Algorithm: public Output {
 
 		// The query methods:
 		// Finds the cluster index
-		virtual int FindClusterIndex(vertex u) = 0;
+		virtual clusterid FindClusterIndex(vertex u) = 0;
 		// finds all the verices in the cluster of u
-		virtual vector<vertex> FindCluster(vertex u) = 0;
+		virtual Vertices FindCluster(vertex u) = 0;
 		// returns the number of clusters
-		virtual int CountClusters() = 0;
+		virtual clusterid CountClusters() = 0;
 		// gets all vertices of cluster
-		virtual vector<vertex> GetCluster(int index) = 0;
+		virtual Vertices GetCluster(clusterid index) = 0;
 
 		//parses arguments for configuration
-		virtual void ParseArguments(const vector<string>& arguments) { std::cout << "arguments for this algorithm are not yet parsed" << std::endl; }
+		virtual void ParseArguments(const Strings &arguments);
 };
 
 //------------------------------------------------------------------------------
 
 class Metis : public Algorithm {
 	public:
-		Metis(int numClusters);
+		Metis(clusterid numClusters);
 		virtual ~Metis();
 
-		virtual void SetNumClusters(int numClusters);
+		virtual void SetNumClusters(clusterid numClusters);
 
 		virtual void Add(Edge e);
 		virtual void Remove(Edge e);
 
-		void ParseArguments(const vector<string>& arguments) override;
+		void ParseArguments(const Strings& arguments) override;
 
-		virtual int FindClusterIndex(vertex u);
-		virtual vector<vertex> FindCluster(vertex u);
-		virtual int CountClusters();
-		virtual vector<vertex> GetCluster(int index);
+		virtual clusterid FindClusterIndex(vertex u);
+		virtual Vertices FindCluster(vertex u);
+		virtual clusterid CountClusters();
+		virtual Vertices GetCluster(clusterid index);
 	private:
 		struct Data;
 		Data *data;
@@ -59,22 +63,21 @@ class StructuralSampler : public Algorithm {
 		SupportReservoir supReservoir;
 		GraphManager manager;
 	public:
-		StructuralSampler();
-		StructuralSampler(int maxClusterSize);
+		StructuralSampler(int maxClusterSize = 10);
 		
 		virtual void Add(Edge e);
 		virtual void Remove(Edge e);
 		
-		virtual int FindClusterIndex(vertex u)
+		virtual clusterid FindClusterIndex(vertex u)
 			{ return manager.FindClusterIndex(u); }
-		virtual vector<vertex> FindCluster(vertex u)
+		virtual Vertices FindCluster(vertex u)
 			{ return manager.FindCluster(u); }
-		virtual int CountClusters()
+		virtual clusterid CountClusters()
 			{ return manager.CountClusters(); }
-		virtual vector<vertex> GetCluster(int index)
+		virtual Vertices GetCluster(clusterid index)
 		{ return manager.GetCluster(index); }
 
-		void ParseArguments(const vector<string>& arguments) override;
+		void ParseArguments(const Strings &arguments) override;
 };
 
 //------------------------------------------------------------------------------

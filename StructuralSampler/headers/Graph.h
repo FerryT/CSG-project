@@ -2,12 +2,14 @@
 #define GRAPH_H
 
 #include <cstdlib>
+#include <set>
 #include <vector>
-
-using namespace std;
 
 // a single vertex
 typedef unsigned long vertex;
+
+// a number refering to a cluster
+typedef unsigned short clusterid;
 
 // and edge from and to vertex
 struct Edge {
@@ -26,8 +28,15 @@ struct Edge {
 	{
 		return v1 != other.v1 || v2 != other.v2;
 	}
+	bool operator <(const Edge &other)
+	{
+		if (v1 == other.v1)
+			return v2 < other.v2;
+		return v1 < other.v1;
+	}
 };
 
-typedef vector<Edge> Graph;
+typedef std::set<Edge> Graph;
+typedef std::vector<vertex> Vertices;
 
 #endif
