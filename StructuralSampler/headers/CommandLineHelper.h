@@ -9,8 +9,8 @@
 
 using namespace std;
 
-vector<ComponentDescription> GetDescriptions(int argc, char *argv[]);
-vector<ComponentDescription> GetDescriptions(Strings argv);
+ComponentDescriptions GetDescriptions(int argc, char *argv[]);
+ComponentDescriptions GetDescriptions(Strings argv);
 
 StackInput* CreateStackInput(ComponentDescription desc);
 vector<StackInput*> CreateStackInputs(ComponentDescriptions arguments);

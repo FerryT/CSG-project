@@ -12,7 +12,7 @@ ComponentDescriptions GetDescriptions(int argc, char *argv[])
 	return GetDescriptions(arguments);
 }
 
-vector<ComponentDescription> GetDescriptions(Strings argv)
+ComponentDescriptions GetDescriptions(Strings argv)
 {
 	std::vector<int> componentStarts;
 	typedef std::vector<int>::size_type size_type;
@@ -144,7 +144,7 @@ Algorithm* CreateAlgorithm(ComponentDescription desc)
 	return result;
 }
 
-vector<Algorithm*> CreateAlgorithms(vector<ComponentDescription> arguments)
+vector<Algorithm*> CreateAlgorithms(ComponentDescriptions arguments)
 {
 	vector<Algorithm*> result;
 	auto item = arguments.begin();
@@ -213,7 +213,7 @@ StackInput* CreateStackInput(ComponentDescription desc)
 	return result;
 }
 
-vector<StackInput*> CreateStackInputs(vector<ComponentDescription> arguments)
+vector<StackInput*> CreateStackInputs(ComponentDescriptions arguments)
 {
 	vector<StackInput*> stackInputs;
 	auto item = arguments.begin();

@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
 
 	try
 	{
-		vector<ComponentDescription> arguments = GetDescriptions(argc, argv);
+		ComponentDescriptions arguments = GetDescriptions(argc, argv);
 
 		auto testDescription = find_if(arguments.begin(), arguments.end(), IsType<ComTest>);
 		if (testDescription == arguments.end())
