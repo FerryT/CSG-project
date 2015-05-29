@@ -52,27 +52,32 @@ struct GraphManager::Data
 
 void GraphManager::Data::AddCluster(const vertex &v)
 {
-
+	Cluster newCluster;
+	pool.insert(std::pair < vertex, Cluster *>(v, &newCluster));
 }
 
 //------------------------------------------------------------------------------
 
 void GraphManager::Data::RemoveCluster(const vertex &v)
 {
-
+	
 }
 
 //------------------------------------------------------------------------------
 
 bool GraphManager::Data::InCluster(const vertex &v) const
 {
-
+	return (pool.count(v) == 1);
 }
 
 //------------------------------------------------------------------------------
 
 void GraphManager::Data::MergeCluster(const vertex &v1, const vertex &v2)
 {
+	Cluster * Cluster1 = pool.find(v1)->second;
+	Cluster * Cluster2 = pool.find(v2)->second;
+
+	(*Cluster1) += Cluster2;
 }
 
 //==============================================================================
