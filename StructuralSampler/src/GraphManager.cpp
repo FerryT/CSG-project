@@ -82,7 +82,19 @@ void GraphManager::Data::AddCluster(const vertex &v)
 
 void GraphManager::Data::RemoveCluster(const vertex &v)
 {
-	
+	clusterid cid = (clusterid) *pool[v];
+	for (ClusterPool::iterator it = pool.begin(); it != pool.end();)
+	{
+		if ((clusterid) (*it->second) == cid)
+		{
+			delete(it->second);
+			pool.erase(it);
+		}
+		else
+		{
+			it++;
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
