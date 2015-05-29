@@ -8,11 +8,11 @@ shift
 echo running Poisson with different p values
 
 rem output header to the CSV
-echo ClusterSize;StructuralSampler;Metis;>> %cluster_output_file%
+echo ClusterSize,StructuralSampler,Metis,>> "%cluster_output_file%"
 
 rem run the tests
-CALL RunQualityTest %cluster_output_file% 10 %cluster_snapshot_size% %*
-CALL RunQualityTest %cluster_output_file% 30 %cluster_snapshot_size% %*
-CALL RunQualityTest %cluster_output_file% 50 %cluster_snapshot_size% %*
-CALL RunQualityTest %cluster_output_file% 70 %cluster_snapshot_size% %*
-CALL RunQualityTest %cluster_output_file% 90 %cluster_snapshot_size% %*
+CALL RunQualityTest "%cluster_output_file%" 10 "%cluster_snapshot_size%" %*
+CALL RunQualityTest "%cluster_output_file%" 30 "%cluster_snapshot_size%" %*
+CALL RunQualityTest "%cluster_output_file%" 50 "%cluster_snapshot_size%" %*
+CALL RunQualityTest "%cluster_output_file%" 70 "%cluster_snapshot_size%" %*
+CALL RunQualityTest "%cluster_output_file%" 90 "%cluster_snapshot_size%" %*

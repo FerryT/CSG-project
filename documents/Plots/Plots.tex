@@ -1,0 +1,27 @@
+\documentclass[tikz]{standalone}
+\usepackage{pgfplots}
+
+\begin{document}
+\newcommand{\plot}[2]
+	{
+		\begin{tikzpicture}
+		\begin{axis}[
+			%title=#1,
+			xlabel={Cluster size},
+			ylabel={Cut size},
+			legend entries={Structural sampler,Metis},
+			legend style={
+				anchor=north,
+				at={(axis description cs:0,-0.1)}}
+			]
+		\addplot table [x=ClusterSize, y=StructuralSampler, col sep=comma] {#2};
+		\addplot table [x=ClusterSize, y=Metis, col sep=comma] {#2};
+		\end{axis}
+		\end{tikzpicture}
+	}
+
+\plot{Quality cluster size BA model}{../../output/QualityClusterSizeBAModel100.csv}
+\plot{Quality cluster size Fruits}{../../output/QualityClusterSizeFruits.csv}
+\plot{Quality cluster size Poisson model}{../../output/QualityClusterSizePoission1000.csv}
+
+\end{document}

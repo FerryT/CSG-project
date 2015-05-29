@@ -127,7 +127,7 @@ void QualityTest::RunTest(string outputFilename)
 	else
 		output.open(outputFilename, ios::out);
 	for (int i = 0; i < algorithms.size(); i++)
-		output << static_cast<float>(results[i].Sumation) / static_cast<float>(results[i].count) << ";";
+		output << static_cast<float>(results[i].Sumation) / static_cast<float>(results[i].count) << ",";
 	output << endl;
 	output.close();
 
