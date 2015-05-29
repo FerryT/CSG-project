@@ -1,5 +1,94 @@
+#include <map>
 
 #include "GraphManager.h"
+
+//------------------------------------------------------------------------------
+
+class Cluster;
+typedef std::map<vertex, Cluster *> ClusterPool;
+
+//==============================================================================
+
+class Cluster
+{
+	public:
+		Cluster() : parent(this) {}
+		~Cluster() {}
+
+		Cluster *operator +=(Cluster *other)
+		{
+			merge(other);
+			return this;
+		}
+	private:
+		Cluster *parent;
+
+		Cluster *find()
+		{
+			if (parent != this)
+				parent = parent->find();
+			return parent;
+		}
+
+		void merge(Cluster *other)
+		{
+			parent = other;
+		}
+};
+
+//==============================================================================
+
+struct GraphManager::Data
+{
+	ClusterPool pool;
+
+	void AddCluster(const vertex &v);
+	void RemoveCluster(const vertex &v);
+	bool InCluster(const vertex &v) const;
+	void MergeCluster(const vertex &v1, const vertex &v2);
+};
+
+//------------------------------------------------------------------------------
+
+void GraphManager::Data::AddCluster(const vertex &v)
+{
+
+}
+
+//------------------------------------------------------------------------------
+
+void GraphManager::Data::RemoveCluster(const vertex &v)
+{
+
+}
+
+//------------------------------------------------------------------------------
+
+bool GraphManager::Data::InCluster(const vertex &v) const
+{
+
+}
+
+//------------------------------------------------------------------------------
+
+void GraphManager::Data::MergeCluster(const vertex &v1, const vertex &v2)
+{
+}
+
+//==============================================================================
+
+GraphManager::GraphManager(int max) : maxClusterSize(max)
+{
+	data = new Data;
+}
+
+//------------------------------------------------------------------------------
+
+GraphManager::~GraphManager()
+{
+	if (data)
+		delete data;
+}
 
 //------------------------------------------------------------------------------
 
