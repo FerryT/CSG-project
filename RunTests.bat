@@ -11,7 +11,7 @@ mkdir "%cluster_output%"
 
 echo running Poisson with different p values
 rem todo more updates and nodes
-call RunMultipleQualityTests "%cluster_output%\QualityClusterSizePoission1000.csv" 100 -CI Poisson 100 1 300
+call RunMultipleQualityTests "%cluster_output%\QualityClusterSizePoission1000.csv" 100 -CI Poisson 100 0.85 300
 echo running BA model with different p values
 call RunMultipleQualityTests "%cluster_output%\QualityClusterSizeBAModel100.csv" 100 -CI BAModel 100
 echo running fruits with different p values
