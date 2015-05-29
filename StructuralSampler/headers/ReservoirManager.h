@@ -7,7 +7,8 @@
 
 class Reservoir {
 	protected:
-		Graph graph;
+		Edges graph;
+		// Todo: convert this into a MinPGraph
 	
 	public:
 		virtual void Add(const Edge &e) = 0;
@@ -41,7 +42,7 @@ class SupportReservoir : public Reservoir {
 		//try to remove an edge equal to e excluding the p-value (only 1 instance), return true if edge was present and false otherwise
 		bool Remove(const Edge &e);
 		//return all edges with p-values > minP, store the length of the array in lastGetEdgesLength
-		vector<Edge> GetEdges(double minP);
+		Edges GetEdges(double minP);
 };
 
 //------------------------------------------------------------------------------

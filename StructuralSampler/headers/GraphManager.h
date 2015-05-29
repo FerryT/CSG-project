@@ -45,11 +45,11 @@ class GraphManager {
 		// Finds the cluster index
 		virtual int FindClusterIndex(vertex u);
 		// finds all the verices in the cluster of u
-		virtual vector<vertex> FindCluster(vertex u);
+		virtual Vertices FindCluster(vertex u);
 		// returns the number of clusters
 		virtual int CountClusters();
 		// returns the vertices in the cluster with index i
-		virtual vector<vertex> GetCluster(int i);
+		virtual Vertices GetCluster(int i);
 };
 
 #endif

@@ -331,7 +331,7 @@ void Metis::ParseArguments(const Strings &arguments)
 
 clusterid Metis::FindClusterIndex(vertex u)
 {
-	if (u >= data->num_nodes)
+	if (u >= (vertex) data->num_nodes)
 		throw "[Metis::FindClusterIndex] index out of bounds!";
 	data->UpdateClusters();
 	return (int) data->clustering[u];
@@ -341,7 +341,7 @@ clusterid Metis::FindClusterIndex(vertex u)
 
 Vertices Metis::FindCluster(vertex u)
 {
-	if (u >= data->num_nodes)
+	if (u >= (vertex) data->num_nodes)
 		throw "[Metis::FindClusterIndex] index out of bounds!";
 	data->UpdateClusters();
 	
@@ -399,8 +399,8 @@ void StructuralSampler::Add(Edge newEdge)
 			supReservoir.Add(currEdge);
 			manager.RemoveExact(currEdge);
 		}
-		const Graph &searchResults = supReservoir.GetEdges(pos);
-		for (Graph::iterator it = searchResults.begin(); it != searchResults.end(); ++it)
+		const Edges &searchResults = supReservoir.GetEdges(pos);
+		for (Edges::const_iterator it = searchResults.begin(); it != searchResults.end(); ++it)
 		{
 			const Edge &currEdge = *it;
 			manager.Add(currEdge);
@@ -426,8 +426,8 @@ void StructuralSampler::Remove(Edge theEdge)
 	{
 		double rmEdgeP = strReservoir.Remove(theEdge);
 		manager.Remove(theEdge);
-		const Graph &searchResults = supReservoir.GetEdges(rmEdgeP);
-		for (Graph::iterator it = searchResults.begin(); it != searchResults.end(); ++it)
+		const Edges &searchResults = supReservoir.GetEdges(rmEdgeP);
+		for (Edges::const_iterator it = searchResults.begin(); it != searchResults.end(); ++it)
 		{
 			const Edge &currEdge = *it;
 			manager.Add(currEdge);

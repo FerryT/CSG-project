@@ -7,7 +7,7 @@
 
 using namespace std;
 
-inline bool exists_test(const std::string& name) {
+inline bool exists_test(const String& name) {
 	ifstream f(name.c_str());
 	if (f.good()) {
 		f.close();
@@ -21,7 +21,14 @@ inline bool exists_test(const std::string& name) {
 
 //------------------------------------------------------------------------------
 
-void QualityTest::ParseArguments(const vector<string>& arguments)
+void Test::ParseArguments(const Strings& arguments)
+{
+	std::cout << "arguments for this test are not yet parsed" << std::endl;
+}
+
+//------------------------------------------------------------------------------
+
+void QualityTest::ParseArguments(const Strings& arguments)
 {
 	if (arguments.size() == 0)
 	{
@@ -56,7 +63,7 @@ struct QualityResult
 	int count = 0;
 };
 
-void QualityTest::RunTest(string outputFilename)
+void QualityTest::RunTest(String outputFilename)
 {
 	vector<QualityResult> results;
 
@@ -153,7 +160,7 @@ CaptureStackInput::~CaptureStackInput()
 void CaptureStackInput::Add(Edge e)
 {
 	this->output->Add(e);
-	this->_currentGraph->push_back(e);
+	this->_currentGraph->insert(e);
 }
 
 //------------------------------------------------------------------------------

@@ -126,7 +126,7 @@ GraphManager::~GraphManager()
 }
 
 //------------------------------------------------------------------------------
-
+/*
 void GraphManager::MergeClusters(int startCluster)
 {
 	std::vector<vector<vertex>>::size_type i = startCluster;
@@ -462,3 +462,7 @@ vector<vertex> GraphManager::GetCluster(int index)
 {
 	return clusters[index];
 }
+
+*/
+
+//------------------------------------------------------------------------------

@@ -1,15 +1,10 @@
 #ifndef ALGORITHM_H
 #define ALGORITHM_H
 
-#include <vector>
-#include <string>
-
 #include "GraphInput.h"
 #include "Graph.h"
 #include "GraphManager.h"
 #include "ReservoirManager.h"
-
-typedef std::vector<std::string> Strings;
 
 //------------------------------------------------------------------------------
 

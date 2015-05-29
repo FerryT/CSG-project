@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <set>
 #include <vector>
+#include <string>
 
 // a single vertex
 typedef unsigned long vertex;
@@ -28,15 +29,27 @@ struct Edge {
 	{
 		return v1 != other.v1 || v2 != other.v2;
 	}
-	bool operator <(const Edge &other)
+	bool operator <(const Edge &other) const
 	{
 		if (v1 == other.v1)
 			return v2 < other.v2;
 		return v1 < other.v1;
 	}
+	struct minP
+	{
+		bool operator() (const Edge &e1, const Edge &e2) const
+		{
+			if (e1.p == e2.p) return e1 < e2; return e1.p < e2.p;
+		}
+	};
 };
 
 typedef std::set<Edge> Graph;
+typedef std::set<Edge, Edge::minP> MinPGraph;
+typedef std::vector<Edge> Edges;
 typedef std::vector<vertex> Vertices;
+
+typedef std::string String;
+typedef std::vector<String> Strings;
 
 #endif

@@ -4,24 +4,24 @@
 
 void FilterEdges::Remove(Edge e)
 {
-	Graph::iterator it = find(this->g.begin(), this->g.end(), e);
-	if (it != this->g.end())
+	Graph::iterator it = graph.find(e);
+	if (it != graph.end())
 	{
-		this->g.erase(it);
+		graph.erase(it);
 		StackInput::Remove(e);
 	}
 }
 
 void FilterEdges::Add(Edge e)
 {
-	if (e.p > this->Filter)
+	if (e.p > Filter)
 	{
 		StackInput::Add(e);
-		this->g.push_back(e);
+		graph.insert(e);
 	}
 }
 
-void FilterEdges::ParseArguments(const vector<string>& arguments)
+void FilterEdges::ParseArguments(const Strings& arguments)
 {
 	if (arguments.size() == 0)
 	{
@@ -29,7 +29,7 @@ void FilterEdges::ParseArguments(const vector<string>& arguments)
 	}
 	else if (arguments.size() == 1)
 	{
-		this->Filter = atof(arguments[0].c_str());
+		Filter = atof(arguments[0].c_str());
 	}
 	else
 	{

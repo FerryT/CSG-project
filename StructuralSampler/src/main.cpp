@@ -16,7 +16,7 @@
 
 int main(int argc, char *argv[])
 {
-	srand(time(NULL));
+	srand((unsigned int) time(NULL));
 
 	try
 	{
@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
 		auto outputDescription = find_if(arguments.begin(), arguments.end(), IsType<ComOutput>);
 		if (outputDescription == arguments.end())
 			throw "Need atleast a single output in the command line";
-		string outputfilename = GetOutputFilename(*outputDescription);
+		String outputfilename = GetOutputFilename(*outputDescription);
 		
 		test->descriptions = arguments;
 		test->RunTest(outputfilename);

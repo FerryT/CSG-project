@@ -1,11 +1,11 @@
 #ifndef TESTS_H
 #define TESTS_H
 
+#include <ctime>
+
 #include "Graph.h"
 #include "Algorithm.h"
 #include "GraphInput.h"
-#include <iostream>
-#include <ctime>
 #include "ComponentDescription.h"
 
 //------------------------------------------------------------------------------
@@ -13,24 +13,24 @@
 class Test {
 	public:
 		Algorithm* algorithm;
-		vector<ComponentDescription> descriptions;
+		ComponentDescriptions descriptions;
 		Input* input;
-		vector<StackInput*> stackinputs;
+		std::vector<StackInput*> stackinputs;
 		// Runs the tests and writes the results to an output file in CSV
-		virtual void RunTest(string outputFile) = 0;
+		virtual void RunTest(String outputFile) = 0;
 		//parses arguments for configuration
-		virtual void ParseArguments(const vector<string>& arguments) { std::cout << "arguments for this test are not yet parsed" << std::endl; }
+		virtual void ParseArguments(const Strings& arguments);
 };
 
 //------------------------------------------------------------------------------
 
 class QualityTest: public Test {
 	public:
-		void ParseArguments(const vector<string>& arguments) override;
+		void ParseArguments(const Strings& arguments) override;
 		QualityTest();
 		QualityTest(int snapshotSize);
 		int SnapshotSize = 10000; 
-		virtual void RunTest(string outputFile) override;
+		virtual void RunTest(String outputFile) override;
 };
 
 //------------------------------------------------------------------------------
@@ -54,7 +54,7 @@ class CaptureStackInput : public StackInput
 class SplitStackInput : public StackInput
 {
 private: 
-	vector<Output*> outputs;
+	std::vector<Output*> outputs;
 	bool is_open = false;
 public:
 	void SetOutput(Output* output) override;
@@ -74,7 +74,7 @@ public:
 
 class ThroughputTest {
 public:
-	void RunTest(string outputFile);
+	void RunTest(String outputFile);
 };
 */
 
