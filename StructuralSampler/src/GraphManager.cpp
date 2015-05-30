@@ -84,7 +84,7 @@ struct GraphManager::Data
 	ClusterIDPool ids;
 
 	void AddCluster(const vertex &v);
-	void RemoveCluster(const vertex &v);
+	Vertices RemoveCluster(const vertex &v);
 	bool InCluster(const vertex &v) const;
 	void MergeCluster(const vertex &v1, const vertex &v2);
 };
@@ -98,9 +98,13 @@ void GraphManager::Data::AddCluster(const vertex &v)
 
 //------------------------------------------------------------------------------
 
-void GraphManager::Data::RemoveCluster(const vertex &v)
+Vertices GraphManager::Data::RemoveCluster(const vertex &v)
 {
-	clusterid cid = (clusterid) *pool[v];
+	Vertices vs;
+	Cluster *c = pool[v];
+	clusterid cid = (clusterid) *c;
+	vs.reserve(c->Count());
+	
 	Cluster *root = NULL;
 	for (ClusterPool::iterator it = pool.begin(); it != pool.end();)
 	{
@@ -111,6 +115,7 @@ void GraphManager::Data::RemoveCluster(const vertex &v)
 			else
 				delete it->second;
 			pool.erase(it);
+			vs.push_back(it->first);
 		}
 		else
 		{
@@ -119,6 +124,8 @@ void GraphManager::Data::RemoveCluster(const vertex &v)
 	}
 	if (root)
 		delete root;
+	
+	return vs;
 }
 
 //------------------------------------------------------------------------------
