@@ -280,11 +280,12 @@ void GraphManager::AddEdgeToGraph(const Edge &e)
 		graph.at(e.v2).at(e.v1) += 1;
 	}
 }
-
+*/
 //------------------------------------------------------------------------------
 
 void GraphManager::Add(const Edge &e)
 {
+	/*
 	//update theGraph
 	AddEdgeToGraph(e);
 	int cluster_v1 = FindClusterIndex(e.v1);
@@ -311,6 +312,7 @@ void GraphManager::Add(const Edge &e)
 	{
 		UnionClusters(cluster_v1, cluster_v2);
 	}
+	*/
 }
 
 //------------------------------------------------------------------------------
@@ -324,6 +326,7 @@ void GraphManager::RemoveExact(const Edge &e)
 
 void GraphManager::Remove(const Edge &e)
 {
+	/*
 	graph.at(e.v1).at(e.v2) -= 1;
 	graph.at(e.v2).at(e.v1) -= 1;
 	bool remakeC1 = true;
@@ -379,12 +382,14 @@ void GraphManager::Remove(const Edge &e)
 			RemakeClusters(i, i);
 		}
 	}
+	*/
 }
 
 //------------------------------------------------------------------------------
 
 bool GraphManager::ConstraintSatisfied()
 {
+	/*
 	for (std::vector<vector<vertex>>::size_type i = 0; i < clusters.size(); i++)
 	{
 		if (clusters[i].size()>maxClusterSize)
@@ -392,6 +397,7 @@ bool GraphManager::ConstraintSatisfied()
 			return false;
 		}
 	}
+	*/
 	return true;
 }
 
@@ -399,6 +405,7 @@ bool GraphManager::ConstraintSatisfied()
 
 int GraphManager::FindClusterIndex(vertex u)
 {
+	/*
 	for (std::vector< vector<vertex> >::size_type i =0; i != clusters.size(); i++)
 	{
 		for (std::vector<vertex>::size_type j = 0; j != clusters[i].size(); j++)
@@ -409,7 +416,7 @@ int GraphManager::FindClusterIndex(vertex u)
 			}
 		}
 	}
-
+	*/
 	return -1;
 }
 
@@ -417,18 +424,18 @@ int GraphManager::FindClusterIndex(vertex u)
 
 vector<vertex> GraphManager::FindCluster(vertex u)
 {
-	return clusters[FindClusterIndex(u)];
+	//return clusters[FindClusterIndex(u)];
 }
 
 //------------------------------------------------------------------------------
 
 int GraphManager::CountClusters()
 {
-	return clusters.size();
+	//return clusters.size();
 }
 
 //------------------------------------------------------------------------------
-
+/*
 void GraphManager::removeFromCluster(int v)
 {
 	vector< vector<vertex> >::size_type cluster = -1;
@@ -455,14 +462,12 @@ void GraphManager::removeFromCluster(int v)
 		clusters.erase(clusters.begin() + cluster);
 	}
 }
-
+*/
 //------------------------------------------------------------------------------
 
 vector<vertex> GraphManager::GetCluster(int index)
 {
-	return clusters[index];
+	//return clusters[index];
 }
-
-*/
 
 //------------------------------------------------------------------------------

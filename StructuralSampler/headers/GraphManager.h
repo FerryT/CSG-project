@@ -43,13 +43,13 @@ class GraphManager {
 	
 		// The query methods:
 		// Finds the cluster index
-		virtual int FindClusterIndex(vertex u);
+		virtual clusterid FindClusterIndex(vertex u);
 		// finds all the verices in the cluster of u
 		virtual Vertices FindCluster(vertex u);
 		// returns the number of clusters
-		virtual int CountClusters();
+		virtual clusterid CountClusters();
 		// returns the vertices in the cluster with index i
-		virtual Vertices GetCluster(int i);
+		virtual Vertices GetCluster(clusterid i);
 };
 
 #endif
