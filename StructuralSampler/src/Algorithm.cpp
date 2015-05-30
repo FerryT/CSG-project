@@ -378,7 +378,7 @@ Vertices Metis::GetCluster(clusterid index)
 
 //==============================================================================
 
-StructuralSampler::StructuralSampler(int maxClusterSize) : manager(maxClusterSize)
+StructuralSampler::StructuralSampler(clusterid maxClusterSize) : manager(maxClusterSize)
 {
 }
 

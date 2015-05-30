@@ -27,9 +27,9 @@ class GraphManager {
 		*/
 	public:
 		// the B value mentioned in the paper
-		int maxClusterSize;
-
-		GraphManager(int max = 10);
+		clusterid maxClusterSize;
+		
+		GraphManager(clusterid max = 10);
 		~GraphManager();
 		
 		// just insert the edge into the graph
