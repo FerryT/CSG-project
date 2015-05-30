@@ -42,9 +42,17 @@ struct Edge {
 			if (e1.p == e2.p) return e1 < e2; return e1.p < e2.p;
 		}
 	};
+	struct less2 // Swapped lexicographic order
+	{
+		bool operator() (const Edge &e1, const Edge &e2) const
+		{
+			if (e1.v2 == e2.v2) return e1.v1 < e2.v1; return e1.v2 < e2.v2;
+		}
+	};
 };
 
 typedef std::set<Edge> Graph;
+typedef std::set<Edge, Edge::less2> Less2Graph;
 typedef std::set<Edge, Edge::minP> MinPGraph;
 typedef std::vector<Edge> Edges;
 typedef std::vector<vertex> Vertices;

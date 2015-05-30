@@ -87,7 +87,55 @@ struct GraphManager::Data
 	Vertices RemoveCluster(const vertex &v);
 	bool InCluster(const vertex &v) const;
 	void MergeCluster(const vertex &v1, const vertex &v2);
+	
+	Graph graph;
+	Less2Graph l2graph;
+	
+	void AddEdge(const Edge &e);
+	void RemoveEdge(const Edge &e);
+	Edges FindEdges(const vertex &v);
 };
+
+//------------------------------------------------------------------------------
+
+void GraphManager::Data::AddEdge(const Edge &e)
+{
+	graph.insert(e);
+	l2graph.insert(e);
+}
+
+//------------------------------------------------------------------------------
+
+void GraphManager::Data::RemoveEdge(const Edge &e)
+{
+	graph.erase(e);
+	l2graph.erase(e);
+}
+
+//------------------------------------------------------------------------------
+
+Edges GraphManager::Data::FindEdges(const vertex &v)
+{
+	Edges es;
+	
+	{
+		Graph::iterator begin, it, end;
+		begin = graph.lower_bound(Edge(v, 0));
+		end = graph.lower_bound(Edge(v + 1, 0));
+		for (it = begin; it != end; ++it)
+			es.push_back(*it);
+	}
+	
+	{
+		Less2Graph::iterator begin, it, end;
+		begin = l2graph.lower_bound(Edge(0, v));
+		end = l2graph.lower_bound(Edge(0, v + 1));
+		for (it = begin; it != end; ++it)
+			es.push_back(*it);
+	}
+	
+	return es;
+}
 
 //------------------------------------------------------------------------------
 
