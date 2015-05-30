@@ -156,6 +156,12 @@ GraphManager::GraphManager(clusterid max) : maxClusterSize(max)
 GraphManager::~GraphManager()
 {
 	delete data;
+	data->ids.clear();
+	
+	ClusterPool::iterator it;
+	for (it = data->pool.begin(); it != data->pool.end(); ++it)
+		delete it->second;
+	data->pool.clear();
 }
 
 //------------------------------------------------------------------------------
