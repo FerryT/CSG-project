@@ -13,6 +13,11 @@ typedef std::map<Cluster *, clusterid> ClusterIDPool;
 class Cluster
 {
 	public:
+		Cluster(ClusterIDPool *ids, Cluster * p) : pool(ids), count(1)
+		{
+			(*pool)[this] = pool->size();
+			parent = p;
+		}
 		Cluster(ClusterIDPool *ids) : parent(this), pool(ids), count(1)
 		{
 			(*pool)[this] = pool->size();
@@ -102,6 +107,26 @@ void GraphManager::Data::AddEdge(const Edge &e)
 {
 	graph.insert(e);
 	l2graph.insert(e);
+	bool v1New = (pool.count(e.v1) == 0);
+	bool v2New = (pool.count(e.v2) == 0);
+
+	if (v1New && v2New)
+	{
+		Cluster c1(&ids);
+		Cluster c2(&ids,&c1);
+		pool.insert(std::pair<vertex, Cluster *>(e.v1, &c1));
+		pool.insert(std::pair<vertex, Cluster *>(e.v2, &c2));
+	}
+	else if (v1New)
+	{
+		Cluster newC(&ids, pool[e.v2]);
+		pool.insert(std::pair<vertex, Cluster *>(e.v1, &newC));
+	}
+	else if (v2New)
+	{
+		Cluster newC(&ids, pool[e.v1]);
+		pool.insert(std::pair<vertex, Cluster *>(e.v2, &newC));
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -110,6 +135,8 @@ void GraphManager::Data::RemoveEdge(const Edge &e)
 {
 	graph.erase(e);
 	l2graph.erase(e);
+
+
 }
 
 //------------------------------------------------------------------------------
