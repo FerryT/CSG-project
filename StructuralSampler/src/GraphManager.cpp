@@ -47,6 +47,19 @@ class Cluster
 		{
 			return parent == this;
 		}
+		//I need to access the parent element in GraphManager::Data::RemoveEdge(const Edge &e), so that I can re-initialize all clusters in a single cluster
+		Cluster *getParent()
+		{
+			return parent;
+		}
+		void setParent(Cluster *newParent)
+		{
+			parent = newParent;
+		}
+		void resetParent()
+		{
+			parent = this;
+		}
 	private:
 		Cluster *parent;
 		ClusterIDPool *pool;
@@ -92,7 +105,7 @@ struct GraphManager::Data
 	Vertices RemoveCluster(const vertex &v);
 	bool InCluster(const vertex &v) const;
 	void MergeCluster(const vertex &v1, const vertex &v2);
-	
+
 	Graph graph;
 	Less2Graph l2graph;
 	
@@ -127,6 +140,27 @@ void GraphManager::Data::AddEdge(const Edge &e)
 		Cluster newC(&ids, pool[e.v1]);
 		pool.insert(std::pair<vertex, Cluster *>(e.v2, &newC));
 	}
+	else
+	{
+		//TODO could you check this is what happens Ferry?
+		//merge pool[e.v1] and pool[e.v2] 
+		//i.e. make it so that the parent of the one has as a parent the parent of the other
+		//and also the parent of all vertices in the cluster with v1 is changed to the parent of v2
+		//this ensures path compression
+		Cluster *parent1 = (*pool[e.v1]).getParent();
+		Cluster *parent2 = (*pool[e.v2]).getParent();
+		(*parent1).setParent(parent2);
+
+		for each (std::pair<vertex, Cluster *> vcPair in pool)
+		{
+			//set the parent of all vertices which have parent1 as parent to parent2
+			//this ensures that all paths are compressed as much as possible
+			if (vcPair.second == parent1)
+			{
+				(*vcPair.second).setParent(parent2);
+			}
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -136,7 +170,42 @@ void GraphManager::Data::RemoveEdge(const Edge &e)
 	graph.erase(e);
 	l2graph.erase(e);
 
+	const Cluster *identifier = (*pool[e.v1]).getParent();
+	for each (std::pair<vertex,Cluster *>vcPair in pool)
+	{
+		if ((*vcPair.second).getParent() == identifier)
+		{
+			(*vcPair.second).resetParent();
+		}
+	}
 
+	for each (Edge oldEdge in graph)
+	{
+		bool v1New = (pool.count(oldEdge.v1) == 0);
+		bool v2New = (pool.count(oldEdge.v2) == 0);
+
+		if (v1New && v2New)
+		{
+			Cluster c1(&ids);
+			Cluster c2(&ids, &c1);
+			pool.insert(std::pair<vertex, Cluster *>(oldEdge.v1, &c1));
+			pool.insert(std::pair<vertex, Cluster *>(oldEdge.v2, &c2));
+		}
+		else if (v1New)
+		{
+			Cluster newC(&ids, pool[oldEdge.v2]);
+			pool.insert(std::pair<vertex, Cluster *>(oldEdge.v1, &newC));
+		}
+		else if (v2New)
+		{
+			Cluster newC(&ids, pool[oldEdge.v1]);
+			pool.insert(std::pair<vertex, Cluster *>(oldEdge.v2, &newC));
+		}
+		else
+		{
+			(*pool[oldEdge.v1]) += pool[oldEdge.v2];
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
