@@ -149,15 +149,19 @@ void GraphManager::Data::AddEdge(const Edge &e)
 		//this ensures path compression
 		Cluster *parent1 = (*pool[e.v1]).getParent();
 		Cluster *parent2 = (*pool[e.v2]).getParent();
-		(*parent1).setParent(parent2);
-
-		for each (std::pair<vertex, Cluster *> vcPair in pool)
+		if (parent1 != parent2)
 		{
-			//set the parent of all vertices which have parent1 as parent to parent2
-			//this ensures that all paths are compressed as much as possible
-			if (vcPair.second == parent1)
+			//nodes are not in the same cluster, so merge the clusters
+			(*parent1).setParent(parent2);
+
+			for each (std::pair<vertex, Cluster *> vcPair in pool)
 			{
-				(*vcPair.second).setParent(parent2);
+				//set the parent of all vertices which have parent1 as parent to parent2
+				//this ensures that all paths are compressed as much as possible
+				if (vcPair.second == parent1)
+				{
+					(*vcPair.second).setParent(parent2);
+				}
 			}
 		}
 	}
@@ -188,15 +192,19 @@ void GraphManager::Data::RemoveEdge(const Edge &e)
 		//this ensures path compression
 		Cluster *parent1 = (*pool[e.v1]).getParent();
 		Cluster *parent2 = (*pool[e.v2]).getParent();
-		(*parent1).setParent(parent2);
-
-		for each (std::pair<vertex, Cluster *> vcPair in pool)
+		if (parent1 != parent2)
 		{
-			//set the parent of all vertices which have parent1 as parent to parent2
-			//this ensures that all paths are compressed as much as possible
-			if (vcPair.second == parent1)
+			//nodes are not in the same cluster, so merge the clusters
+			(*parent1).setParent(parent2);
+
+			for each (std::pair<vertex, Cluster *> vcPair in pool)
 			{
-				(*vcPair.second).setParent(parent2);
+				//set the parent of all vertices which have parent1 as parent to parent2
+				//this ensures that all paths are compressed as much as possible
+				if (vcPair.second == parent1)
+				{
+					(*vcPair.second).setParent(parent2);
+				}
 			}
 		}
 	}
