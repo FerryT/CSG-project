@@ -118,21 +118,27 @@ void GraphManager::Data::AddVertex(const vertex &v)
 void GraphManager::Data::RemoveVertex(const vertex &v)
 {
 	Vertices vs; // Holds vertices belonging to resolved cluster
+	std::vector<Cluster *> cs; // Holds cluster objects being resolved
 	
 	Cluster *c = pool[v];
 	clusterid cid = *c;
 	vs.reserve(c->Count() - 1);
+	cs.reserve(c->Count() - 1);
 	pool.erase(v); // Remove vertex
 	
-	// Resolve cluster vertex belonged to
+	// Find vertices and cluster objects belonging to teh cluster
 	for (ClusterPool::iterator it = pool.begin(); it != pool.end(); ++it)
 	{
 		if (*it->second == cid)
 		{
-			it->second->Reset();
 			vs.push_back(it->first);
+			cs.push_back(it->second);
 		}
 	}
+
+	// Break up cluster
+	for (Cluster *cluster : cs)
+		cluster->Reset();
 	
 	// Free removed cluster: now since it could have been a cluster root
 	delete c;
