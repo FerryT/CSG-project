@@ -11,6 +11,7 @@ typedef unsigned long vertex;
 
 // a number refering to a cluster
 typedef unsigned short clusterid;
+const clusterid unclustered = (clusterid) -1;
 
 // and edge from and to vertex
 struct Edge {

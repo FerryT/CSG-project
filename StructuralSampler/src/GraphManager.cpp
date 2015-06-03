@@ -187,8 +187,8 @@ Edges GraphManager::Data::FindEdges(const vertex &v) const
 	
 	{
 		Graph::iterator begin, it, end;
-		begin = graph.lower_bound(Edge(v, 0));
-		end = graph.lower_bound(Edge(v + 1, 0));
+		begin = graph.upper_bound(Edge(v, v));
+		end = graph.lower_bound(Edge(v + 1, v + 1));
 		for (it = begin; it != end; ++it)
 			es.push_back(*it);
 	}
@@ -208,7 +208,7 @@ Edges GraphManager::Data::FindEdges(const vertex &v) const
 
 bool GraphManager::Data::HasEdgesWith(const vertex &v) const
 {
-	if (graph.lower_bound(Edge(v, 0)) != graph.lower_bound(Edge(v + 1, 0)))
+	if (graph.upper_bound(Edge(v, v)) != graph.lower_bound(Edge(v + 1, v + 1)))
 		return true;
 	
 	if (l2graph.lower_bound(Edge(0, v)) != l2graph.lower_bound(Edge(0, v + 1)))
@@ -302,7 +302,8 @@ bool GraphManager::ConstraintSatisfied()
 clusterid GraphManager::FindClusterIndex(vertex u)
 {
 	if (!data->pool.count(u))
-		throw "[GraphManager::FindClusterIndex] index out of bounds!";
+		return unclustered;
+		//throw "[GraphManager::FindClusterIndex] index out of bounds!";
 	return (clusterid) *data->pool[u];
 }
 
@@ -311,6 +312,9 @@ clusterid GraphManager::FindClusterIndex(vertex u)
 Vertices GraphManager::FindCluster(vertex u)
 {
 	clusterid i = FindClusterIndex(u);
+	
+	if (i == unclustered)
+		return Vertices();
 	
 	Vertices vs;
 	ClusterPool::iterator it;

@@ -171,6 +171,10 @@ void VisualizeResults::RunTest(String outputFilename)
 			{
 				color = "red";
 			}
+			else if (c1 == unclustered)
+			{
+				color = "gray";
+			}
 			else
 			{
 				color = "blue";
