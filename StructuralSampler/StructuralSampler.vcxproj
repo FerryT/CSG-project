@@ -94,6 +94,7 @@
     <ClInclude Include="headers\Algorithm.h" />
     <ClInclude Include="headers\CommandLineHelper.h" />
     <ClInclude Include="headers\ComponentDescription.h" />
+    <ClInclude Include="headers\ConsoleColor.h" />
     <ClInclude Include="headers\Graph.h" />
     <ClInclude Include="headers\GraphInput.h" />
     <ClInclude Include="headers\GraphManager.h" />

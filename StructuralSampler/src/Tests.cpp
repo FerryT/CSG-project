@@ -2,8 +2,9 @@
 #include <fstream>
 #include <algorithm>
 
-#include "../headers/Tests.h"
-#include <CommandLineHelper.h>
+#include "Tests.h"
+#include "CommandLineHelper.h"
+#include "ConsoleColor.h"
 
 using namespace std;
 
@@ -260,6 +261,7 @@ void ThroughputTest::RunTest(string outputFilename)
 	
 	int totalUpdates = 0;
 	
+	bool NoClusterWarning = false;
 	clock_t start = clock();
 	while (!input->IsEnd())
 	{
@@ -272,19 +274,26 @@ void ThroughputTest::RunTest(string outputFilename)
 		for (int i = 0; !input->IsEnd() && i < this->queries; i++)
 		{
 			int clusterCount = algorithm->CountClusters();
-			int c1i = rand() % clusterCount;
-			int c2i = rand() % clusterCount;
+			if (clusterCount != 0)
+			{
+				int c1i = rand() % clusterCount;
+				int c2i = rand() % clusterCount;
 
-			vector<vertex> c1 = algorithm->GetCluster(c1i);
-			vector<vertex> c2 = algorithm->GetCluster(c2i);
+				vector<vertex> c1 = algorithm->GetCluster(c1i);
+				vector<vertex> c2 = algorithm->GetCluster(c2i);
 
-			int v1 = rand() % c1.size();
-			int v2 = rand() % c2.size();
+				int v1 = rand() % c1.size();
+				int v2 = rand() % c2.size();
 
-			algorithm->FindClusterIndex(v1);
-			algorithm->FindClusterIndex(v2);
+				algorithm->FindClusterIndex(v1);
+				algorithm->FindClusterIndex(v2);
 
-			//check if v1c and v2c are the same, but unneccary because performance test
+				//check if v1c and v2c are the same, but unneccary because performance test
+			}
+			else
+			{
+				NoClusterWarning = true;
+			}
 		}
 	}
 	clock_t end = clock();
@@ -315,4 +324,10 @@ void ThroughputTest::RunTest(string outputFilename)
 	output.close();
 
 	cout << "Finished writing" << endl;
+
+	if (NoClusterWarning)
+	{
+		cout << red << "Warning: there was a situation with no clusters" << white << endl;
+	}
+
 }
