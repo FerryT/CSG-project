@@ -41,7 +41,7 @@ struct Metis::Data
 {
 	idx_t num_nodes;
 	idx_t num_edges;
-	idx_t num_clusters;
+	idx_t max_cluster_size;
 
 	idx_t *node_indices;
 	idx_t *edges;
@@ -50,8 +50,8 @@ struct Metis::Data
 	bool cached;
 	MetisOptions options;
 
-	Data(int numClusters)
-		: num_nodes(0), num_edges(0), num_clusters(numClusters),
+	Data(int maxClusterSize)
+		: num_nodes(0), num_edges(0), max_cluster_size(maxClusterSize),
 		node_indices(NULL), edges(NULL), clustering(NULL),
 		cached(true), options() {}
 	void UpdateClusters();
@@ -68,8 +68,11 @@ void Metis::Data::UpdateClusters()
 	/** /Debug();//*/
 	
 	idx_t ncon = 1;
-	idx_t nparts = num_clusters;
+	//approximation of the parts from max cluster size
+	idx_t nparts = ceil(static_cast<double>(num_nodes)/max_cluster_size);
 	idx_t objval;
+	if (nparts == 1)
+		nparts = 2;
 	
 	int status = METIS_PartGraphKway(&num_nodes, &ncon,
 		node_indices,	edges,
@@ -104,12 +107,12 @@ void Metis::Data::Debug()
 
 //------------------------------------------------------------------------------
 
-Metis::Metis(int numClusters)
+Metis::Metis(int maxClusterSize)
 {
-	if (numClusters < 2)
+	if (maxClusterSize < 2)
 		throw "Metis error: the number of clusters must be greater than 1.";
 	
-	data = new Data(numClusters);
+	data = new Data(maxClusterSize);
 }
 
 //------------------------------------------------------------------------------
@@ -130,10 +133,10 @@ Metis::~Metis()
 
 //------------------------------------------------------------------------------
 
-void Metis::SetNumClusters(int numClusters)
+void Metis::SetMaxClusterSize(int maxClusterSize)
 {
 	if (data)
-		data->num_clusters = numClusters;
+		data->max_cluster_size = maxClusterSize;
 }
 
 //------------------------------------------------------------------------------
@@ -311,7 +314,7 @@ void Metis::ParseArguments(const vector<string>& arguments)
 	}
 	else if (arguments.size() == 1)
 	{
-		this->SetNumClusters(atoi(arguments[0].c_str()));
+		this->SetMaxClusterSize(atoi(arguments[0].c_str()));
 	}
 	else
 	{
@@ -351,7 +354,15 @@ vector<vertex> Metis::FindCluster(vertex u)
 
 int Metis::CountClusters()
 {
-	return data->num_clusters;
+	long clusters = ceil(static_cast<double>(data->num_nodes) / data->max_cluster_size);
+	if (clusters == 1)
+	{
+		return 2;
+	}
+	else
+	{
+		return clusters;
+	}
 }
 
 //------------------------------------------------------------------------------

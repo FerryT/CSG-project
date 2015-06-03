@@ -32,10 +32,10 @@ class Algorithm: public Output {
 
 class Metis : public Algorithm {
 	public:
-		Metis(int numClusters);
+		Metis(int maxClusterSize);
 		virtual ~Metis();
 
-		virtual void SetNumClusters(int numClusters);
+		virtual void SetMaxClusterSize(int maxClusterSize);
 
 		virtual void Add(Edge e);
 		virtual void Remove(Edge e);
