@@ -16,7 +16,7 @@ class VisualizeResults : public Test
 public:
 	int runTillUpdate = -1;
 	bool CallDot = false;
-	string* nameInput = nullptr;
+	std::string* nameInput = nullptr;
 	VisualizeResults() : VisualizeResults(100){};
 	VisualizeResults(int runTillUpdate);
 	void RunTest(String outputFile) override;
