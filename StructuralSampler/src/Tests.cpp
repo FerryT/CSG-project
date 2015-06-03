@@ -2,8 +2,9 @@
 #include <fstream>
 #include <algorithm>
 
-#include "../headers/Tests.h"
-#include <CommandLineHelper.h>
+#include "Tests.h"
+#include "CommandLineHelper.h"
+#include "ConsoleColor.h"
 
 using namespace std;
 
@@ -134,7 +135,7 @@ void QualityTest::RunTest(String outputFilename)
 	else
 		output.open(outputFilename, ios::out);
 	for (int i = 0; i < algorithms.size(); i++)
-		output << static_cast<float>(results[i].Sumation) / static_cast<float>(results[i].count) << ";";
+		output << static_cast<float>(results[i].Sumation) / static_cast<float>(results[i].count) << ",";
 	output << endl;
 	output.close();
 
@@ -224,4 +225,128 @@ void SplitStackInput::Remove(Edge e)
 {
 	for (Output* o : this->outputs)
 		o->Remove(e);
+}
+
+void ThroughputTest::ParseArguments(const Strings& arguments)
+{
+	if (arguments.size() == 2)
+	{
+		this->queries = atoi(arguments[0].c_str());
+		this->updates = atoi(arguments[1].c_str());
+	}
+	else
+	{
+		throw "Can't parse the parameters for throughput test, arguments are <queries> <updates>";
+	}
+}
+
+ThroughputTest::ThroughputTest()
+{
+}
+
+ThroughputTest::ThroughputTest(int updates, int queries)
+{
+	this->updates = updates;
+	this->queries = queries;
+}
+
+void ThroughputTest::RunTest(String outputFilename)
+{
+	cout << "Start performance test..." << endl;
+
+	Input* realInput = CreateInput(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComInput>));
+	vector<StackInput*> stackInputs = CreateStackInputs(this->descriptions);
+	Algorithm* algorithm = CreateAlgorithm(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComAlgorithm>));
+
+	Input* input = realInput;
+	for (StackInput* stackinput : stackInputs)
+	{
+		stackinput->SetInternalInput(input);
+		input = stackinput;
+	}
+	input->SetOutput(algorithm);
+	
+	int totalUpdates = 0;
+	
+	bool NoClusterWarning = false;
+	bool EmptyClusterWarning = false;
+	clock_t start = clock();
+	while (!input->IsEnd())
+	{
+		for (int i = 0; !input->IsEnd() && i < this->updates; i++)
+		{
+			input->ExecuteNextUpdate();
+			totalUpdates++;
+		}
+
+		for (int i = 0; !input->IsEnd() && i < this->queries; i++)
+		{
+			int clusterCount = algorithm->CountClusters();
+			if (clusterCount != 0)
+			{
+				int c1i = rand() % clusterCount;
+				int c2i = rand() % clusterCount;
+
+				Vertices c1 = algorithm->GetCluster(c1i);
+				Vertices c2 = algorithm->GetCluster(c2i);
+
+				if (c1.size() > 0 && c2.size() > 0)
+				{
+					int v1 = rand() % c1.size();
+					int v2 = rand() % c2.size();
+
+					algorithm->FindClusterIndex(v1);
+					algorithm->FindClusterIndex(v2);
+
+					//check if v1c and v2c are the same, but unneccary because performance test
+				}
+				else
+				{
+					EmptyClusterWarning = true;
+				}
+			}
+			else
+			{
+				NoClusterWarning = true;
+			}
+		}
+	}
+	clock_t end = clock();
+
+	cout << "Done testing, writing results..." << endl;
+
+	bool exist = exists_test(outputFilename);
+
+	//writes results
+	ofstream output;
+	if (exist)
+		output.open(outputFilename, ios::out | ios::ate | ios::app);
+	else
+		output.open(outputFilename, ios::out);
+	
+	clock_t  diff = end-start;
+	if (diff != 0)
+	{
+		float diffSec = static_cast<float>(diff) / CLOCKS_PER_SEC;
+		float throughput = updates/diffSec;
+		output << throughput;
+	}
+	else
+	{
+		output << "-1";
+	}
+	
+	output.close();
+
+	cout << "Finished writing" << endl;
+
+	if (NoClusterWarning)
+	{
+		cout << yellow << "Warning: There was a situation with no clusters" << white << endl;
+	}
+	if (EmptyClusterWarning)
+	{
+		cout << yellow << "Warning: There were empty clusters" << white << endl;
+	}
+
 }

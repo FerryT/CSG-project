@@ -66,17 +66,15 @@ public:
 	void Remove(Edge e) override;
 };
 
-/*
-
-//The classes that has to be implemented
-
-
-
-class ThroughputTest {
+class ThroughputTest : public Test {
 public:
-	void RunTest(String outputFile);
+	void ParseArguments(const Strings& arguments) override;
+	ThroughputTest();
+	ThroughputTest(int updates, int queries);
+	int updates = 5;
+	int queries = 1;
+	virtual void RunTest(String outputFile) override;
 };
-*/
 
 //------------------------------------------------------------------------------
 

@@ -174,6 +174,10 @@ Test* CreateTest(ComponentDescription desc)
 	{
 		result = new VisualizeResults();
 	}
+	else if (desc.name == "Throughput")
+	{
+		result = new ThroughputTest();
+	}
 	else
 	{
 		throw "Test does not exist";
