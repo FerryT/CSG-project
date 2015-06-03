@@ -194,6 +194,7 @@ void VisualizeResults::RunTest(String outputFilename)
 		for (vertex v : c)
 		{
 			fprintf(output, "\t\t%lu;\n", v);
+			vertices.insert(v);
 		}
 		fputs("\t}\n", output);
 	}
