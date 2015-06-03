@@ -13,6 +13,7 @@
 #include "WindowManager.h"
 #include "StackInputs.h"
 #include "CommandLineHelper.h"
+#include "ConsoleColor.h"
 
 int main(int argc, char *argv[])
 {
@@ -37,7 +38,7 @@ int main(int argc, char *argv[])
 	}
 	catch (const char *msg) 
 	{
-		fprintf(stderr, "Fatal error:\n\t%s\n", msg);
+		cerr << red << "Fatal error: " << msg << white << endl;
 		cout << "Basic usage: StructuralSampler -CI <input> [parameters] -CA <algorithm> [parameters] -CT <test> [parameters] -CO <output file>" << endl;
 		cout << "Example usage: StructuralSampler -CI Poisson 100 0.80 400 -CA StructuralSampler 10 -CT VisualizeResult 100 1 -CO testresult.png" << endl;
 		return EXIT_FAILURE;

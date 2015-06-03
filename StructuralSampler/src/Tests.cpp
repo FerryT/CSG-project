@@ -262,6 +262,7 @@ void ThroughputTest::RunTest(string outputFilename)
 	int totalUpdates = 0;
 	
 	bool NoClusterWarning = false;
+	bool EmptyClusterWarning = false;
 	clock_t start = clock();
 	while (!input->IsEnd())
 	{
@@ -282,13 +283,20 @@ void ThroughputTest::RunTest(string outputFilename)
 				vector<vertex> c1 = algorithm->GetCluster(c1i);
 				vector<vertex> c2 = algorithm->GetCluster(c2i);
 
-				int v1 = rand() % c1.size();
-				int v2 = rand() % c2.size();
+				if (c1.size() > 0 && c2.size() > 0)
+				{
+					int v1 = rand() % c1.size();
+					int v2 = rand() % c2.size();
 
-				algorithm->FindClusterIndex(v1);
-				algorithm->FindClusterIndex(v2);
+					algorithm->FindClusterIndex(v1);
+					algorithm->FindClusterIndex(v2);
 
-				//check if v1c and v2c are the same, but unneccary because performance test
+					//check if v1c and v2c are the same, but unneccary because performance test
+				}
+				else
+				{
+					EmptyClusterWarning = true;
+				}
 			}
 			else
 			{
@@ -327,7 +335,11 @@ void ThroughputTest::RunTest(string outputFilename)
 
 	if (NoClusterWarning)
 	{
-		cout << red << "Warning: there was a situation with no clusters" << white << endl;
+		cout << yellow << "Warning: There was a situation with no clusters" << white << endl;
+	}
+	if (EmptyClusterWarning)
+	{
+		cout << yellow << "Warning: There were empty clusters" << white << endl;
 	}
 
 }
