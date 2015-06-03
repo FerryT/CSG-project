@@ -232,7 +232,7 @@ void EdgeFileInput::ExecuteNextUpdate()
 		throw "Invalid input detected whilst reading graph file.";
 	}
 	
-	if (output)
+	if (output && (src != dst))
 	{
 		if (removing)
 			output->Remove(Edge(src, dst));
