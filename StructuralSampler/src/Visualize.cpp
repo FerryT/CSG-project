@@ -82,6 +82,12 @@ void VisualizeResults::ParseArguments(const vector<string>& arguments)
 		this->runTillUpdate = atoi(arguments[0].c_str());
 		this->CallDot = arguments[1] == "1";
 	}
+	else if (arguments.size() == 3)
+	{
+		this->runTillUpdate = atoi(arguments[0].c_str());
+		this->CallDot = arguments[1] == "1";
+		this->nameInput = new string(arguments[2]);
+	}
 	else
 	{
 		throw "Can't parse the parameters for quality test, parameters are <updates> <0|1 for a dot call>";
@@ -192,9 +198,36 @@ void VisualizeResults::RunTest(string outputFilename)
 		fputs("\t}\n", output);
 	}
 	
-	for (vertex v : vertices)
+
+	if (this->nameInput == nullptr)
 	{
-		fprintf(output, "\t%lu [label=\"\",shape=point];\n", v);
+		for (vertex v : vertices)
+		{
+			fprintf(output, "\t%lu [label=\"\",shape=point];\n", v);
+		}
+	}
+	else
+	{
+		vector<string> names;
+		ifstream infile(*this->nameInput);
+
+		std::string line;
+		while (std::getline(infile, line))
+		{
+			names.push_back(line);
+		}
+
+		for (vertex v : vertices)
+		{
+			if (v < names.size())
+			{
+				fprintf(output, "\t%lu [label=\"%s\"];\n", v, names[v].c_str());
+			}
+			else
+			{
+				fprintf(output, "\t%lu [label=\"\",shape=point];\n", v);
+			}
+		}
 	}
 	
 	capture->Close();

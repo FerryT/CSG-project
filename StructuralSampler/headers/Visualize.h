@@ -16,6 +16,7 @@ class VisualizeResults : public Test
 public:
 	int runTillUpdate = -1;
 	bool CallDot = false;
+	string* nameInput = nullptr;
 	VisualizeResults() : VisualizeResults(100){};
 	VisualizeResults(int runTillUpdate);
 	void RunTest(string outputFile) override;
