@@ -2,13 +2,14 @@
 \usepackage{pgfplots}
 
 \begin{document}
-\newcommand{\plot}[2]
+\newcommand{\plot}[3]
 	{
 		\begin{tikzpicture}
 		\begin{axis}[
 			title=#1,
 			xlabel={Cluster size},
 			ylabel={Cut size},
+			xmode=#3,
 			legend entries={Structural sampler,Metis},
 			legend style={
 				anchor=north,
@@ -20,12 +21,12 @@
 		\end{tikzpicture}
 	}
 
-\plot{Quality cluster size BA model}{QualityClusterSizeBAModel100.csv}
-\plot{Quality cluster size Fruits}{QualityClusterSizeFruits.csv}
-\plot{Quality cluster size Poisson model}{QualityClusterSizePoission1000.csv}
+\plot{Quality cluster size BA model}{QualityClusterSizeBAModel100.csv}{normal}
+\plot{Quality cluster size Fruits}{QualityClusterSizeFruits.csv}{normal}
+\plot{Quality cluster size Poisson model}{QualityClusterSizePoission1000.csv}{normal}
 
-\plot{Throughput BA model}{PerfBAModel100.csv}
-\plot{Throughput fruits}{PerfFruits.csv}
-\plot{Throughput Poission}{PerfPoission1000.csv}
+\plot{Throughput BA model}{PerfBAModel100.csv}{log}
+\plot{Throughput fruits}{PerfFruits.csv}{log}
+\plot{Throughput Poission}{PerfPoission1000.csv}{log}
 
 \end{document}
