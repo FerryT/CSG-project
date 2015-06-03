@@ -9,16 +9,16 @@
 
 using namespace std;
 
-vector<ComponentDescription> GetDescriptions(int argc, char *argv[]);
-vector<ComponentDescription> GetDescriptions(vector<string> argv);
+ComponentDescriptions GetDescriptions(int argc, char *argv[]);
+ComponentDescriptions GetDescriptions(Strings argv);
 
 StackInput* CreateStackInput(ComponentDescription desc);
-vector<StackInput*> CreateStackInputs(vector<ComponentDescription> arguments);
+vector<StackInput*> CreateStackInputs(ComponentDescriptions arguments);
 Test* CreateTest(ComponentDescription desc);
 Algorithm* CreateAlgorithm(ComponentDescription desc);
-vector<Algorithm*> CreateAlgorithms(vector<ComponentDescription> arguments);
+vector<Algorithm*> CreateAlgorithms(ComponentDescriptions arguments);
 Input* CreateInput(ComponentDescription desc);
-string GetOutputFilename(ComponentDescription desc);
+String GetOutputFilename(ComponentDescription desc);
 
 template<Component c>
 bool IsType(ComponentDescription desc) { return desc.type == c; }

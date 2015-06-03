@@ -1,17 +1,17 @@
 #ifndef COMPONENT_DESCRIPTION_H
 #define COMPONENT_DESCRIPTION_H
-#include <string>
-#include <vector>
 
-using namespace std;
+#include "Graph.h"
 
 enum Component { ComInput, ComStackInput, ComAlgorithm, ComTest, ComOutput };
 
 struct ComponentDescription
 {
 	Component type;
-	string name;
-	vector<string> parameters;
+	String name;
+	Strings parameters;
 };
+
+typedef std::vector<ComponentDescription> ComponentDescriptions;
 
 #endif // COMMAND_LINE_HELPER_H

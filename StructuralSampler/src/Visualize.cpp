@@ -14,7 +14,7 @@
 #include <algorithm>
 #include <CommandLineHelper.h>
 
-void OutputVisualization::RunTest(string outputFilename)
+void OutputVisualization::RunTest(String outputFilename)
 {
 	this->input = CreateInput(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComInput>));
 
@@ -22,7 +22,7 @@ void OutputVisualization::RunTest(string outputFilename)
 
 	if (CallDot)
 	{
-		string dotCall = "dot -Tpng -Kneato -o" + outputFilename;
+		String dotCall = "dot -Tpng -Kneato -o" + outputFilename;
 		output = popen(dotCall.c_str(), "wt");
 	}
 	else
@@ -71,7 +71,7 @@ void OutputVisualization::RunTest(string outputFilename)
 		fclose(output);
 }
 
-void VisualizeResults::ParseArguments(const vector<string>& arguments)
+void VisualizeResults::ParseArguments(const Strings& arguments)
 {
 	if (arguments.size() == 0)
 	{
@@ -93,7 +93,7 @@ VisualizeResults::VisualizeResults(int runTillUpdate)
 	this->runTillUpdate = runTillUpdate;
 }
 
-void VisualizeResults::RunTest(string outputFilename)
+void VisualizeResults::RunTest(String outputFilename)
 {
 	this->input = CreateInput(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComInput>));
 	this->algorithm = CreateAlgorithm(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComAlgorithm>));
@@ -103,7 +103,7 @@ void VisualizeResults::RunTest(string outputFilename)
 
 	if (CallDot)
 	{
-		string dotCall = "dot -Tpng -o" + outputFilename;
+		String dotCall = "dot -Tpng -o" + outputFilename;
 		output = popen(dotCall.c_str(), "wt");
 	}
 	else
@@ -152,8 +152,8 @@ void VisualizeResults::RunTest(string outputFilename)
 		vertices.insert(edge.v1);
 		vertices.insert(edge.v2);
 
-		string color;
-		string style;
+		String color;
+		String style;
 		if (isSampled)
 		{
 			style = "solid";
@@ -184,7 +184,7 @@ void VisualizeResults::RunTest(string outputFilename)
 	for (int i = 0; i < this->algorithm->CountClusters(); i++)
 	{
 		fprintf(output, "\tsubgraph cluster%d {\n", i);
-		vector<vertex> c = this->algorithm->GetCluster(i);
+		Vertices c = this->algorithm->GetCluster(i);
 		for (vertex v : c)
 		{
 			fprintf(output, "\t\t%lu;\n", v);

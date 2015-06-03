@@ -1,10 +1,7 @@
 #ifndef GRAPH_INPUT_H
 #define GRAPH_INPUT_H
 
-#include <string>
-
 #include "Graph.h"
-#include <iostream>
 
 //------------------------------------------------------------------------------
 
@@ -24,7 +21,7 @@ class Input {
 		Output* output;
 
 	public:
-		Input() : output(0) {}
+		Input() : output(NULL) {}
 		//Opens the input
 		virtual void Open() = 0;
 		//Closes the input
@@ -37,7 +34,7 @@ class Input {
 		virtual void SetOutput(Output* output) { this->output = output; }
 
 		//parses arguments for configuration
-		virtual void ParseArguments(const vector<string>& arguments) { std::cout << "arguments for this input/stackinput are not yet parsed" << std::endl; }
+		virtual void ParseArguments(const Strings &arguments);
 };
 
 class StackInput: public Input, public Output
@@ -55,23 +52,18 @@ public:
 	virtual void SetInternalInput(Input* input);
 };
 
-
-
-
 //------------------------------------------------------------------------------
 
 class FileInput: public Input {
 	public:
-		std::string filename;
+		String filename;
 	
 		FileInput(const char *fn) : Input(), filename(fn) {}
 		FileInput() : Input() {}
 
-		void ParseArguments(const vector<string>& arguments) override;
+		void ParseArguments(const Strings &arguments) override;
 
 };
-
-//------------------------------------------------------------------------------
 
 // METIS graph file input
 class MGraphFileInput: public FileInput {
@@ -89,8 +81,6 @@ class MGraphFileInput: public FileInput {
 		File *file;
 };
 
-//------------------------------------------------------------------------------
-
 // edge list file input
 class EdgeFileInput: public FileInput {
 	public:
@@ -106,54 +96,6 @@ class EdgeFileInput: public FileInput {
 		struct File;
 		File *file;
 };
-
-//------------------------------------------------------------------------------
-
-/*
-
-//The classes that has to be implemented:
-
-class DNSInput {
-public:
-	//Opens the input
-	void Open();
-	//Closes the input
-	void Close();
-	//this executed the next update, this can be a delete or a insert
-	void ExecuteNextUpdate();
-};
-
-class PaperCitationsInput {
-public:
-	//Opens the input
-	void Open();
-	//Closes the input
-	void Close();
-	//this executed the next update, this can be a delete or a insert
-	void ExecuteNextUpdate();
-};
-
-class WebGraphNotreDameInput {
-public:
-	//Opens the input
-	void Open();
-	//Closes the input
-	void Close();
-	//this executed the next update, this can be a delete or a insert
-	void ExecuteNextUpdate();
-};
-
-class TwitterInput {
-public:
-	//Opens the input
-	void Open();
-	//Closes the input
-	void Close();
-	//this executed the next update, this can be a delete or a insert
-	void ExecuteNextUpdate();
-};
-
-*/
 
 //------------------------------------------------------------------------------
 

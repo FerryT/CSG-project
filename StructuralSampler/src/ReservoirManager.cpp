@@ -74,9 +74,9 @@ Edge StructuralReservoir::RemoveLast()
 
 bool StructuralReservoir::HasEdge(const Edge &e)
 {
-	for (vector<Edge>::size_type i = 0; i < graph.size(); i++)
+	for (Edges::iterator it = graph.begin(); it != graph.end(); ++it)
 	{
-		if (graph[i] == e)
+		if (*it == e)
 		{
 			return true;
 		}
@@ -152,7 +152,7 @@ bool SupportReservoir::Remove(const Edge &e)
 
 //------------------------------------------------------------------------------
 
-vector<Edge> SupportReservoir::GetEdges(double minP)
+Edges SupportReservoir::GetEdges(double minP)
 {
 	int start = 0;
 
@@ -164,7 +164,7 @@ vector<Edge> SupportReservoir::GetEdges(double minP)
 		}
 		start++;
 	}
-	vector<Edge> result;
+	Edges result;
 	while (start < graph.size())
 	{
 		result.push_back(graph.at(start));

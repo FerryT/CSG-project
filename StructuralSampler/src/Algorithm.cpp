@@ -1,13 +1,21 @@
-#include <stdlib.h>
-#include <time.h>
-#include <string.h>
+#include <cstdlib>
+#include <ctime>
+#include <cstring>
 #include <algorithm>
+#include <iostream>
 
 #include "metis.h"
 
 #include "Algorithm.h"
 
 //------------------------------------------------------------------------------
+
+void Algorithm::ParseArguments(const Strings &arguments)
+{
+	std::cout << "arguments for this algorithm are not yet parsed" << std::endl;
+}
+
+//==============================================================================
 
 class MetisOptions
 {
@@ -107,7 +115,7 @@ void Metis::Data::Debug()
 
 //------------------------------------------------------------------------------
 
-Metis::Metis(int maxClusterSize)
+Metis::Metis(clusterid maxClusterSize)
 {
 	if (maxClusterSize < 2)
 		throw "Metis error: the number of clusters must be greater than 1.";
@@ -133,7 +141,7 @@ Metis::~Metis()
 
 //------------------------------------------------------------------------------
 
-void Metis::SetMaxClusterSize(int maxClusterSize)
+void Metis::SetMaxClusterSize(clusterid maxClusterSize)
 {
 	if (data)
 		data->max_cluster_size = maxClusterSize;
@@ -306,7 +314,7 @@ void Metis::Remove(Edge e)
 
 //------------------------------------------------------------------------------
 
-void Metis::ParseArguments(const vector<string>& arguments)
+void Metis::ParseArguments(const Strings &arguments)
 {
 	if (arguments.size() == 0)
 	{
@@ -324,9 +332,9 @@ void Metis::ParseArguments(const vector<string>& arguments)
 
 //------------------------------------------------------------------------------
 
-int Metis::FindClusterIndex(vertex u)
+clusterid Metis::FindClusterIndex(vertex u)
 {
-	if (u >= data->num_nodes)
+	if (u >= (vertex) data->num_nodes)
 		throw "[Metis::FindClusterIndex] index out of bounds!";
 	data->UpdateClusters();
 	return (int) data->clustering[u];
@@ -334,15 +342,15 @@ int Metis::FindClusterIndex(vertex u)
 
 //------------------------------------------------------------------------------
 
-vector<vertex> Metis::FindCluster(vertex u)
+Vertices Metis::FindCluster(vertex u)
 {
-	if (u >= data->num_nodes)
+	if (u >= (vertex) data->num_nodes)
 		throw "[Metis::FindClusterIndex] index out of bounds!";
 	data->UpdateClusters();
 	
 	idx_t cluster = data->clustering[u];
 	
-	vector<vertex> vs;
+	Vertices vs;
 	for (idx_t v = data->num_nodes - 1; v >= 0; --v)
 		if (data->clustering[v] == cluster)
 			vs.push_back(v);
@@ -352,7 +360,7 @@ vector<vertex> Metis::FindCluster(vertex u)
 
 //------------------------------------------------------------------------------
 
-int Metis::CountClusters()
+clusterid Metis::CountClusters()
 {
 	long clusters = ceil(static_cast<double>(data->num_nodes) / data->max_cluster_size);
 	if (clusters == 1)
@@ -367,11 +375,11 @@ int Metis::CountClusters()
 
 //------------------------------------------------------------------------------
 
-vector<vertex> Metis::GetCluster(int index)
+Vertices Metis::GetCluster(clusterid index)
 {
 	data->UpdateClusters();
 	
-	vector<vertex> vs;
+	Vertices vs;
 	for (idx_t v = data->num_nodes - 1; v >= 0; --v)
 		if (data->clustering[v] == index)
 			vs.push_back(v);
@@ -381,13 +389,7 @@ vector<vertex> Metis::GetCluster(int index)
 
 //==============================================================================
 
-StructuralSampler::StructuralSampler(int maxClusterSize) : manager(maxClusterSize)
-{
-}
-
-//------------------------------------------------------------------------------
-
-StructuralSampler::StructuralSampler() : manager(10)
+StructuralSampler::StructuralSampler(clusterid maxClusterSize) : manager(maxClusterSize)
 {
 }
 
@@ -401,18 +403,17 @@ void StructuralSampler::Add(Edge newEdge)
 	if (!manager.ConstraintSatisfied())
 	{
 		double pos;
-		Edge currEdge;
 		while (!manager.ConstraintSatisfied())
 		{
-			currEdge = strReservoir.RemoveLast();
+			const Edge &currEdge = strReservoir.RemoveLast();
 			pos = currEdge.p;
 			supReservoir.Add(currEdge);
 			manager.RemoveExact(currEdge);
 		}
-		vector<Edge> searchResults = supReservoir.GetEdges(pos);
-		for (vector<Edge>::size_type i = 0; i < searchResults.size(); i++)
+		const Edges &searchResults = supReservoir.GetEdges(pos);
+		for (Edges::const_iterator it = searchResults.begin(); it != searchResults.end(); ++it)
 		{
-			currEdge = searchResults[i];
+			const Edge &currEdge = *it;
 			manager.Add(currEdge);
 			if (!manager.ConstraintSatisfied())
 			{
@@ -436,11 +437,10 @@ void StructuralSampler::Remove(Edge theEdge)
 	{
 		double rmEdgeP = strReservoir.Remove(theEdge);
 		manager.Remove(theEdge);
-		vector<Edge> searchResults = supReservoir.GetEdges(rmEdgeP);
-		Edge currEdge;
-		for (vector<Edge>::size_type i = 0; i < searchResults.size(); i++)
+		const Edges &searchResults = supReservoir.GetEdges(rmEdgeP);
+		for (Edges::const_iterator it = searchResults.begin(); it != searchResults.end(); ++it)
 		{
-			currEdge = searchResults[i];
+			const Edge &currEdge = *it;
 			manager.Add(currEdge);
 			if (!manager.ConstraintSatisfied())
 			{
@@ -455,7 +455,9 @@ void StructuralSampler::Remove(Edge theEdge)
 	}
 }
 
-void StructuralSampler::ParseArguments(const vector<string>& arguments)
+//------------------------------------------------------------------------------
+
+void StructuralSampler::ParseArguments(const Strings &arguments)
 {
 	if (arguments.size() == 0)
 	{

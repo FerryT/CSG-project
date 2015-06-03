@@ -80,6 +80,7 @@
   <ItemGroup>
     <ClCompile Include="src\Algorithm.cpp" />
     <ClCompile Include="src\CommandLineHelper.cpp" />
+    <ClCompile Include="src\Graph.cpp" />
     <ClCompile Include="src\GraphInput.cpp" />
     <ClCompile Include="src\GraphManager.cpp" />
     <ClCompile Include="src\main.cpp" />

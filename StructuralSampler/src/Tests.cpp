@@ -8,7 +8,7 @@
 
 using namespace std;
 
-inline bool exists_test(const std::string& name) {
+inline bool exists_test(const String& name) {
 	ifstream f(name.c_str());
 	if (f.good()) {
 		f.close();
@@ -22,7 +22,14 @@ inline bool exists_test(const std::string& name) {
 
 //------------------------------------------------------------------------------
 
-void QualityTest::ParseArguments(const vector<string>& arguments)
+void Test::ParseArguments(const Strings& arguments)
+{
+	std::cout << "arguments for this test are not yet parsed" << std::endl;
+}
+
+//------------------------------------------------------------------------------
+
+void QualityTest::ParseArguments(const Strings& arguments)
 {
 	if (arguments.size() == 0)
 	{
@@ -57,7 +64,7 @@ struct QualityResult
 	int count = 0;
 };
 
-void QualityTest::RunTest(string outputFilename)
+void QualityTest::RunTest(String outputFilename)
 {
 	vector<QualityResult> results;
 
@@ -154,7 +161,7 @@ CaptureStackInput::~CaptureStackInput()
 void CaptureStackInput::Add(Edge e)
 {
 	this->output->Add(e);
-	this->_currentGraph->push_back(e);
+	this->_currentGraph->insert(e);
 }
 
 //------------------------------------------------------------------------------
@@ -220,7 +227,7 @@ void SplitStackInput::Remove(Edge e)
 		o->Remove(e);
 }
 
-void ThroughputTest::ParseArguments(const vector<string>& arguments)
+void ThroughputTest::ParseArguments(const Strings& arguments)
 {
 	if (arguments.size() == 2)
 	{
@@ -243,7 +250,7 @@ ThroughputTest::ThroughputTest(int updates, int queries)
 	this->queries = queries;
 }
 
-void ThroughputTest::RunTest(string outputFilename)
+void ThroughputTest::RunTest(String outputFilename)
 {
 	cout << "Start performance test..." << endl;
 
@@ -280,8 +287,8 @@ void ThroughputTest::RunTest(string outputFilename)
 				int c1i = rand() % clusterCount;
 				int c2i = rand() % clusterCount;
 
-				vector<vertex> c1 = algorithm->GetCluster(c1i);
-				vector<vertex> c2 = algorithm->GetCluster(c2i);
+				Vertices c1 = algorithm->GetCluster(c1i);
+				Vertices c2 = algorithm->GetCluster(c2i);
 
 				if (c1.size() > 0 && c2.size() > 0)
 				{

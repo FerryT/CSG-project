@@ -63,7 +63,7 @@ bool EulerNetworkInput::IsEnd()
 	return this->currentUpdates >= this->maxUpdates;
 }
 
-void EulerNetworkInput::ParseArguments(const vector<string>& arguments)
+void EulerNetworkInput::ParseArguments(const Strings &arguments)
 {
 	if (arguments.size() == 0)
 	{
@@ -90,7 +90,7 @@ ScaleFreeNetworkInput::ScaleFreeNetworkInput(int nodes, float insertDeleteRatio,
 	this->insertDeleteRatio = insertDeleteRatio;
 
 	this->CurrentGraph.reserve(nodes*nodes);
-	this->NotInCurrentGraph = new vector<int>[nodes];
+	this->NotInCurrentGraph = new Vertices[nodes];
 	this->NodeDegree = new int[nodes];
 
 	for (int i = 0; i < nodes; i++)
@@ -179,7 +179,7 @@ bool ScaleFreeNetworkInput::IsEnd()
 	return this->currentUpdates >= this->maxUpdates;
 }
 
-void ScaleFreeNetworkInput::ParseArguments(const vector<string>& arguments)
+void ScaleFreeNetworkInput::ParseArguments(const Strings &arguments)
 {
 	if (arguments.size() == 0)
 	{
@@ -264,7 +264,7 @@ bool BAModelInput::IsEnd()
 	return this->currentSourceNode >= this->nodes;
 }
 
-void BAModelInput::ParseArguments(const vector<string>& arguments)
+void BAModelInput::ParseArguments(const Strings &arguments)
 {
 	if (arguments.size() == 0)
 	{

@@ -1,5 +1,3 @@
-#include <string>
-#include <vector>
 #include <algorithm>
 #include <StackInputs.h>
 #include <CommandLineHelper.h>
@@ -8,17 +6,18 @@
 #include <WindowManager.h>
 
 
-vector<ComponentDescription> GetDescriptions(int argc, char *argv[])
+ComponentDescriptions GetDescriptions(int argc, char *argv[])
 {
-	vector<string> arguments(argv, argv+argc);
+	Strings arguments(argv, argv+argc);
 	return GetDescriptions(arguments);
 }
 
-vector<ComponentDescription> GetDescriptions(vector<string> argv)
+ComponentDescriptions GetDescriptions(Strings argv)
 {
-	vector<int> componentStarts;
-	vector<ComponentDescription> result;
-	for (int i = 0; i < argv.size(); i++)
+	std::vector<int> componentStarts;
+	typedef std::vector<int>::size_type size_type;
+	ComponentDescriptions result;
+	for (Strings::size_type i = 0; i < argv.size(); i++)
 	{
 		if (argv[i].compare("-CI") == 0 || argv[i].compare("-CS") == 0 || argv[i].compare("-CA") == 0 || argv[i].compare("-CT") == 0 || argv[i].compare("-CO") == 0)
 		{
@@ -26,7 +25,7 @@ vector<ComponentDescription> GetDescriptions(vector<string> argv)
 		}
 	}
 
-	for (int i = 0; i < componentStarts.size(); i++)
+	for (size_type i = 0; i < componentStarts.size(); i++)
 	{
 		int start = componentStarts[i];
 		int end;
@@ -61,21 +60,21 @@ vector<ComponentDescription> GetDescriptions(vector<string> argv)
 			throw "Parsing of command line went wrong";
 		}
 
-		if (start + 1 >= argv.size())
+		if (((size_type) start + 1) >= argv.size())
 		{
 			throw "Wrong usage of application";
 		}
 
 		if (desc.type == Component::ComOutput)
 		{
-			desc.parameters.push_back(string(argv[start + 1]));
+			desc.parameters.push_back(String(argv[start + 1]));
 		}
 		else
 		{
-			desc.name = string(argv[start + 1]);
+			desc.name = String(argv[start + 1]);
 			for (int j = start + 1 + 1; j < end; j++)
 			{
-				desc.parameters.push_back(string(argv[j]));
+				desc.parameters.push_back(String(argv[j]));
 			}
 		}
 		result.push_back(desc);
@@ -145,7 +144,7 @@ Algorithm* CreateAlgorithm(ComponentDescription desc)
 	return result;
 }
 
-vector<Algorithm*> CreateAlgorithms(vector<ComponentDescription> arguments)
+vector<Algorithm*> CreateAlgorithms(ComponentDescriptions arguments)
 {
 	vector<Algorithm*> result;
 	auto item = arguments.begin();
@@ -218,7 +217,7 @@ StackInput* CreateStackInput(ComponentDescription desc)
 	return result;
 }
 
-vector<StackInput*> CreateStackInputs(vector<ComponentDescription> arguments)
+vector<StackInput*> CreateStackInputs(ComponentDescriptions arguments)
 {
 	vector<StackInput*> stackInputs;
 	auto item = arguments.begin();
@@ -233,7 +232,7 @@ vector<StackInput*> CreateStackInputs(vector<ComponentDescription> arguments)
 	return stackInputs;
 }
 
-string GetOutputFilename(ComponentDescription desc)
+String GetOutputFilename(ComponentDescription desc)
 {
 	if (desc.type != ComOutput)
 		throw "Not an output";

@@ -8,8 +8,8 @@ class EulerNetworkInput: public Input {
 private:
 	int nodes;
 	float insertDeleteRatio;
-	Graph CurrentGraph;
-	Graph NotInCurrentGraph;
+	Edges CurrentGraph;
+	Edges NotInCurrentGraph;
 	int maxUpdates;
 	int currentUpdates;
 public:
@@ -21,7 +21,7 @@ public:
 	void ExecuteNextUpdate() override;
 	bool IsEnd() override;
 
-	void ParseArguments(const vector<string>& arguments) override;
+	void ParseArguments(const Strings &arguments) override;
 };
 
 
@@ -29,8 +29,8 @@ class ScaleFreeNetworkInput : public Input {
 private:
 	int nodes;
 	float insertDeleteRatio;
-	Graph CurrentGraph;
-	vector<int>* NotInCurrentGraph;
+	Edges CurrentGraph;
+	Vertices *NotInCurrentGraph;
 	int maxUpdates;
 	int currentUpdates;
 	int* NodeDegree; 
@@ -45,7 +45,7 @@ public:
 	void ExecuteNextUpdate() override;
 	bool IsEnd() override;
 
-	void ParseArguments(const vector<string>& arguments) override;
+	void ParseArguments(const Strings &arguments) override;
 };
 
 class BAModelInput : public Input {
@@ -67,7 +67,7 @@ public:
 	void ExecuteNextUpdate() override;
 	bool IsEnd() override;
 
-	void ParseArguments(const vector<string>& arguments) override;
+	void ParseArguments(const Strings &arguments) override;
 };
 
 #endif // RANDOMIZED_INPUT_H

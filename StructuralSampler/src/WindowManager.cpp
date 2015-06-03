@@ -2,9 +2,7 @@
 
 void SlideWindow::Add(Edge e)
 {
-	TimedEdge timed_edge;
-	timed_edge.e = e;
-	timed_edge.time = this->timesteps;
+	TimedEdge timed_edge(e, timesteps);
 	this->window.push(timed_edge);
 	this->output->Add(e);
 }

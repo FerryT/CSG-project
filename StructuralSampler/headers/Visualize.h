@@ -8,7 +8,7 @@ class OutputVisualization: public Test
 {
 public:
 	bool CallDot = false;
-	void RunTest(string outputFile) override;
+	void RunTest(String outputFile) override;
 };
 
 class VisualizeResults : public Test
@@ -18,8 +18,8 @@ public:
 	bool CallDot = false;
 	VisualizeResults() : VisualizeResults(100){};
 	VisualizeResults(int runTillUpdate);
-	void RunTest(string outputFile) override;
-	void ParseArguments(const vector<string>& arguments) override;
+	void RunTest(String outputFile) override;
+	void ParseArguments(const Strings& arguments) override;
 };
 
 class NullOutput: public Output

@@ -32,6 +32,13 @@ char *read_line(char *str, int num, FILE *fp)
 
 //==============================================================================
 
+void Input::ParseArguments(const Strings &arguments)
+{
+	puts("arguments for this input/stackinput are not yet parsed\n");
+}
+
+//==============================================================================
+
 struct MGraphFileInput::File
 {
 	FILE *fp;
@@ -294,7 +301,7 @@ void StackInput::SetInternalInput(Input* input)
 
 //------------------------------------------------------------------------------
 
-void FileInput::ParseArguments(const vector<string>& arguments)
+void FileInput::ParseArguments(const Strings &arguments)
 {
 	if (arguments.size() == 1)
 	{

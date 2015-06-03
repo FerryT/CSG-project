@@ -7,13 +7,14 @@
 struct TimedEdge {
 	Edge e;
 	int time;
+	TimedEdge(const Edge &edge, int t = 0) : e(edge), time(t) {}
 };
 
 class SlideWindow : public StackInput
 {
 	Input* input;
 	int timesteps = 0;
-	queue<TimedEdge> window;
+	std::queue<TimedEdge> window;
 
 public:
 	int windowSize = 0;
@@ -28,7 +29,7 @@ public:
 class TumblingWindow : public StackInput
 {
 	Input* input;
-	Graph window;
+	Edges window;
 	bool removal = false;
 
 public:
