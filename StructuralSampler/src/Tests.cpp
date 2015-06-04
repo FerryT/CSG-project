@@ -72,14 +72,16 @@ void QualityTest::RunTest(String outputFilename)
 	vector<StackInput*> stackInputs = CreateStackInputs(this->descriptions);
 	vector<Algorithm*> algorithms = CreateAlgorithms(this->descriptions);
 
-	CaptureStackInput* capture = new CaptureStackInput();
-	capture->SetInternalInput(realInput);
-	Input* input = capture;
+	Input* input = realInput;
 	for (StackInput* stackinput : stackInputs)
 	{
 		stackinput->SetInternalInput(input);
 		input = stackinput;
 	}
+	CaptureStackInput* capture = new CaptureStackInput();
+	capture->SetInternalInput(input);
+	input = capture;
+
 	SplitStackInput* split = new SplitStackInput();
 	split->SetInternalInput(input);
 	split->Open();
@@ -102,9 +104,9 @@ void QualityTest::RunTest(String outputFilename)
 			updates++;
 		}
 
-		cout << updates << " updates done, continuing ..." << endl;
-
 		Graph* g = capture->GetCompleteGraph();
+
+		cout << updates << " updates done, current graph size: " << g->size() << ", continuing ..." << endl;
 
 		for (int i = 0; i < algorithms.size(); i++)
 		{
@@ -265,6 +267,7 @@ void ThroughputTest::RunTest(String outputFilename)
 		input = stackinput;
 	}
 	input->SetOutput(algorithm);
+	input->Open();
 	
 	int totalUpdates = 0;
 	
@@ -277,6 +280,8 @@ void ThroughputTest::RunTest(String outputFilename)
 		{
 			input->ExecuteNextUpdate();
 			totalUpdates++;
+			if (totalUpdates%10000 == 0)
+				cout << totalUpdates << endl;
 		}
 
 		for (int i = 0; !input->IsEnd() && i < this->queries; i++)
@@ -312,6 +317,8 @@ void ThroughputTest::RunTest(String outputFilename)
 		}
 	}
 	clock_t end = clock();
+
+	input->Close();
 
 	cout << "Done testing, writing results..." << endl;
 

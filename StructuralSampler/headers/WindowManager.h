@@ -12,7 +12,7 @@ struct TimedEdge {
 
 class SlideWindow : public StackInput
 {
-	Input* input;
+private:
 	int timesteps = 0;
 	std::queue<TimedEdge> window;
 
@@ -24,11 +24,12 @@ public:
 
 	void Add(Edge e) override;
 	void Remove(Edge e) override;
+
+	void ParseArguments(const Strings& arguments) override;
 };
 
 class TumblingWindow : public StackInput
 {
-	Input* input;
 	Edges window;
 	bool removal = false;
 
@@ -41,6 +42,7 @@ public:
 	void Add(Edge e) override;
 	void Remove(Edge e) override;
 
+	void ParseArguments(const Strings& arguments) override;
 };
 
 

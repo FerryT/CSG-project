@@ -12,9 +12,9 @@ shift
 
 rem echo|set /p=%cluster_queries%:%cluster_updates%,>> "%cluster_output_file%"
 echo|set /p=%cluster_rule_value%,>> "%cluster_output_file%"
-echo "%cluster_application%" %* -CA StructuralSampler 100 -CT Throughput %cluster_queries% %cluster_updates% -CO "%cluster_output_file%"
-"%cluster_application%" %* -CA StructuralSampler 100 -CT Throughput %cluster_queries% %cluster_updates% -CO "%cluster_output_file%"
+echo "%cluster_application%" %* -CA StructuralSampler 1000 -CT Throughput %cluster_queries% %cluster_updates% -CO %cluster_output_file%
+"%cluster_application%" %* -CA StructuralSampler 1000 -CT Throughput %cluster_queries% %cluster_updates% -CO %cluster_output_file%
 echo|set /p=,>> "%cluster_output_file%"
-echo "%cluster_application%" %* -CA Metis 100 -CT Throughput %cluster_queries% %cluster_updates% -CO "%cluster_output_file%"
-"%cluster_application%" %* -CA Metis 100 -CT Throughput %cluster_queries% %cluster_updates% -CO "%cluster_output_file%"
+echo "%cluster_application%" %* -CA Metis 1000 -CT Throughput %cluster_queries% %cluster_updates% -CO %cluster_output_file%
+"%cluster_application%" %* -CA Metis 1000 -CT Throughput %cluster_queries% %cluster_updates% -CO %cluster_output_file%
 echo , >> "%cluster_output_file%"

@@ -11,9 +11,22 @@ void SlideWindow::Remove(Edge e)
 {
 }
 
+void SlideWindow::ParseArguments(const Strings& arguments)
+{
+	if (arguments.size() == 1)
+	{
+		this->windowSize = atoi(arguments[0].c_str());
+	}
+	else
+	{
+		throw "Can't parse the parameters for sliding window, parameters are <window size>";
+	}
+}
+
 void SlideWindow::ExecuteNextUpdate()
 {
-	if (!this->window.empty() && this->timesteps - this->window.front().time > this->windowSize)
+	//if (!this->window.empty() && this->timesteps - this->window.front().time > this->windowSize)
+	if (!this->window.empty() && this->window.size() >= this->windowSize)
 	{
 		this->output->Remove(this->window.front().e);
 		this->window.pop();
@@ -67,4 +80,16 @@ void TumblingWindow::Add(Edge e)
 
 void TumblingWindow::Remove(Edge e)
 {
+}
+
+void TumblingWindow::ParseArguments(const Strings& arguments)
+{
+	if (arguments.size() == 1)
+	{
+		this->windowSize = atoi(arguments[0].c_str());
+	}
+	else
+	{
+		throw "Can't parse the parameters for sliding window, parameters are <window size>";
+	}
 }
