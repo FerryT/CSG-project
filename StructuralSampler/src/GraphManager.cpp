@@ -1,87 +1,81 @@
 #include <map>
+#include <vector>
 
 #include "GraphManager.h"
 
 //------------------------------------------------------------------------------
 
-class Cluster;
-typedef std::map<vertex, Cluster *> ClusterPool;
-typedef std::map<Cluster *, clusterid> ClusterIDPool;
+template <typename T> class Cluster;
+typedef std::map<vertex, Cluster<vertex> *> ClusterPool;
+typedef std::vector<Cluster<vertex> *> ClusterIndex;
 
 //==============================================================================
 
+template <typename T>
 class Cluster
 {
 	public:
-		Cluster(ClusterIDPool *ids) : parent(this), pool(ids), count(1)
-		{
-			(*pool)[this] = pool->size();
-		}
+		Cluster(T val) : value(val), parent(this),
+			next(NULL), last(this), count(1) {}
 		~Cluster()
-		{
-			if (parent == this)
-			{
-				pool->erase(this);
-				reindex();
-			}
-		}
-		Cluster *operator +=(Cluster *other)
-		{
-			merge(other);
-			return this;
-		}
-		operator clusterid()
-		{
-			return (*pool)[find()];
-		}
-		clusterid Count()
-		{
-			return find()->count;
-		}
+			{ crumble(); }
+		void operator +=(Cluster &other)
+			{ merge(other); }
+		operator size_t()
+			{ return find()->count; }
+		operator std::vector<T>()
+			{ return fetch(); }
 		bool IsRoot() const
-		{
-			return parent == this;
-		}
-		void Reset()
-		{
-			count = 1;
-			if (parent != this)
-			{
-				(*pool)[this] = pool->size();
-				parent = this;
-			}
-		}
+			{ return parent == this; }
+		const Cluster &GetRoot()
+			{ return *find(); }
 	private:
-		Cluster *parent;
-		ClusterIDPool *pool;
-		clusterid count;
+		T value;
+		Cluster<T> *parent;
+		Cluster<T> *next;
+		Cluster<T> *last;
+		size_t count;
 
-		Cluster *find()
+		Cluster<T> *find()
 		{
 			if (parent != this)
 				parent = parent->find();
 			return parent;
 		}
 
-		void merge(Cluster *other)
+		void merge(Cluster &other)
 		{
-			Cluster *a = find();
-			Cluster *b = other->find();
+			Cluster<T> *a = find();
+			Cluster<T> *b = other.find();
 			if (a != b)
 			{
 				a->parent = b;
+				b->last->next = a;
+				b->last = a->last;
 				b->count += a->count;
-				pool->erase(a);
-				reindex();
 			}
 		}
-
-		void reindex()
+		
+		void crumble()
 		{
-			clusterid id = 0;
-			ClusterIDPool::iterator it;
-			for (it = pool->begin(); it != pool->end(); ++it)
-				it->second = id++;
+			for (Cluster<T> *c = find(), *next; c != NULL; c = next)
+			{
+				next = c->next;
+				c->parent = c;
+				c->next = NULL;
+				c->last = c;
+				c->count = 1;
+			}
+		}
+		
+		std::vector<T> fetch()
+		{
+			Cluster<T> *c = find();
+			std::vector<T> vs;
+			vs.reserve(c->count);
+			for (; c != NULL; c = c->next)
+				vs.push_back(c->value);
+			return vs;
 		}
 };
 
@@ -89,14 +83,14 @@ class Cluster
 
 struct GraphManager::Data
 {
-	ClusterPool pool;
-	ClusterIDPool ids;
-	Graph graph;
-	Less2Graph l2graph;
-
+	public:
+	Data() : Index(index), index_cached(true) {}
+	~Data();
+	
 	void AddVertex(const vertex &v);
 	void RemoveVertex(const vertex &v);
 	bool HasVertex(const vertex &v) const;
+	Cluster<vertex> &GetCluster(const vertex &v);
 	
 	void Merge(const Edge &e);
 	
@@ -104,63 +98,71 @@ struct GraphManager::Data
 	void RemoveEdge(const Edge &e);
 	Edges FindEdges(const vertex &v) const;
 	bool HasEdgesWith(const vertex &v) const;
+	
+	const ClusterIndex &Index;
+	void InvalidateIndex();
+	void UpdateIndex();
+	
+	private:
+	ClusterPool pool;
+	ClusterIndex index;
+	bool index_cached;
+	Graph graph;
+	Less2Graph l2graph;
 };
+
+//------------------------------------------------------------------------------
+
+GraphManager::Data::~Data()
+{
+	for (ClusterPool::iterator it = pool.begin(); it != pool.end(); ++it)
+		delete it->second;
+}
 
 //------------------------------------------------------------------------------
 
 void GraphManager::Data::AddVertex(const vertex &v)
 {
-	pool[v] = new Cluster(&ids);
+	pool[v] = new Cluster<vertex>(v);
 }
 
 //------------------------------------------------------------------------------
 
-void GraphManager::Data::RemoveVertex(const vertex &v)
+void GraphManager::Data::RemoveVertex(const vertex &u)
 {
-	Vertices vs; // Holds vertices belonging to resolved cluster
-	std::vector<Cluster *> cs; // Holds cluster objects being resolved
+	// Find vertices belonging to same cluster
+	Vertices vs = *(pool[u]);
 	
-	Cluster *c = pool[v];
-	clusterid cid = *c;
-	vs.reserve(c->Count() - 1);
-	cs.reserve(c->Count() - 1);
-	pool.erase(v); // Remove vertex
-	
-	// Find vertices and cluster objects belonging to teh cluster
-	for (ClusterPool::iterator it = pool.begin(); it != pool.end(); ++it)
-	{
-		if (*it->second == cid)
-		{
-			vs.push_back(it->first);
-			cs.push_back(it->second);
-		}
-	}
-
-	// Break up cluster
-	for (Cluster *cluster : cs)
-		cluster->Reset();
-	
-	// Free removed cluster: now since it could have been a cluster root
-	delete c;
+	// Remove vertex from clustering
+	delete pool[u];
+	pool.erase(u);
 	
 	// Recluster
-	for (const vertex &v : vs)
-		for (const Edge &e : FindEdges(v))
-			Merge(e);
+	for (vertex v : vs)
+		if (u != v)
+			for (const Edge &e : FindEdges(v))
+				Merge(e);
 }
 
 //------------------------------------------------------------------------------
 
 bool GraphManager::Data::HasVertex(const vertex &v) const
 {
-	return (pool.count(v) == 1);
+	return pool.count(v) != 0;
+}
+
+//------------------------------------------------------------------------------
+
+Cluster<vertex> &GraphManager::Data::GetCluster(const vertex &v)
+{
+	return *pool[v];
 }
 
 //------------------------------------------------------------------------------
 
 void GraphManager::Data::Merge(const Edge &e)
 {
-	(*pool[e.v1]) += pool[e.v2];
+	(*pool[e.v1]) += (*pool[e.v2]);
 }
 
 //------------------------------------------------------------------------------
@@ -217,6 +219,29 @@ bool GraphManager::Data::HasEdgesWith(const vertex &v) const
 	return false;
 }
 
+//------------------------------------------------------------------------------
+
+void GraphManager::Data::InvalidateIndex()
+{
+	index_cached = false;
+}
+
+//------------------------------------------------------------------------------
+
+void GraphManager::Data::UpdateIndex()
+{
+	if (index_cached) return;
+	
+	index.clear();
+	
+	ClusterPool::const_iterator it;
+	for (it = pool.begin(); it != pool.end(); ++it)
+		if (it->second->IsRoot())
+			index.push_back(it->second);
+	
+	index_cached = true;
+}
+
 //==============================================================================
 
 GraphManager::GraphManager(clusterid max) : maxClusterSize(max)
@@ -231,12 +256,6 @@ GraphManager::GraphManager(clusterid max) : maxClusterSize(max)
 GraphManager::~GraphManager()
 {
 	delete data;
-	data->ids.clear();
-	
-	ClusterPool::iterator it;
-	for (it = data->pool.begin(); it != data->pool.end(); ++it)
-		delete it->second;
-	data->pool.clear();
 }
 
 //------------------------------------------------------------------------------
@@ -256,6 +275,7 @@ void GraphManager::Add(const Edge &e)
 	
 	data->Merge(e);
 	data->AddEdge(e);
+	data->InvalidateIndex();
 }
 
 //------------------------------------------------------------------------------
@@ -284,15 +304,17 @@ void GraphManager::Remove(const Edge &e)
 	
 	if (!data->HasEdgesWith(e.v2))
 		data->RemoveVertex(e.v2);
+	
+	data->InvalidateIndex();
 }
 
 //------------------------------------------------------------------------------
 
 bool GraphManager::ConstraintSatisfied()
 {
-	ClusterIDPool::iterator it;
-	for (it = data->ids.begin(); it != data->ids.end(); ++it)
-		if (it->first->Count() > maxClusterSize)
+	data->UpdateIndex();
+	for (Cluster<vertex> *cluster : data->Index)
+		if (((size_t) *cluster) > maxClusterSize)
 			return false;
 	return true;
 }
@@ -301,49 +323,50 @@ bool GraphManager::ConstraintSatisfied()
 
 clusterid GraphManager::FindClusterIndex(vertex u)
 {
-	if (!data->pool.count(u))
+	if (!data->HasVertex(u))
 		return unclustered;
-		//throw "[GraphManager::FindClusterIndex] index out of bounds!";
-	return (clusterid) *data->pool[u];
+	
+	data->UpdateIndex();
+	clusterid id = 0;
+	const Cluster<vertex> *root = &data->GetCluster(u).GetRoot();
+	for (Cluster<vertex> *cluster : data->Index)
+	{
+		if (cluster != root)
+			++id;
+		else
+			return id;
+	}
+			
+	return unclustered;
 }
 
 //------------------------------------------------------------------------------
 
 Vertices GraphManager::FindCluster(vertex u)
 {
-	clusterid i = FindClusterIndex(u);
-	
-	if (i == unclustered)
+	if (!data->HasVertex(u))
 		return Vertices();
 	
-	Vertices vs;
-	ClusterPool::iterator it;
-	for (it = data->pool.begin(); it != data->pool.end(); ++it)
-		if (*it->second == i)
-			vs.push_back(it->first);
-	return vs;
+	return data->GetCluster(u);
 }
 
 //------------------------------------------------------------------------------
 
 clusterid GraphManager::CountClusters()
 {
-	return data->ids.size();
+	data->UpdateIndex();
+	return data->Index.size();
 }
 
 //------------------------------------------------------------------------------
 
-Vertices GraphManager::GetCluster(clusterid i)
+Vertices GraphManager::GetCluster(clusterid id)
 {
-	if (i >= data->ids.size())
+	data->UpdateIndex();
+	if (id >= data->Index.size())
 		throw "[GraphManager::GetCluster] index out of bounds!";
 	
-	Vertices vs;
-	ClusterPool::iterator it;
-	for (it = data->pool.begin(); it != data->pool.end(); ++it)
-		if (*it->second == i)
-			vs.push_back(it->first);
-	return vs;
+	return *data->Index[id];
 }
 
 //------------------------------------------------------------------------------
