@@ -397,7 +397,6 @@ StructuralSampler::StructuralSampler(clusterid maxClusterSize) : manager(maxClus
 
 void StructuralSampler::Add(Edge newEdge)
 {
-	//TODO: sampling method, mentioned under C. 3)
 	strReservoir.Add(newEdge);
 	manager.Add(newEdge);
 	if (!manager.ConstraintSatisfied())
