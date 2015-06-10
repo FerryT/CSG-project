@@ -4,7 +4,7 @@ rem run the tests
 set cluster_output_file=%1
 set cluster_queries=%2
 set cluster_updates=%3
-set cluster_rule_value=%4
+set cluster_rule_value=%4	
 shift
 shift
 shift
