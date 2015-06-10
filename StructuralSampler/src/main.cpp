@@ -43,5 +43,9 @@ int main(int argc, char *argv[])
 		cout << "Example usage: StructuralSampler -CI Poisson 100 0.80 400 -CA StructuralSampler 10 -CT VisualizeResult 100 1 -CO testresult.png" << endl;
 		return EXIT_FAILURE;
 	}
+	catch (exception& e)
+	{
+		cout << red << "Fatal error: " << e.what() << white << endl;
+	}
 	return EXIT_SUCCESS;
 }
