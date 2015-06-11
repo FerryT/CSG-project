@@ -3,6 +3,7 @@
 #include <cstring>
 #include <algorithm>
 #include <iostream>
+#include <unordered_map>
 
 #include "metis.h"
 
@@ -57,6 +58,9 @@ struct Metis::Data
 	
 	bool cached;
 	MetisOptions options;
+	
+	std::unordered_map<vertex, idx_t> alias;
+	std::vector<vertex> dealias;
 
 	Data(int maxClusterSize)
 		: num_nodes(0), num_edges(0), max_cluster_size(maxClusterSize),
@@ -155,16 +159,28 @@ void Metis::Add(Edge e)
 	if (e.v1 == e.v2)
 		throw "Metis error: self-loop detected while adding edges"
 			"(which is not supported).";
-	else if (e.v1 < e.v2)
+	
+	if (!data->alias.count(e.v1))
 	{
-		v1 = e.v1;
-		v2 = e.v2;
+		v1 = data->dealias.size();
+		data->alias[e.v1] = v1;
+		data->dealias.push_back(e.v1);
 	}
 	else
+		v1 = data->alias[e.v1];
+	
+	if (!data->alias.count(e.v2))
 	{
-		v1 = e.v2;
-		v2 = e.v1;
+		v2 = data->dealias.size();
+		data->alias[e.v2] = v2;
+		data->dealias.push_back(e.v2);
 	}
+	else
+		v2 = data->alias[e.v2];
+	
+	if (v1 > v2)
+		std::swap(v1,v2);
+	
 	idx_t nodes_needed = v2 + 1;
 	
 	if (data->num_nodes < 1)
@@ -247,16 +263,27 @@ void Metis::Remove(Edge e)
 	if (e.v1 == e.v2)
 		throw "Metis error: self-loop detected while removing edges"
 			"(which is not supported).";
-	else if (e.v1 < e.v2)
+	
+	if (!data->alias.count(e.v1))
 	{
-		v1 = e.v1;
-		v2 = e.v2;
+		v1 = data->dealias.size();
+		data->alias[e.v1] = v1;
+		data->dealias.push_back(e.v1);
 	}
 	else
+		v1 = data->alias[e.v1];
+	
+	if (!data->alias.count(e.v2))
 	{
-		v1 = e.v2;
-		v2 = e.v1;
+		v2 = data->dealias.size();
+		data->alias[e.v2] = v2;
+		data->dealias.push_back(e.v2);
 	}
+	else
+		v2 = data->alias[e.v2];
+	
+	if (v1 > v2)
+		std::swap(v1,v2);
 	
 	if (v1 >= data->num_nodes || v2 >= data->num_nodes)
 		throw "Metis error: tried to remove an unexisting edge.";
@@ -334,26 +361,26 @@ void Metis::ParseArguments(const Strings &arguments)
 
 clusterid Metis::FindClusterIndex(vertex u)
 {
-	if (u >= (vertex) data->num_nodes)
+	if (!data->alias.count(u))
 		throw "[Metis::FindClusterIndex] index out of bounds!";
 	data->UpdateClusters();
-	return (int) data->clustering[u];
+	return (int) data->clustering[data->alias[u]];
 }
 
 //------------------------------------------------------------------------------
 
 Vertices Metis::FindCluster(vertex u)
 {
-	if (u >= (vertex) data->num_nodes)
+	if (!data->alias.count(u))
 		throw "[Metis::FindClusterIndex] index out of bounds!";
 	data->UpdateClusters();
 	
-	idx_t cluster = data->clustering[u];
+	idx_t cluster = data->clustering[data->alias[u]];
 	
 	Vertices vs;
 	for (idx_t v = data->num_nodes - 1; v >= 0; --v)
 		if (data->clustering[v] == cluster)
-			vs.push_back(v);
+			vs.push_back(data->dealias[v]);
 	
 	return vs;
 }
@@ -382,7 +409,7 @@ Vertices Metis::GetCluster(clusterid index)
 	Vertices vs;
 	for (idx_t v = data->num_nodes - 1; v >= 0; --v)
 		if (data->clustering[v] == index)
-			vs.push_back(v);
+			vs.push_back(data->dealias[v]);
 	
 	return vs;
 }
