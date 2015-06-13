@@ -186,6 +186,8 @@ void GraphManager::Data::AddEdge(const Edge &e)
 
 void GraphManager::Data::RemoveEdge(const Edge &e)
 {
+	if (!graph.count(e))
+		throw "Tried to remove an unexisting edge.";
 	// We assume that existing edges always are in the same cluster
 	
 	// Whether the deleted edge may decrease the max count
