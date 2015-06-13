@@ -37,22 +37,28 @@ void EulerNetworkInput::ExecuteNextUpdate()
 	if(this->CurrentGraph.empty() || rand() % 100 < insertDeleteRatio*100)
 	{
 		//inserts
-		int item = rand() % this->NotInCurrentGraph.size();
-		Edge e = this->NotInCurrentGraph[item];
-		this->CurrentGraph.push_back(e);
-		this->NotInCurrentGraph.erase(this->NotInCurrentGraph.begin()+item);
-
-		this->output->Add(e);
+		if (this->NotInCurrentGraph.size())
+		{
+			int item = rand() % this->NotInCurrentGraph.size();
+			Edge e = this->NotInCurrentGraph[item];
+			this->CurrentGraph.push_back(e);
+			this->NotInCurrentGraph.erase(this->NotInCurrentGraph.begin()+item);
+	
+			this->output->Add(e);
+		}
 	}
 	else
 	{
 		//deletes
-		int item = rand() % this->CurrentGraph.size();
-		Edge e = this->CurrentGraph[item];
-		this->NotInCurrentGraph.push_back(e);
-		this->CurrentGraph.erase(this->CurrentGraph.begin() + item);
-
-		this->output->Remove(e);
+		if (this->CurrentGraph.size())
+		{
+			int item = rand() % this->CurrentGraph.size();
+			Edge e = this->CurrentGraph[item];
+			this->NotInCurrentGraph.push_back(e);
+			this->CurrentGraph.erase(this->CurrentGraph.begin() + item);
+	
+			this->output->Remove(e);
+		}
 	}
 
 	this->currentUpdates++;
