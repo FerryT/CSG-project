@@ -225,16 +225,16 @@ Edges GraphManager::Data::FindEdges(const vertex &v) const
 	
 	{
 		Graph::iterator begin, it, end;
-		begin = graph.upper_bound(Edge(v, v));
-		end = graph.lower_bound(Edge(v + 1, v + 1));
+		begin = graph.upper_bound(Edge(v, v, 0));
+		end = graph.lower_bound(Edge(v + 1, v + 1, 0));
 		for (it = begin; it != end; ++it)
 			es.push_back(*it);
 	}
 	
 	{
 		Less2Graph::iterator begin, it, end;
-		begin = l2graph.lower_bound(Edge(0, v));
-		end = l2graph.lower_bound(Edge(0, v + 1));
+		begin = l2graph.lower_bound(Edge(0, v, 0));
+		end = l2graph.lower_bound(Edge(0, v + 1, 0));
 		for (it = begin; it != end; ++it)
 			es.push_back(*it);
 	}
@@ -246,10 +246,12 @@ Edges GraphManager::Data::FindEdges(const vertex &v) const
 
 bool GraphManager::Data::HasEdgesWith(const vertex &v) const
 {
-	if (graph.upper_bound(Edge(v, v)) != graph.lower_bound(Edge(v + 1, v + 1)))
+	if (graph.upper_bound(Edge(v, v, 0))
+		!= graph.lower_bound(Edge(v + 1, v + 1, 0)))
 		return true;
 	
-	if (l2graph.lower_bound(Edge(0, v)) != l2graph.lower_bound(Edge(0, v + 1)))
+	if (l2graph.lower_bound(Edge(0, v, 0))
+		!= l2graph.lower_bound(Edge(0, v + 1, 0)))
 		return true;
 	
 	return false;
