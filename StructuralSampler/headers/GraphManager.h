@@ -6,7 +6,7 @@
 class GraphManager {
 	public:
 		// the B value mentioned in the paper
-		const clusterid maxClusterSize;
+		clusterid maxClusterSize;
 		
 		GraphManager(clusterid max = 10);
 		~GraphManager();
