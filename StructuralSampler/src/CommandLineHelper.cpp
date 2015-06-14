@@ -93,10 +93,6 @@ Input* CreateInput(ComponentDescription desc)
 	{
 		result = new EulerNetworkInput();
 	}
-	else if (desc.name == "Scale-Free")
-	{
-		result = new ScaleFreeNetworkInput();
-	}
 	else if (desc.name == "BAModel")
 	{
 		result = new BAModelInput();

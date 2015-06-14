@@ -42,12 +42,12 @@ class StackInput: public Input, public Output
 protected:
 	Input* input;
 public:
-	virtual void Add(Edge e) override;
-	virtual void Remove(Edge e) override;
-	virtual void Open() override;
-	virtual void Close() override;
-	virtual void ExecuteNextUpdate() override;
-	virtual bool IsEnd() override;
+	virtual void Add(Edge e);
+	virtual void Remove(Edge e);
+	virtual void Open();
+	virtual void Close();
+	virtual void ExecuteNextUpdate();
+	virtual bool IsEnd();
 
 	virtual void SetInternalInput(Input* input);
 };
@@ -61,7 +61,7 @@ class FileInput: public Input {
 		FileInput(const char *fn) : Input(), filename(fn) {}
 		FileInput() : Input() {}
 
-		void ParseArguments(const Strings &arguments) override;
+		void ParseArguments(const Strings &arguments);
 
 };
 

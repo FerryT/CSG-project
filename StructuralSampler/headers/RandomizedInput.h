@@ -13,39 +13,14 @@ private:
 	int maxUpdates;
 	int currentUpdates;
 public:
-	EulerNetworkInput(): EulerNetworkInput(100, 0.80f, 100) {};
-	EulerNetworkInput(int nodes, float insertDeleteRatio, int maxUpdates);
+	EulerNetworkInput(int nodes = 100, float insertDeleteRatio = 0.8f, int maxUpdates = 100);
 
-	void Open() override;
-	void Close() override;
-	void ExecuteNextUpdate() override;
-	bool IsEnd() override;
+	void Open();
+	void Close();
+	void ExecuteNextUpdate();
+	bool IsEnd();
 
-	void ParseArguments(const Strings &arguments) override;
-};
-
-
-class ScaleFreeNetworkInput : public Input {
-private:
-	int nodes;
-	float insertDeleteRatio;
-	Edges CurrentGraph;
-	Vertices *NotInCurrentGraph;
-	int maxUpdates;
-	int currentUpdates;
-	int* NodeDegree; 
-	int totalDegree;
-public:
-	ScaleFreeNetworkInput() : ScaleFreeNetworkInput(100, 0.80f, 100) {};
-	ScaleFreeNetworkInput(int nodes, float insertDeleteRatio, int maxUpdates);
-	~ScaleFreeNetworkInput();
-
-	void Open() override;
-	void Close() override;
-	void ExecuteNextUpdate() override;
-	bool IsEnd() override;
-
-	void ParseArguments(const Strings &arguments) override;
+	void ParseArguments(const Strings &arguments);
 };
 
 class BAModelInput : public Input {
@@ -58,16 +33,15 @@ private:
 
 	void FindNextEdge();
 public:
-	BAModelInput() : BAModelInput(100) {};
-	BAModelInput(int nodes);
+	BAModelInput(int nodes = 100);
 	~BAModelInput();
 
-	void Open() override;
-	void Close() override;
-	void ExecuteNextUpdate() override;
-	bool IsEnd() override;
+	void Open();
+	void Close();
+	void ExecuteNextUpdate();
+	bool IsEnd();
 
-	void ParseArguments(const Strings &arguments) override;
+	void ParseArguments(const Strings &arguments);
 };
 
 #endif // RANDOMIZED_INPUT_H

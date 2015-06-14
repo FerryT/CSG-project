@@ -7,10 +7,12 @@ class FilterEdges : public StackInput
 {
 	Graph graph;
 public:
-	double Filter = 0;
-	void Remove(Edge e) override;
-	void Add(Edge e) override;
-	void ParseArguments(const Strings& arguments) override;
+	double Filter;
+
+	FilterEdges() : Filter(0) {}
+	void Remove(Edge e);
+	void Add(Edge e);
+	void ParseArguments(const Strings& arguments);
 	
 
 };

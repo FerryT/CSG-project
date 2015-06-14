@@ -45,23 +45,14 @@ void QualityTest::ParseArguments(const Strings& arguments)
 	}
 }
 
-QualityTest::QualityTest()
-{
-}
-
-//------------------------------------------------------------------------------
-
-QualityTest::QualityTest(int snapshotSize)
-{
-	this->SnapshotSize = snapshotSize;
-}
-
 //------------------------------------------------------------------------------
 
 struct QualityResult
 {
-	int Sumation = 0;
-	int count = 0;
+	int Sumation;
+	int count;
+
+	QualityResult() : Sumation(0), count(0) {}
 };
 
 void QualityTest::RunTest(String outputFilename)
@@ -73,10 +64,10 @@ void QualityTest::RunTest(String outputFilename)
 	vector<Algorithm*> algorithms = CreateAlgorithms(this->descriptions);
 
 	Input* input = realInput;
-	for (StackInput* stackinput : stackInputs)
+	for (auto stackinput = stackInputs.begin(); stackinput != stackInputs.end(); ++stackinput)
 	{
-		stackinput->SetInternalInput(input);
-		input = stackinput;
+		(*stackinput)->SetInternalInput(input);
+		input = *stackinput;
 	}
 	CaptureStackInput* capture = new CaptureStackInput();
 	capture->SetInternalInput(input);
@@ -102,6 +93,10 @@ void QualityTest::RunTest(String outputFilename)
 		{
 			input->ExecuteNextUpdate();
 			updates++;
+			if (updates %100 == 0)
+			{
+				cout << updates << endl;
+			}
 		}
 
 		Graph* g = capture->GetCompleteGraph();
@@ -111,10 +106,10 @@ void QualityTest::RunTest(String outputFilename)
 		for (int i = 0; i < algorithms.size(); i++)
 		{
 			int cutSize = 0;
-			for (Edge edge : *g)
+			for (auto edge = g->begin(); edge != g->end(); ++edge)
 			{
-				vertex c1 = algorithms[i]->FindClusterIndex(edge.v1);
-				vertex c2 = algorithms[i]->FindClusterIndex(edge.v2);
+				vertex c1 = algorithms[i]->FindClusterIndex(edge->v1);
+				vertex c2 = algorithms[i]->FindClusterIndex(edge->v2);
 				if (c1 != c2)
 					cutSize++;
 			}
@@ -219,14 +214,14 @@ bool SplitStackInput::IsEnd()
 
 void SplitStackInput::Add(Edge e)
 {
-	for (Output* o : this->outputs)
-		o->Add(e);
+	for (auto o = this->outputs.begin(); o != this->outputs.end(); ++o)
+		(*o)->Add(e);
 }
 
 void SplitStackInput::Remove(Edge e)
 {
-	for (Output* o : this->outputs)
-		o->Remove(e);
+	for (auto o = this->outputs.begin(); o != this->outputs.end(); ++o)
+		(*o)->Remove(e);
 }
 
 void ThroughputTest::ParseArguments(const Strings& arguments)
@@ -242,16 +237,6 @@ void ThroughputTest::ParseArguments(const Strings& arguments)
 	}
 }
 
-ThroughputTest::ThroughputTest()
-{
-}
-
-ThroughputTest::ThroughputTest(int updates, int queries)
-{
-	this->updates = updates;
-	this->queries = queries;
-}
-
 void ThroughputTest::RunTest(String outputFilename)
 {
 	cout << "Start performance test..." << endl;
@@ -261,10 +246,10 @@ void ThroughputTest::RunTest(String outputFilename)
 	Algorithm* algorithm = CreateAlgorithm(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComAlgorithm>));
 
 	Input* input = realInput;
-	for (StackInput* stackinput : stackInputs)
+	for (auto stackinput = this->stackinputs.begin(); stackinput != this->stackinputs.end(); ++stackinput)
 	{
-		stackinput->SetInternalInput(input);
-		input = stackinput;
+		(*stackinput)->SetInternalInput(input);
+		input = *stackinput;
 	}
 	input->SetOutput(algorithm);
 	input->Open();

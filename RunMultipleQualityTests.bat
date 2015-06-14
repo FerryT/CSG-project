@@ -10,7 +10,7 @@ echo Input,StructuralSampler,Metis,>> "%cluster_output_file%"
 
 rem run the tests
 rem higher cluster sizes
-CALL RunQualityTest %cluster_output_file% 500 %cluster_snapshot_size% %*
-CALL RunQualityTest %cluster_output_file% 1000 %cluster_snapshot_size% %*
-CALL RunQualityTest %cluster_output_file% 5000 %cluster_snapshot_size% %*
-CALL RunQualityTest %cluster_output_file% 10000 %cluster_snapshot_size% %*
+CALL RunQualityTest %cluster_output_file% 10 100 %*
+CALL RunQualityTest %cluster_output_file% 50 500 %*
+CALL RunQualityTest %cluster_output_file% 100 1000 %*
+CALL RunQualityTest %cluster_output_file% 500 5000 %*

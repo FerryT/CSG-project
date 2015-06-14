@@ -7,27 +7,27 @@
 class OutputVisualization: public Test
 {
 public:
-	bool CallDot = false;
-	void RunTest(String outputFile) override;
+	bool CallDot;
+	void RunTest(String outputFile);
 };
 
 class VisualizeResults : public Test
 {
 public:
-	int runTillUpdate = -1;
-	bool CallDot = false;
-	std::string* nameInput = nullptr;
-	VisualizeResults() : VisualizeResults(100){};
-	VisualizeResults(int runTillUpdate);
-	void RunTest(String outputFile) override;
-	void ParseArguments(const Strings& arguments) override;
+	int runTillUpdate;
+	bool CallDot;
+	std::string* nameInput;
+
+	VisualizeResults(int runTillUpdate = 100) : runTillUpdate(-1), CallDot(false), nameInput(NULL) {}
+	void RunTest(String outputFile);
+	void ParseArguments(const Strings& arguments);
 };
 
 class NullOutput: public Output
 {
 public:
-	void Add(Edge e) override {};
-	void Remove(Edge e) override {};
+	void Add(Edge e) {};
+	void Remove(Edge e) {};
 };
 
 
