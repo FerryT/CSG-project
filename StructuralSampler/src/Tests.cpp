@@ -49,8 +49,10 @@ void QualityTest::ParseArguments(const Strings& arguments)
 
 struct QualityResult
 {
-	int Sumation = 0;
-	int count = 0;
+	int Sumation;
+	int count;
+
+	QualityResult() : Sumation(0), count(0) {}
 };
 
 void QualityTest::RunTest(String outputFilename)
@@ -244,10 +246,10 @@ void ThroughputTest::RunTest(String outputFilename)
 	Algorithm* algorithm = CreateAlgorithm(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComAlgorithm>));
 
 	Input* input = realInput;
-	for (StackInput* stackinput : stackInputs)
+	for (auto stackinput = this->stackinputs.begin(); stackinput != this->stackinputs.end(); ++stackinput)
 	{
-		stackinput->SetInternalInput(input);
-		input = stackinput;
+		(*stackinput)->SetInternalInput(input);
+		input = *stackinput;
 	}
 	input->SetOutput(algorithm);
 	input->Open();
