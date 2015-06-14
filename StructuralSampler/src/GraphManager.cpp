@@ -137,16 +137,21 @@ void GraphManager::Data::RemoveVertex(const vertex &v)
 	}
 
 	// Break up cluster
-	for (Cluster *cluster : cs)
-		cluster->Reset();
 	
+	for (auto it = cs.begin(); it != cs.end(); ++it) {
+		(*it)->Reset();
+	}
+
 	// Free removed cluster: now since it could have been a cluster root
 	delete c;
 	
 	// Recluster
-	for (const vertex &v : vs)
-		for (const Edge &e : FindEdges(v))
-			Merge(e);
+	for (auto v = vs.begin(); v != vs.end(); ++v) {
+		auto edges = FindEdges(*v);
+		for (auto e = edges.begin(); e != edges.end(); ++e) {
+			Merge(*e);
+		}
+	}
 }
 
 //------------------------------------------------------------------------------

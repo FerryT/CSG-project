@@ -9,4 +9,4 @@ shift
 shift
 
 echo|set /p=%cluster_size%,>> "%cluster_output_file%"
-"%cluster_application%" %* -CA StructuralSampler "%cluster_size%" -CA Metis "%cluster_size%" -CT Quality "%cluster_snapshot_size%" -CO "%cluster_output_file%"
+"%cluster_application%" %* -CS SlideWindow %cluster_snapshot_size% -CA StructuralSampler %cluster_size% -CA Metis %cluster_size% -CT Quality "%cluster_snapshot_size%" -CO "%cluster_output_file%"
