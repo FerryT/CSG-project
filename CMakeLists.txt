@@ -5,6 +5,8 @@ file(GLOB sample_SRC
     "StructuralSampler/src/*.cpp"
 )
 
+add_definitions("-std=gnu++0x")
+
 include_directories(../metis/include)
 include_directories(StructuralSampler/headers)
 
