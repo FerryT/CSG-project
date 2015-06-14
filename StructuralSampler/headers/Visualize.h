@@ -14,9 +14,9 @@ public:
 class VisualizeResults : public Test
 {
 public:
-	int runTillUpdate = -1;
-	bool CallDot = false;
-	std::string* nameInput = nullptr;
+	int runTillUpdate;
+	bool CallDot;
+	std::string* nameInput;
 
 	VisualizeResults() : VisualizeResults(100){};
 	VisualizeResults(int runTillUpdate) : runTillUpdate(-1), CallDot(false), nameInput(nullptr) {}
