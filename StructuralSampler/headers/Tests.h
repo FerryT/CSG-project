@@ -26,11 +26,11 @@ class Test {
 
 class QualityTest: public Test {
 	public:
-		void ParseArguments(const Strings& arguments) override;
-		QualityTest();
-		QualityTest(int snapshotSize);
-		int SnapshotSize = 10000; 
-		virtual void RunTest(String outputFile) override;
+		void ParseArguments(const Strings& arguments);
+		QualityTest() : SnapshotSize(10000) {};
+		QualityTest(int snapshotSize) : SnapshotSize(snapshotSize) {};
+		int SnapshotSize;
+		virtual void RunTest(String outputFile);
 };
 
 //------------------------------------------------------------------------------
@@ -44,8 +44,8 @@ class CaptureStackInput : public StackInput
 		CaptureStackInput();
 		~CaptureStackInput();
 		
-		virtual void Add(Edge e) override;
-		virtual void Remove(Edge e) override;
+		virtual void Add(Edge e);
+		virtual void Remove(Edge e);
 	
 		Graph* GetCompleteGraph();
 };
@@ -55,25 +55,27 @@ class SplitStackInput : public StackInput
 {
 private: 
 	std::vector<Output*> outputs;
-	bool is_open = false;
+	bool is_open;
 public:
-	void SetOutput(Output* output) override;
-	void Open() override;
-	void Close() override;
-	void ExecuteNextUpdate() override;
-	bool IsEnd() override;
-	void Add(Edge e) override;
-	void Remove(Edge e) override;
+	SplitStackInput() : is_open(false) {}
+
+	void SetOutput(Output* output);
+	void Open();
+	void Close();
+	void ExecuteNextUpdate();
+	bool IsEnd();
+	void Add(Edge e);
+	void Remove(Edge e);
 };
 
 class ThroughputTest : public Test {
 public:
-	void ParseArguments(const Strings& arguments) override;
-	ThroughputTest();
-	ThroughputTest(int updates, int queries);
-	int updates = 5;
-	int queries = 1;
-	virtual void RunTest(String outputFile) override;
+	void ParseArguments(const Strings& arguments);
+	ThroughputTest() : updates(5), queries(1) {}
+	ThroughputTest(int updates, int queries) : updates(updates), queries(queries) {};
+	int updates;
+	int queries;
+	virtual void RunTest(String outputFile);
 };
 
 //------------------------------------------------------------------------------

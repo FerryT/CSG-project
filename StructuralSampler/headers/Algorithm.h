@@ -39,7 +39,7 @@ class Metis : public Algorithm {
 		virtual void Add(Edge e);
 		virtual void Remove(Edge e);
 
-		void ParseArguments(const Strings& arguments) override;
+		void ParseArguments(const Strings& arguments);
 
 		virtual clusterid FindClusterIndex(vertex u);
 		virtual Vertices FindCluster(vertex u);
@@ -72,7 +72,7 @@ class StructuralSampler : public Algorithm {
 		virtual Vertices GetCluster(clusterid index)
 		{ return manager.GetCluster(index); }
 
-		void ParseArguments(const Strings &arguments) override;
+		void ParseArguments(const Strings &arguments);
 };
 
 //------------------------------------------------------------------------------

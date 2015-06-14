@@ -45,17 +45,6 @@ void QualityTest::ParseArguments(const Strings& arguments)
 	}
 }
 
-QualityTest::QualityTest()
-{
-}
-
-//------------------------------------------------------------------------------
-
-QualityTest::QualityTest(int snapshotSize)
-{
-	this->SnapshotSize = snapshotSize;
-}
-
 //------------------------------------------------------------------------------
 
 struct QualityResult
@@ -240,16 +229,6 @@ void ThroughputTest::ParseArguments(const Strings& arguments)
 	{
 		throw "Can't parse the parameters for throughput test, arguments are <queries> <updates>";
 	}
-}
-
-ThroughputTest::ThroughputTest()
-{
-}
-
-ThroughputTest::ThroughputTest(int updates, int queries)
-{
-	this->updates = updates;
-	this->queries = queries;
 }
 
 void ThroughputTest::RunTest(String outputFilename)

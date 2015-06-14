@@ -94,11 +94,6 @@ void VisualizeResults::ParseArguments(const Strings& arguments)
 	}
 }
 
-VisualizeResults::VisualizeResults(int runTillUpdate)
-{
-	this->runTillUpdate = runTillUpdate;
-}
-
 void VisualizeResults::RunTest(String outputFilename)
 {
 	this->input = CreateInput(*find_if(this->descriptions.begin(), this->descriptions.end(), IsType<ComInput>));
