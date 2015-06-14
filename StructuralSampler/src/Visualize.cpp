@@ -199,7 +199,7 @@ void VisualizeResults::RunTest(String outputFilename)
 	}
 	
 
-	if (this->nameInput == nullptr)
+	if (this->nameInput == NULL)
 	{
 		for (auto v = vertices.begin(); v != vertices.end(); ++v)
 		{
