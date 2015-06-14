@@ -3,6 +3,8 @@
 
 // ConsoleColor.h
 
+#ifdef _MSC_VER
+
 #include <iostream>
 #include <windows.h>
 
@@ -59,5 +61,15 @@ operator<<(std::basic_ostream<_Elem, _Traits>& i, color& c)
 	SetConsoleTextAttribute(hStdout, c.m_color);
 	return i;
 }
+
+#else
+
+const string blue = "\e[1;34m";
+const string red = "\e[0;31m";
+const string green = "\e[0;32m";
+const string yellow = "\e[0;33m";
+const string white = "\e[47m";
+
+#endif
 
 #endif
