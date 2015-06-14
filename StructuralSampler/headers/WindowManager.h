@@ -32,11 +32,12 @@ public:
 
 class TumblingWindow : public StackInput
 {
+private:
 	Edges window;
-	bool removal = false;
+	bool removal;
 
 public:
-	int windowSize = 0;
+	int windowSize;
 
 	TumblingWindow() : removal(false), windowSize(0) {}
 

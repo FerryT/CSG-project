@@ -7,7 +7,7 @@
 class OutputVisualization: public Test
 {
 public:
-	bool CallDot = false;
+	bool CallDot;
 	void RunTest(String outputFile);
 };
 
@@ -18,8 +18,7 @@ public:
 	bool CallDot;
 	std::string* nameInput;
 
-	VisualizeResults() : VisualizeResults(100){};
-	VisualizeResults(int runTillUpdate) : runTillUpdate(-1), CallDot(false), nameInput(nullptr) {}
+	VisualizeResults(int runTillUpdate = 100) : runTillUpdate(-1), CallDot(false), nameInput(NULL) {}
 	void RunTest(String outputFile);
 	void ParseArguments(const Strings& arguments);
 };
