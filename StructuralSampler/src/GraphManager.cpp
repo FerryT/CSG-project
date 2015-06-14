@@ -146,10 +146,16 @@ void GraphManager::Data::RemoveVertex(const vertex &u)
 	pool.erase(u);
 	
 	// Recluster
-	for (vertex v : vs)
+	for (Vertices::iterator it1 = vs.begin(); it1 != vs.end(); ++it1)
+	{
+		vertex &v = *it1;
 		if (u != v)
-			for (const Edge &e : FindEdges(v))
-				Merge(e);
+		{
+			Edges es = FindEdges(v);
+			for (Edges::const_iterator it2 = es.begin(); it2 != es.end(); ++it2)
+				Merge(*it2);
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -204,9 +210,12 @@ void GraphManager::Data::RemoveEdge(const Edge &e)
 	--*pool[e.v1];
 	
 	// Recluster
-	for (vertex v : vs)
-		for (const Edge &e : FindEdges(v))
-			Merge(e);
+	for (Vertices::iterator it1 = vs.begin(); it1 != vs.end(); ++it1)
+	{
+		Edges es = FindEdges(*it1);
+		for (Edges::const_iterator it2 = es.begin(); it2 != es.end(); ++it2)
+			Merge(*it2);
+	}
 	
 	// Recalculate count
 	if (max_cluster)
@@ -467,9 +476,10 @@ clusterid GraphManager::FindClusterIndex(vertex u)
 	data->UpdateIndex();
 	clusterid id = 0;
 	const Cluster<vertex> *root = &data->GetCluster(u).GetRoot();
-	for (Cluster<vertex> *cluster : data->Index)
+	ClusterIndex::const_iterator it;
+	for (it = data->Index.begin(); it != data->Index.end(); ++it)
 	{
-		if (cluster != root)
+		if (*it != root)
 			++id;
 		else
 			return id;
