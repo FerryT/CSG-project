@@ -22,7 +22,7 @@ char *read_line(char *str, int num, FILE *fp)
 	if (!feof(fp) && str[len - 1] != '\n')
 		throw "Buffer overflow whilst reading graph file.";
 	
-	while (*str && isblank(*str))
+	while (*str && (*str == 0x20 || *str == 0x09))
 		++str;
 	
 	if (*str == delim)

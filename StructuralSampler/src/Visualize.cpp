@@ -190,10 +190,10 @@ void VisualizeResults::RunTest(String outputFilename)
 	{
 		fprintf(output, "\tsubgraph cluster%d {\n", i);
 		Vertices c = this->algorithm->GetCluster(i);
-		for (vertex v : c)
+		for (auto v = c.begin(); v != c.end(); ++v)
 		{
-			fprintf(output, "\t\t%lu;\n", v);
-			vertices.insert(v);
+			fprintf(output, "\t\t%lu;\n", *v);
+			vertices.insert(*v);
 		}
 		fputs("\t}\n", output);
 	}
