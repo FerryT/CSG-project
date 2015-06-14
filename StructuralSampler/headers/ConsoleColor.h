@@ -68,7 +68,7 @@ const string blue = "\e[1;34m";
 const string red = "\e[0;31m";
 const string green = "\e[0;32m";
 const string yellow = "\e[0;33m";
-const string white = "\e[47m";
+const string white = "\e[0m";
 
 #endif
 
