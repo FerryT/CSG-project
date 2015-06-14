@@ -3,6 +3,7 @@
 #include <cstring>
 #include <algorithm>
 #include <iostream>
+#include <unordered_map>
 
 #include "metis.h"
 
@@ -57,6 +58,10 @@ struct Metis::Data
 	
 	bool cached;
 	MetisOptions options;
+	
+	std::unordered_map<vertex, idx_t> alias;
+	std::vector<vertex> dealias;
+	std::vector<idx_t> aliaspool;
 
 	Data(int maxClusterSize)
 		: num_nodes(0), num_edges(0), max_cluster_size(maxClusterSize),
@@ -64,6 +69,11 @@ struct Metis::Data
 		cached(true), options() {}
 	void UpdateClusters();
 	void Debug();
+	
+	idx_t Alias(vertex v);
+	vertex Dealias(idx_t i);
+	bool HasAlias(vertex v);
+	void FreeAlias(vertex v);
 };
 
 //------------------------------------------------------------------------------
@@ -115,6 +125,50 @@ void Metis::Data::Debug()
 
 //------------------------------------------------------------------------------
 
+idx_t Metis::Data::Alias(vertex v)
+{
+	if (alias.count(v) > 0)
+		return alias[v];
+	
+	if (aliaspool.size())
+	{
+		idx_t i = aliaspool.back();
+		aliaspool.pop_back();
+		alias[v] = i;
+		dealias[i] = v;
+		return i;
+	}
+	
+	idx_t i = dealias.size();
+	alias[v] = i;
+	dealias.push_back(v);
+	return i;
+}
+
+//------------------------------------------------------------------------------
+
+vertex Metis::Data::Dealias(idx_t i)
+{
+	return dealias[i];
+}
+
+//------------------------------------------------------------------------------
+
+bool Metis::Data::HasAlias(vertex v)
+{
+	return alias.count(v) > 0;
+}
+
+//------------------------------------------------------------------------------
+
+void Metis::Data::FreeAlias(vertex v)
+{
+	aliaspool.push_back(alias[v]);
+	alias.erase(v);
+}
+
+//==============================================================================
+
 Metis::Metis(clusterid maxClusterSize)
 {
 	if (maxClusterSize < 2)
@@ -155,16 +209,13 @@ void Metis::Add(Edge e)
 	if (e.v1 == e.v2)
 		throw "Metis error: self-loop detected while adding edges"
 			"(which is not supported).";
-	else if (e.v1 < e.v2)
-	{
-		v1 = e.v1;
-		v2 = e.v2;
-	}
-	else
-	{
-		v1 = e.v2;
-		v2 = e.v1;
-	}
+	
+	v1 = data->Alias(e.v1);
+	v2 = data->Alias(e.v2);
+	
+	if (v1 > v2)
+		std::swap(v1,v2);
+	
 	idx_t nodes_needed = v2 + 1;
 	
 	if (data->num_nodes < 1)
@@ -247,16 +298,12 @@ void Metis::Remove(Edge e)
 	if (e.v1 == e.v2)
 		throw "Metis error: self-loop detected while removing edges"
 			"(which is not supported).";
-	else if (e.v1 < e.v2)
-	{
-		v1 = e.v1;
-		v2 = e.v2;
-	}
-	else
-	{
-		v1 = e.v2;
-		v2 = e.v1;
-	}
+	
+	v1 = data->Alias(e.v1);
+	v2 = data->Alias(e.v2);
+	
+	if (v1 > v2)
+		std::swap(v1,v2);
 	
 	if (v1 >= data->num_nodes || v2 >= data->num_nodes)
 		throw "Metis error: tried to remove an unexisting edge.";
@@ -309,6 +356,12 @@ void Metis::Remove(Edge e)
 		}
 	}
 	
+	if (data->node_indices[v1] == data->node_indices[v1 + 1])
+		data->FreeAlias(data->Dealias(v1));
+	
+	if (data->node_indices[v2] == data->node_indices[v2 + 1])
+		data->FreeAlias(data->Dealias(v2));
+	
 	data->cached = false;
 }
 
@@ -334,26 +387,26 @@ void Metis::ParseArguments(const Strings &arguments)
 
 clusterid Metis::FindClusterIndex(vertex u)
 {
-	if (u >= (vertex) data->num_nodes)
+	if (!data->HasAlias(u))
 		throw "[Metis::FindClusterIndex] index out of bounds!";
 	data->UpdateClusters();
-	return (int) data->clustering[u];
+	return (int) data->clustering[data->Alias(u)];
 }
 
 //------------------------------------------------------------------------------
 
 Vertices Metis::FindCluster(vertex u)
 {
-	if (u >= (vertex) data->num_nodes)
+	if (!data->HasAlias(u))
 		throw "[Metis::FindClusterIndex] index out of bounds!";
 	data->UpdateClusters();
 	
-	idx_t cluster = data->clustering[u];
+	idx_t cluster = data->clustering[data->Alias(u)];
 	
 	Vertices vs;
 	for (idx_t v = data->num_nodes - 1; v >= 0; --v)
 		if (data->clustering[v] == cluster)
-			vs.push_back(v);
+			vs.push_back(data->Dealias(v));
 	
 	return vs;
 }
@@ -382,7 +435,7 @@ Vertices Metis::GetCluster(clusterid index)
 	Vertices vs;
 	for (idx_t v = data->num_nodes - 1; v >= 0; --v)
 		if (data->clustering[v] == index)
-			vs.push_back(v);
+			vs.push_back(data->Dealias(v));
 	
 	return vs;
 }
@@ -397,7 +450,6 @@ StructuralSampler::StructuralSampler(clusterid maxClusterSize) : manager(maxClus
 
 void StructuralSampler::Add(Edge newEdge)
 {
-	//TODO: sampling method, mentioned under C. 3)
 	strReservoir.Add(newEdge);
 	manager.Add(newEdge);
 	if (!manager.ConstraintSatisfied())
