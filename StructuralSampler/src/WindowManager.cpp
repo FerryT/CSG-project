@@ -26,7 +26,7 @@ void SlideWindow::ParseArguments(const Strings& arguments)
 void SlideWindow::ExecuteNextUpdate()
 {
 	//if (!this->window.empty() && this->timesteps - this->window.front().time > this->windowSize)
-	if (!this->window.empty() && this->window.size() >= this->windowSize)
+	if (!this->window.empty() && (this->window.size() >= this->windowSize || this->input->IsEnd()))
 	{
 		this->output->Remove(this->window.front().e);
 		this->window.pop();
@@ -47,7 +47,7 @@ bool SlideWindow::IsEnd()
 
 void TumblingWindow::ExecuteNextUpdate()
 {
-	if (window.size() >= this->windowSize)
+	if (window.size() >= this->windowSize || this->input->IsEnd())
 	{
 		removal = true;
 	}

@@ -93,15 +93,14 @@ void QualityTest::RunTest(String outputFilename)
 		{
 			input->ExecuteNextUpdate();
 			updates++;
-			if (updates %100 == 0)
-			{
-				cout << updates << endl;
-			}
 		}
 
 		Graph* g = capture->GetCompleteGraph();
 
-		cout << updates << " updates done, current graph size: " << g->size() << ", continuing ..." << endl;
+		if (updates % 100 == 0)
+		{
+			cout << updates << " updates done, current graph size: " << g->size() << ", continuing ..." << endl;
+		}
 
 		for (int i = 0; i < algorithms.size(); i++)
 		{
