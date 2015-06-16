@@ -1,0 +1,24 @@
+graph {
+	layout = fdp;
+	node [shape = point];
+	dpi = 72;
+	K = .125;
+	
+	I, J;
+	
+	subgraph clusterA
+	{
+		A, B, G, D, E;
+	}
+	
+	subgraph clusterB
+	{
+		F, C, H, K;
+	}
+	
+	subgraph clusterC
+	{
+		X, Y, Z;
+		Y [style = invis];
+	}
+}

@@ -1,0 +1,19 @@
+graph {
+	layout = dot;
+	node [shape = point];
+	dpi = 72;
+	nodesep = .125;
+	rankdir = LR;
+	
+	A -- B;
+	B -- C;
+	C -- A;
+	A -- D;
+	E -- H;
+	C -- F [style = dotted];
+	F [style = invis];
+	A -- G [style = dotted];
+	G [style = invis];
+	
+	{ E; C; rank = same; }
+}

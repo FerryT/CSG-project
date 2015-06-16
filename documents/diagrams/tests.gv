@@ -1,0 +1,34 @@
+digraph {
+
+	layout = dot;
+	node [shape = rect];
+
+	Input [shape = hexagon];
+	
+	StackInput;
+	
+	Algorithm [shape = hexagon];
+	
+	Test [shape = hexagon];
+	Algorithm -> Test [dir = back];
+	Input -> Test [dir = back];
+	StackInput -> Test [dir = both, arrowhead = odot];
+	
+	QualityTest;
+	Test -> QualityTest [arrowtail = onormal, dir = back];
+	QualityTest -> CaptureStackInput [style = dashed];
+	QualityTest -> SplitStackInput [style = dashed];
+	
+	ThroughputTest;
+	Test -> ThroughputTest [arrowtail = onormal, dir = back];
+	
+	OutputVisualization;
+	Test -> OutputVisualization [arrowtail = onormal, dir = back];
+	OutputVisualization -> CaptureStackInput [style = dashed];
+	OutputVisualization -> NullOutput [style = dashed];
+	
+	VisualizeResults;
+	Test -> VisualizeResults [arrowtail = onormal, dir = back];
+	VisualizeResults -> CaptureStackInput [style = dashed];
+	
+}

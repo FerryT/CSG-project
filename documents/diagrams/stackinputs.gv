@@ -1,0 +1,39 @@
+digraph {
+
+	layout = dot;
+	node [shape = rect];
+
+	Output [shape = hexagon];
+	Input [shape = hexagon];
+	{ Input -> Output; rank = same; }
+	
+	StackInput;
+	Input -> StackInput [arrowtail = onormal, dir = back];
+	Output -> StackInput [arrowtail = onormal, dir = back];
+	StackInput -> Input;
+	
+	FilterEdges;
+	StackInput -> FilterEdges [arrowtail = onormal, dir = back];
+	FilterEdgesGraph [image = "graph.gv.png", shape = none, label = ""];
+	FilterEdges -> FilterEdgesGraph [style = dashed];
+	
+	CaptureStackInput;
+	StackInput -> CaptureStackInput [arrowtail = onormal, dir = back];
+	CaptureStackInputGraph [image = "graph.gv.png", shape = none, label = ""];
+	CaptureStackInput -> CaptureStackInputGraph [style = dashed];
+	
+	SplitStackInput;
+	StackInput -> SplitStackInput  [arrowtail = onormal, dir = back];
+	SplitStackInput -> Output [dir = both, arrowtail = odot];
+	
+	SlideWindow;
+	StackInput -> SlideWindow [arrowtail = onormal, dir = back];
+	SlideWindowGraph [image = "timedgraph.gv.png", shape = none, label = ""];
+	SlideWindow -> SlideWindowGraph [style = dashed];
+	
+	TumblingWindow;
+	StackInput -> TumblingWindow [arrowtail = onormal, dir = back];
+	TumblingWindowEdgeList [image = "edgelist.gv.png", shape = none, label = ""];
+	TumblingWindow -> TumblingWindowEdgeList [style = dashed];
+
+}

@@ -1,0 +1,35 @@
+digraph {
+
+	layout = dot;
+	node [shape = rect];
+
+	Output [shape = hexagon];
+	Input [shape = hexagon];
+	{ Input -> Output; rank = same; }
+	
+	StackInput;
+	Input -> StackInput [arrowtail = onormal, dir = back];
+	Output -> StackInput [arrowtail = onormal, dir = back];
+	StackInput -> Input;
+	
+	FileInput [shape = hexagon];
+	Input -> FileInput [arrowtail = onormal, dir = back];
+	
+	Algorithm [shape = hexagon];
+	Output -> Algorithm [arrowtail = onormal, dir = back];
+	
+	Metis;
+	Algorithm -> Metis [arrowtail = onormal, dir = back];
+	
+	StructuralSampler;
+	Algorithm -> StructuralSampler [arrowtail = onormal, dir = back];
+	
+	Test [shape = hexagon];
+	Test -> Algorithm;
+	Test -> Input;
+	Test -> StackInput [dir = both, arrowtail = odot];
+	
+	NullOutput;
+	Output -> NullOutput [arrowtail = onormal, dir = back];
+
+}

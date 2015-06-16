@@ -1,0 +1,98 @@
+digraph {
+
+	layout = dot;
+	node [shape = rect];
+
+	Output [shape = hexagon];
+	Input [shape = hexagon];
+	Input -> Output;
+	
+	StackInput;
+	Input -> StackInput [arrowtail = onormal, dir = back];
+	Output -> StackInput [arrowtail = onormal, dir = back];
+	StackInput -> Input;
+	
+	FileInput [shape = hexagon];
+	Input -> FileInput [arrowtail = onormal, dir = back];
+	
+	MGraphFileInput;
+	FileInput -> MGraphFileInput [arrowtail = onormal, dir = back];
+	MGraphFileInput -> File1 [style = dashed];
+	File1 [label = "File", style = dashed];
+
+	EdgeFileInput;
+	FileInput -> EdgeFileInput [arrowtail = onormal, dir = back];
+	EdgeFileInput -> File2 [style = dashed];
+	File2 [label = "File", style = dashed];
+	
+	EulerNetworkInput;
+	Input -> EulerNetworkInput [arrowtail = onormal, dir = back];
+	
+	BAModelInput;
+	Input -> BAModelInput [arrowtail = onormal, dir = back];
+	
+	Algorithm [shape = hexagon];
+	Output -> Algorithm [arrowtail = onormal, dir = back];
+	
+	Metis;
+	Algorithm -> Metis [arrowtail = onormal, dir = back];
+	Metis -> Data1 [style = dashed];
+	Data1 [label = "Data", style = dashed];
+	
+	StructuralSampler;
+	Algorithm -> StructuralSampler [arrowtail = onormal, dir = back];
+	StructuralSampler -> StructuralReservoir [style = dashed];
+	StructuralSampler -> SupportReservoir [style = dashed];
+	StructuralSampler -> GraphManager [style = dashed];
+	
+	Reservoir [shape = hexagon];
+	
+	StructuralReservoir;
+	Reservoir -> StructuralReservoir [arrowtail = onormal, dir = back];
+	
+	SupportReservoir;
+	Reservoir -> SupportReservoir [arrowtail = onormal, dir = back];
+	
+	GraphManager;
+	GraphManager -> Data2 [style = dashed];
+	Data2 [label = "Data", style = dashed];
+	Data2 -> Cluster [style = dashed];
+	Cluster [style = dashed];
+	
+	FilterEdges;
+	StackInput -> FilterEdges [arrowtail = onormal, dir = back];
+	
+	Test [shape = hexagon];
+	Test -> Algorithm;
+	Test -> Input;
+	Test -> StackInput [dir = both, arrowhead = odot];
+	
+	QualityTest;
+	Test -> QualityTest [arrowtail = onormal, dir = back];
+	
+	CaptureStackInput;
+	StackInput -> CaptureStackInput [arrowtail = onormal, dir = back];
+	
+	SplitStackInput;
+	StackInput -> SplitStackInput  [arrowtail = onormal, dir = back];
+	SplitStackInput -> Output;
+	
+	ThroughputTest;
+	Test -> ThroughputTest [arrowtail = onormal, dir = back];
+	
+	OutputVisualization;
+	Test -> OutputVisualization [arrowtail = onormal, dir = back];
+	
+	VisualizeResults;
+	Test -> VisualizeResults [arrowtail = onormal, dir = back];
+	
+	NullOutput;
+	Output -> NullOutput [arrowtail = onormal, dir = back];
+	
+	SlideWindow;
+	StackInput -> SlideWindow [arrowtail = onormal, dir = back];
+	
+	TumblingWindow;
+	StackInput -> TumblingWindow [arrowtail = onormal, dir = back];
+
+}

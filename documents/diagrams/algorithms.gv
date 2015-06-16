@@ -1,0 +1,43 @@
+digraph {
+	
+	layout = dot;
+	node [shape = rect];
+
+	Output [shape = hexagon];
+
+	Algorithm [shape = hexagon];
+	Output -> Algorithm [arrowtail = onormal, dir = back];
+	
+	Metis;
+	Algorithm -> Metis [arrowtail = onormal, dir = back];
+	Metis -> Data1 [style = dashed];
+	Data1 [label = "Data", style = dashed];
+	Data1Graph [image = "graph.gv.png", shape = none, label = ""];
+	Data1 -> Data1Graph [style = dashed];
+	
+	StructuralSampler;
+	Algorithm -> StructuralSampler [arrowtail = onormal, dir = back];
+	StructuralSampler -> StructuralReservoir [style = dashed];
+	StructuralSampler -> SupportReservoir [style = dashed];
+	StructuralSampler -> GraphManager [style = dashed];
+	
+	Reservoir [shape = hexagon];
+	ReservoirEdgeList [image = "edgelist.gv.png", shape = none, label = ""];
+	Reservoir -> ReservoirEdgeList [style = dashed];
+	
+	StructuralReservoir;
+	StructuralReservoir -> Reservoir [arrowhead = onormal];
+	
+	SupportReservoir;
+	SupportReservoir -> Reservoir [arrowhead = onormal];
+	
+	GraphManager;
+	GraphManager -> Data2 [style = dashed];
+	Data2 [label = "Data", style = dashed];
+	Data2 -> Cluster [style = dashed];
+	Data2Graph [image = "graph.gv.png", shape = none, label = ""];
+	Data2 -> Data2Graph [style = dashed];
+	Cluster [image = "clustering.gv.png", shape = none, label = ""];
+	
+	{ Data1; Data2; rank = same; }
+}

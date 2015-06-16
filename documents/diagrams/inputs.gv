@@ -1,0 +1,31 @@
+digraph {
+
+	layout = dot;
+	node [shape = rect];
+
+	Output [shape = hexagon];
+	Input [shape = hexagon];
+	{ Input -> Output; rank = same; }
+	
+	FileInput [shape = hexagon];
+	Input -> FileInput [arrowtail = onormal, dir = back];
+	
+	MGraphFileInput;
+	FileInput -> MGraphFileInput [arrowtail = onormal, dir = back];
+	MGraphFileInput -> File1 [style = dashed];
+	File1 [label = "File", style = dashed];
+
+	EdgeFileInput;
+	FileInput -> EdgeFileInput [arrowtail = onormal, dir = back];
+	EdgeFileInput -> File2 [style = dashed];
+	File2 [label = "File", style = dashed];
+	
+	EulerNetworkInput;
+	Input -> EulerNetworkInput [arrowtail = onormal, dir = back];
+	EulerNetworkInputEdgeList [image = "edgelist.gv.png", shape = none, label = ""];
+	EulerNetworkInput -> EulerNetworkInputEdgeList [style = dashed];
+	
+	BAModelInput;
+	Input -> BAModelInput [arrowtail = onormal, dir = back];
+	
+}
