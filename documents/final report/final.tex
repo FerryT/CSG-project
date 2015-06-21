@@ -1,0 +1,531 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage[colorinlistoftodos]{todonotes}
+\usepackage[T1]{fontenc}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\title{Database Technology [2ID35] \\
+\textbf{Final Report}}
+
+\author{
+Michiel Fortuin --- 0812105 \\
+Fengjun Wang --- 0925350 \\
+Ferry Timmers --- 0637586 \\
+Myrthe van Delft --- 0657742}
+
+\date{\today}
+
+\newcommand{\plot}[4]
+	{
+		\begin{tikzpicture}[scale=0.6]
+		\begin{axis}[
+			title=#1,
+			xlabel={Cluster size},
+			ylabel={Cut size},
+			xmode=#3,
+            ymode=#4,
+			legend entries={Structural sampler,Metis},
+			legend style={
+				anchor=north,
+				at={(axis description cs:0,-0.1)}}
+			]
+		\addplot table [x=Input, y=StructuralSampler, col sep=comma] {#2};
+		\addplot table [x=Input, y=Metis, col sep=comma] {#2};
+		\end{axis}
+		\end{tikzpicture}
+	}
+
+\begin{document}
+\newcommand{\papername}[0]{Clustering Streaming Graphs}
+
+\maketitle
+\begin{abstract}
+As part of the database technology course of 2014-2015, we had to investigate a research paper from the scientific community. Our project group was assigned the paper \papername. This paper presents a method for 'online' clustering of (large) streaming graphs. In this report we will present the results of our project.
+\end{abstract}
+
+\pagebreak
+\tableofcontents
+
+\pagebreak
+\section{Introduction}\label{sec:In}
+As part of the database technology course of 2014-2015, we had to investigate a research paper from the scientific community. Our project group was assigned the paper \papername \cite{paper}. This paper presents a method for `online' clustering of (large) streaming graphs, and compares it with well established clustering algorithms, AZY and METIS. The name of the presented method is `structural sampler'. For the comparison of the new method, the paper assumes that METIS gives the most optimal clustering. Therefore, we decided to only verify the comparison between the structural sampler and METIS. 
+
+%TODO: some notes on the final conclusions
+
+\subsection{Report overview}
+The first step for this project was to understand the subject material, and the presented method and results. Therefore, we did a small literature survey (section \ref{sec:LS}), and wrote a short summary of the research problem and results presented by the paper (section \ref{sec:Pa}). A big part of the project was to create a good road map, which we describe in section \ref{sec:Pl}. In section \ref{sec:PE} we compare the roadmap with how the project truly progressed. In section \ref{sec:Code} we explain how to use the application we created for the tests the structure and workings of our code. Our final results are presented in section \ref{sec:TR}, and in section \ref{sec:Co} we explain the similarities and differences of our results with those of the paper.
+
+\pagebreak
+\section{Literature Survey}\label{sec:LS}
+In the paper, a method for clustering online, streaming graphs is presented. A streaming graph is a graph where the updates to the graph are given in the form of a \textit{stream} of edge or vertex additions or deletions. Handling of such rapidly changing graphs is challenging because of its dynamic, online nature and massive scale. An algorithm thus would necessarily need to be incremental and extremely fast, and preferably amenable to parallel or distributed implementations. 
+
+The graph clustering problem has been a subject of extensive research, but mostly assuming an \textit{offline} setting where the entire graph is given beforehand. The paper presents an algorithm which is suitable to an online setting, and is capable of maintaining a decent graph clustering while updates are performed on the graph. 
+
+In \cite{11} random sampling was used to solve this problem in a offline fashion. This random sampling was first used in this paper. In \cite{12} solves the same problem, but then in an online fashion, using an Erdös-Réyni model. Problem with this algorithm in \cite{12} is that it does not allow deletion or modification of the graph. Also it does not scale well with the number of clusters. The algorithm presented in  \cite{13} solves the same problem in an online fashion. This hash-compressed micro-clusters and find structurally similar graphs in a stream of large number of small graphs. In \cite{14} reservoir sampling is also used. This algorithm is called the AZY algorithm. Our paper is based on top of this algorithm. It can be seen as an extension. The AZY does not consider deletions in the graph.
+
+In \cite{DynPar} the algorithm presented in our paper is used for analyzing social network. The weighted graph is used, which is based on the chat frequency and access recency. In \cite{StrHyp} the algorithm is adapted for use with hypergraphs. The paper \cite{ProStr} describes another clustering algorithm similar to ours, only the query's aren't about a snapshot of the graph, but deletions in the past and additions in the future are taken into account with the clustering.
+
+\pagebreak
+\section{The paper}\label{sec:Pa}
+The research problem is clustering large-scale and rapidly changing "streaming" graphs where the updates to a graph are given in form of a stream of vertex or edge additions and deletions. 
+
+The algorithm in the paper is proposed to solve the clustering problem and also satisfies 3 optimization requirements:
+\begin{itemize}
+\item[a] it should be simple to adjust to parallellizations and distributed environments
+\item[b] it should handle massive inputs, with a relatively low overall space complexity
+\item[c] it should handle high throughput streams, with a relatively low time complexity per update or query
+\end{itemize}
+
+To test the algorithm, it is tested against two other clustering algorithms. The first is METIS, a standard clustering algorithm, with some slight modifications to make it suitable to an `online' environment. The second is AZY, which was originally developed for outlier detection, but can also be used to determine clustering in an `online' environment. The tests are performed on 4 different datasets:
+\begin{itemize}
+\item[1] cit-HepPh, which shows a large increase in the number of vertices over time. This graph has (in total) $34k$ vertices and $420k$ edges.
+\item[2] web-NotreDame. This graph has (in total) $330k$ vertices and $1.5M$ edges.
+\item[3] replies, a very sparse and not well clustering graph. This graph has (in total) $1.9M$ vertices and $1.6M$ edges.
+\item[4] DNS Edges, containing many duplicate edges but with different time stamps. This graph has (in total) $180k$ vertices and $4.8M$ edges.
+\end{itemize}
+
+\subsection{Approach}\label{sec:approach}
+The structural sampler as described in the paper, consists of three parts working together: the window manager, the reservoir manager and the graph manager. The main contribution of the paper is the reservoir manager, the window manager and the graph manager are taken from existing systems.
+
+The window manager accepts a stream of edges as input and produces graph updates according to the specified window settings. Then, the graph updates are passed to  the reservoir manager, which manages a structural reservoir (containing the currently sampled part of the graph) and a support reservoir (which stores the complete graph). The reservoir manager handles the core part of the algorithm, and will be discussed in more detail later. It decides which edges should be added and which edges should be removed from the currently sampled graph. Adding and removing edges to the reservoirs is managed by the graph manager, which also deals with query events.
+
+The idea behind the algorithm is to sample random parts of the current graph, and determine clusters from these parts, while trying to satisfy a certain clustering constraint. The clustering constraint is some number $B$, which indicates the maximum size of a cluster. The procedure works as follows. Whenever edges are inserted, they are assigned a random value $p$. The clusters in the sampled graph are determined by connected components: everything which belongs to the same connected component, belongs to the same cluster. As soon as the size of one of the clusters exceeds $B$ after adding an edge, edges are removed, starting with the edge with the highest p-value. This is done until the clustering constraint is once again satisfied. After this, only edges with p-values less than a certain value, say $m$, are part of the sampled graph. Now, all edges with a p-value greater than $m$ are considered once again, starting with the edge with p-value closest to $m$. If adding this edge to the sampled graph does not break the clustering constraint, then it is added to the graph. Otherwise, it remains in the support reservoir. 
+
+Removing an edge works in a similar fashion. When removing an edge, if it is part of the support reservoir, then it can simply be removed from the support reservoir. However, if the edge is part of the sampled graph, then the edge is removed from the sampled graph, and all edges from the support reservoir with a higher p-value than the removed edge are collected. For each of these edges, it is checked if adding this edge to the sampled graph would break the clustering constraint. If it wouldn't break the clustering constraint, then the edge is added to the sampled graph. Otherwise, it remains in the support reservoir.
+
+By defining addition and removal in this manner, we can guarantee that the sampled graph always satisfies two properties: conformity and maximality . With conformity, we mean that it satisfies the clustering constraint. Maximality means that adding any edge from the support reservoir to the sampled graph would break the clustering constraint. 
+
+A small expansion on the algorithm is proposed, in which edges with p-values higher than a certain value are almost never added to the sampled graph. During the experiments, the authors found that a large amount of the edges was immediately discarded when they were added if their p-value exceeded a certain amount. To further optimize the performance of the algortihm, they decided to experiment with ignoring edges when their p-value exceeded a predefined amount.
+
+\subsection{Results}
+The paper measures the performance of the algorithms in two different aspects: quality and performance. Quality is measured in terms of the cut-size of the resulting clusters. Also, tuning experiments with discarding edges with p-values higher than a certain amount were performed.
+
+\subsubsection{Quality}
+The paper tests the quality of the 4 datasets on the Structural Sampler, METIS, and AZY, with different clustering group size bounds, while fixing the sampling threshold parameter p at 1. The results show that the quality of the clusters produced by the Structural Sampler is almost as good as the quality of those produced by METIS, which is assumed to be close to the best clustering. AZY performs significantly worse than both METIS and the Structural Sampler in terms of quality.
+
+Furthermore, the paper tests the quality of the clusters of the Structural Sampler, METIS, and AZY on the cit-HepPh and DNS Edges datasets, using different sampling thresholds (maximal p-values). For both METIS and the Structural Sampler, applying a lower sampling threshold results in a worse clustering quality. However AZY is mostly uninfluenced by a lower sampling threshold. 
+
+In Figure \ref{fig:paqu}, the results presented by the paper of the quality experiments is shown. 
+
+\begin{figure}
+\includegraphics[width=\textwidth]{paper_results.png}
+\caption{The results of the paper}
+\label{fig:paqu}
+\end{figure}
+
+\subsubsection{Performance}
+The paper uses different ratios for the number of queries versus the number of updates while measuring the performance of the algorithms. The performance of the Structural Sampler and METIS is tested on  on cit-HepPh and web-NotreDame. The throughput of the Structural Sampler greatly out-performs METIS, even more so when the query vs. update ratio increases, up to an improvement of more than 3 orders of magnitude.
+
+Furthermore, the paper tests Structural Sampler and METIS, with different clustering size bounds B, while fixing Query/Update-ratio at 0.5, on the datasets DNS Edges and web-NotreDame. The throughput of Structural Sampler still out-performs METIS with more than 3 orders of magnitude. However, METIS has almost the same throughput for changing values of the clustering size bound B, while the performance of the Structural Sampler decreases as B increases. 
+
+Finally, the paper tests the throughput of Structural Sampler and METIS on cit-HepPh and DNS Edges, while adjusting the sampling threshold (the maximal p-value). The structural Sampler shows an increase in performance when adjusting the sampling threshold. The effect of adjusting the sampling threshold on the performance on METIS is rather limited, but it does follow the same trend as the effect on the Structural Sampler.
+
+\pagebreak
+\section{Planning}\label{sec:Pl}
+The planning of our project looks as follows. Depending on whether or not we receive the source code from the author, we will either execute with 3a (if we do receive the source code), or 3b (if we do not receive the source code).
+
+\begin{enumerate}
+\item[1] Mail the authors with a request for the source code. 
+\item[2] Obtain the datasets used in the paper, as far as possible.
+\item[3-a] If we are capable of obtaining the source code from the authors, then:
+\begin{enumerate}
+\item[i] Compare the performance and quality results presented in the paper with those of METIS and our implementation.
+\end{enumerate}
+\item[3-b] If we do not receive the source code from the authors in a timely manner, then:
+\begin{enumerate}
+\item[i] Implement the algorithm presented in the paper.
+\item[ii] Compare the quality results presented in the paper with those of METIS and our implementation.
+\item[iii] \textit{Expansion:} Compare the performance results presented in the paper with those of METIS and our implementation.
+\end{enumerate}
+\item[4] Possible expansions, depending on the time it takes to implement and run the experiments:
+\begin{enumerate}
+\item[i] Repeat the tests on different datasets. An interesting candidate is a dataset showing no obvious clustering. 
+\item[ii] Testing for additional $p$-values aside from those used in the paper, and verifying the claims made about higher and/or lower $p$-values.
+\item[iii] The paper claims the algorithm can be easily parallelized or run distributed. We are interested to test the method presented for parallelizing the algorithm.
+\end{enumerate}
+\end{enumerate}
+
+\subsection{Time Schedule}
+Here, we list the dates and deadlines we set out for ourselves, to ensure successful completion of the project.
+
+\begin{tabular}{|l|l|}
+\hline
+\textbf{Date}	&	\textbf{Deadline}\\
+\hline
+13 May	&	Finish scheduling report\\
+\hline
+24 May	&	Untested, but completed implementation of the algorithms\\
+		&	Completed preprocessing the datasets\\
+		&	Project part 3 \\
+\hline
+31 May	&	Completed and debugged implementation of the algorithms\\
+		& 	Start testing and preliminaries of the final report\\
+\hline
+7 June	&	Start discussing final presentation\\
+\hline
+14 June	&	Finished main experiments\\
+\hline
+21 June	&	Finished final report (project part 4)\\
+\hline
+\end{tabular}
+
+\subsection{Tools} 
+We have used git as a code repository for the project, and we have writen our code in C++. The development environment we used was Visual Studio V12. For writing documents and such we have used \LaTeX. Benchmarking our code was done via Visual Studio plugins. Finally, we used batch scripts to automate the testing.
+
+
+\section{Project execution}\label{sec:PE}
+We created our own implementation for the algorithms proposed in the paper. For METIS, we were able to find source code online, and we integrated the code in our own application. Furthermore, we created a Poisson-Network generator to test if our implementation works, and decided it would also generate good data sets to use during the experiments. The final result of our implementation was a command line application, for which we could write a script to automate the testing. In section \ref{sec:Code}, we describe the useage of the application. 
+
+In more detail: we first determined the general structure of our project, which includes I/O, testing, the algorithms, and visualization parts. After we finished the structural sampler architecture, we performed tests on randomly generated Poisson-Network graphs, and Barabási–Albert model network(scale free). Our implementation included functionality to report the cutsize of the clusters at certain interval as well as a visual represnetation of the clustering using GraphViz. After that, we started testing on some small datasets we found on the internet. For each dataset we tried different $p$-values, and examined resulting GraphViz visualizations. 
+
+While setting up our tests, we found that METIS uses a different clustering constraint than the clustering constraint used by the Structural Sampler. The Structural Sampler uses a maximal cluster size $B$ as its clustering constraint, while METIS uses a maximal number of clusters $n$. After some research we found that, according to \cite{METIS}, METIS tries to balance the number of vertices per cluster. Thus, we decided to use $n=|V|/B$, where $|V|$ is the total number of vertices in the graph. %TODO reference
+
+Finally, we ran our tests (including data sets `replies', `cit-HepPh' and `web-NotreDame', as well as two different randomly generated graphs) on a ngrid server hosted at the TU/e. While we were inspecting the results from our tests, we discovered that these were significantly different from those produced by the paper. This caused us to reexamine the parameters we used during our tests, and we discovered that the paper did not mention the window settings used during the tests. We had chosen a window setting which seemed logical to us, increasing the window size as the graph increased, and we believed that this might explain the differences between our results and those from the paper. Therefore we decided to rerun the tests on a the data sets using a constant window size. The test results of both sets of tests are shown and discussed in section \ref{sec:TR}. 
+
+\section{Application usage}\label{sec:Code}
+For our project we have created an application to run various tests on the structural sampler algorithm and Metis. In this section we will explain how to use this application. For a more detailed description on the internals of this application we refer to section \ref{sec:code_struct}. To run the application, some command line options need to be set, like input, test format, etc. Their possibilities will be explained first, and then we will show some examples.
+
+%In \ref{sec:eu}, we explain some examples for calling the application from the command line.
+
+\subsection{Command line options for the application}
+
+\subsubsection{input}
+Depending on the input format and settings, either a pre-existing data set or a randomly generated data set is used. There are two options for random data sets, and two options for pre-existing data set formats.\\
+
+\emph{-CI <input> [parameters]}
+
+Specifies an input, there has to be 1 input specified.\\
+Choices for <input>: Poisson, BAModel, mgraph, graph
+
+\begin{itemize}
+	\item Poisson: A randomized graph as input. Every edge has the same chance of existing in the graph. \\
+	Generates deletes: Yes \\
+	Parameters: <nodes> <insert delete ratio> <updates> 
+	
+	\begin{itemize}
+		\item \textbf{nodes}(integer):  The maximum number of nodes in the graph.
+		\item \textbf{insert delete ratio}(real number $x$, $0\leq x\leq 1$): A number between 0 and 1 (including) that determines how many of the updates should edge insertion or edge deletion. 0 results in only edge deletions, and 1 results in only edge insertions. \textit{Note: if the graph is empty then an insert is always executed, so numbers below 0.5 have little meaning.}
+		\item \textbf{updates}(integer): The total number of graph updates (insertions and deletions). 
+	\end{itemize}
+	
+	\item BAModel: A randomized graph as input. The graph will show clustering behavior. Nodes that have a higher degree also have a higher chance of connecting to new edges. The number of edges and the number of updates are randomized in this model. \\
+	Generates deletes: No \\
+	Parameters: <nodes>
+	
+	\begin{itemize}
+		\item \textbf{nodes}(integer): The number of nodes in the graph.
+	\end{itemize}
+	
+	\item mgraph: A file input. This input reads a Metis graph file to determine the edge additions. \\
+	Generates deletes: No \\
+	Parameters: <filename>
+	
+	\begin{itemize}
+		\item \textbf{filename}(string): The number of nodes in the graph.
+	\end{itemize}
+	
+	\item graph: A file input. This input reads a list of edges to determine the edge additions. \\
+	Generates deletes: No\footnote{The file format does not support deletions officially we extended the format so that deletetions can be specified.} \\
+	Parameters: <filename>
+	
+	\begin{itemize}
+		\item \textbf{filename}(string): The number of nodes in the graph.
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Algorithm}
+The application can determine clusterings using both Metis and the structural sampler approach. Depending on the testing format, it is possible to run both. This is particularly useful to compare metis and the structural sampler when using randomized data as input, since then both will be run on the same random data.\\
+
+\emph{-CA <algorithm> [parameters]}
+
+Specifies an algorithm. Multiple algorithms may be set if the test format supports it.\\
+Choices for <input>: Metis, StructuralSampler
+
+\begin{itemize}
+	\item Metis: The Metis algorithm. This is a k-way clustering algorithm. See \cite{METIS} \\
+	Parameters: <max cluster size>
+	
+	\begin{itemize}
+		\item \textbf{max cluster size}(positive integer): The maximum size of a cluster.
+	\end{itemize}
+	
+	\item StructuralSampler: The structural sampler. This is the algorithm specified in \cite{paper}. \\
+	Parameters: <max cluster size>
+	
+	\begin{itemize}
+		\item \textbf{max cluster size}(positive integer): The maximum size of a cluster.
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Test}
+The application can run several kinds of tests. It can test the quality of the resulting clusterings, using the cut size of the resulting clusterings as a quality measure, and in which case both algorithms can be run at the same time. It is also possible to generate a visualization of the resulting clusterings. A final option which we didn't use during the project is testing the throughput of the algorithms. For generating a visualization and testing the throughput of the algorithms, only one algorithm may be tested at a time.\\
+
+\emph{-CT <test> [parameters]}
+
+Specifies a test. \\
+Choices for <input>: Quality, VisualizeResult, Throughput
+
+\begin{itemize}
+	\item Quality: Tests the quality of an algorithm. This determines the cut size of the resulting clustering of an algorithms. The cutsize is defined as in \cite{paper}, it is the number of inter-cluster edges. The average is calculated over all the snapshots. The output are comma separated values for the algorithms in the output file. This test is the same quality test as in \cite{paper} \\
+	Multiple algorithms: Yes \\
+	Parameters: <snapshot size>
+	
+	\begin{itemize}
+		\item \textbf{snapshot size}(positive integer): The number of updates executed before the cutsize is calculated.
+	\end{itemize}
+	
+	\item VisualizeResult: Uses the output of the algorithm to generate a DOT(as specified by graphviz) file. Optionally the dot application is called to generate an png image. \\
+	Multiple algorithms: No \\
+	Parameters: <updates> <call dot> [name input]
+	
+	\begin{itemize}
+		\item \textbf{updates}(positive integer): The number of updates that are executed before making an image, use -1 for all updates.
+		\item \textbf{call dot}(0 or 1): 1 for calling the dot application so that a png image is generated in stead of a dot file.
+		\item \textbf{name input}(string, optional): An optional parameter to use names with generating a dot file or png image. The file is specified such that node 0 is on the 1st line of the file, node 1 on the 2nd line, node 2 on the 3rd and so on.
+	\end{itemize}
+	
+	\item Throughput: Tests the performance of an algorithm. The number of updates are executed and then the number of queries are executed. This is done until there are no updates from the input. This is the same throughput test as specified in \cite{paper} \\
+	Multiple algorithms: No \\
+	Parameters: <queries> <updates>
+	
+	\begin{itemize}
+		\item \textbf{queries}(positive integer): The number of queries that is executed every round.
+		\item \textbf{updates}(positive integer): The number of updates that is executed every round.
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Stack inputs}
+To reduce the size of the clustering which is stored in memory, it is possible to specify window settings as specified in \cite{paper}. Both a sliding window and a tumbling window can be used. Furthermore, in \cite{paper} some tests were done with discarding edges for $p$-values greater than a certain threshold. This may be done by setting FilterEdges.
+
+
+\emph{-Cs <stack input> [parameters]}
+
+Specifies an Stack inputs. These are parsed from left to right and are stacked on top of each other. So multiple stack inputs are accepted. \\
+Choices for <input>: SlideWindow, TumblingWindow, FilterEdges
+
+\begin{itemize}
+	\item SlideWindow: Removes edges if the graph is equal or larger than the window size. This test is the same sliding window as in \cite{paper} \\
+	Generates deletes: Yes \\
+	Parameters: <window size>
+	
+	\begin{itemize}
+		\item \textbf{window size}(positive integer): The maximum number of edges in the window. This also the maximum number of edges in the memory.
+	\end{itemize}
+	
+	\item TumblingWindow: Removes all edges if the the window size is reached. If then there are 0 edges in the graph, edges are added to graph. This test is the same tumbling window as in \cite{paper} \\
+	Generates deletes: Yes \\
+	Parameters: <window size>
+	
+	\begin{itemize}
+		\item \textbf{window size}(positive integer): The maximum number of edges in the window. This also the maximum number of edges in the memory.
+	\end{itemize}
+	
+	\item FilterEdges: Filter edges based on a percentage. This is the same p-filtering as specified in \cite{paper} \\
+	Parameters: <filter value>
+		
+	\begin{itemize}
+		\item \textbf{filter value}(real, between 0 and 1 included)): The percentage that has to be filtered. This is based on a random number, if it's higher than the filter value then it keeps the new edge, if it's lower than filter value then it skips that edge.
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Output}
+For all possible test formats, some output file is generated. The name of this output file needs to be set by the user. \\
+
+
+\emph{-CO <output file>}
+
+Specifies an output file, this has to be specified. \\
+\begin{itemize}
+	\item \textbf{output file}(string): the file where the output has to be written to.
+\end{itemize}
+
+\subsubsection{Example usage}\label{sec:eu}
+\begin{verbatim}
+StructuralSampler -CI Poisson 100 0.80 400 -CA StructuralSampler 
+10 -CT VisualizeResult 100 1 -CO testresult.png
+\end{verbatim}
+
+Generates an image testresults.png showing the clusterings produced by running the structural sampler on a random poisson graph with 100 nodes. 80\% of the updates are additions, the remainder are deletions and the input will produce 400 updates. The test is visualize result, and it only takes 100 of the updates. Furthermore, the application dot will be called to generate an image.
+
+\begin{verbatim}
+StructuralSampler -CI graph web-NotreDame.txt -CS FilterEdges 0.2 
+-CS SlideWindow 10000 -CA StructuralSampler 1000 -CT Quality 
+10000 -CO test.csv
+\end{verbatim}
+
+The graph web-NotreDame.txt is used as input file. 20\% of the edges are discarded. Furthermore, a sliding window is used with a window size of 10,000, so no more than 10,000 edges are simultaneously active. Also, because of the sliding window, edge deletions are generated. The algorithm used is the structural samples with a cluster size of 1,000. The algorithm is tested for quality, and is checked every 10,000 graph updates. The results are written as a column separated file to test.csv.
+
+
+
+\pagebreak
+\section{Implementation}\label{sec:code_struct}
+The aplication was written in C++ and designed to work on both Windows and Linux. It supports various input formats (as explained in Section \ref{sec:Code}) some of them generated on the fly and others use data files. The application includes two algorithms. The structural sampler algorithm we implemented ourselves; Metis was used as and included as a static library. A global overview of our implementation can be seen in Figure \ref{fig:overview}.
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio=true]{overview_gv.png}
+\caption{\label{fig:overview}Overview: Abstract classes denoted by hexagons, implemented classes rectangles. Open arrows denote inheritance and closed arrows use. The disc indicates cardinality: Test has a number of StackInputs.}
+\end{figure}
+
+Outputs are defined as a stream of edge inclusions and deletions. Due to the nature of this a number of filters can be applied to this stream before applying the algorithm using daisy-chaining. The StackInput class implements this behaviour. Algorithms are specials cases of outputs which include methods for quering clustering information. Inputs are defined as an object that can do updates; it contains a reference to an output object which can be send any number of edge inclusions and deletions each update.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio=true]{inputs_gv.png}
+\caption{\label{fig:inputs}Input system: dashed arrows and nodes represent internal use and classes.}
+\end{figure}
+
+In Figure \ref{fig:inputs} we take a closer on the input system. The FileInput class extends inputs to contain a reference to files. Two file types are currently supported: the graph format Metis uses which is also used by a number of other tools and a simple list of edges which is commonly used for data sets. There are also two generator type inputs which randomly produce edge additions.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio=true]{stackinputs_gv.png}
+\caption{\label{fig:stackinputs}StackInput system}
+\end{figure}
+
+In Figure \ref{fig:stackinputs} we take a closer look on stack inputs. Stack inputs are both inputs and outputs and can be used to create an output chain. FilterEdges excludes some percentage of edges added and removed; this allows a speed gain over accuracy. CaptureStackInput stores a copy of the entered graph for future processing. The sliding window and tumbing window stack inputs coalescense with the equally named windows as described in the paper. The sliding windows stores a graph with an added time component to edges and the tumbling windows holds a list of edges. The SplitStackInput class allows inputs to be sent to multiple outputs which is useful to run multiple configurations all at once.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio=true]{algorithms_gv.png}
+\caption{\label{fig:algorithms}Algorithms}
+\end{figure}
+
+\pagebreak
+
+In Figure \ref{fig:algorithms} we take a closer look on the algorithms and their implementations. Algorithms are an extension to outputs and receive edge inclusions and deletions. In addition clustering information can be requested by queries: Given a vertex return a unique id representing the cluster it is part of; or return all vertices in the same cluster; get the total number of clusters and given a unique cluster id return the clusters belonging to it.
+
+Metis is used as a library but uses a different format to store edges internally. Since Metis is an offline algorithm this format is not optimized for edge inclusions and deletions. We therefore wrote a wrapper which can alter the representation Metis requires on the fly without suffering a large time overhead. This is performed on each addition or remove but the clustering itself is not calculated until it is required by one of the queries.
+
+The second algorithm is the structural sampler which is described in detail in Section \ref{sec:approach}. Both reservoirs keep a list of edges and are implemented accordingly. The graph manager keeps track of the graph sampled so far and the clustering of this graph. Similar to what the original authors did we use the Union-Find algorithm to efficiently find and merge clusters. We augmented this algorithm to also store the total count of and a linked list of vertices belong to a certain cluster. In contrast of what the original authors did we also included a `Crumble' method which breaks a cluster appart into their original components. On edge or vertex removal this allows to efficiently recluster without having to remove all edges belonging to a cluster. The constraint is calculated by maintaining a maximal cluster size metric which is updated on edge inclusion and deletion. Our implementation does not allow multiple edges between the same nodes or not existing edges to be removed.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.85\textwidth,height=0.85\textheight,keepaspectratio=true]{tests_gv.png}
+\caption{\label{fig:tests}Tests}
+\end{figure}
+
+In figure \ref{fig:tests} we take a closer look at the tests that are available. Each test requires an input, optionally a list of stack inputs and an algorithm which will create the output. The quality test assesses the average cutsize (the average number of edges between cluster versus the total number of edges) of the generated output; this metric can be used to determine the quality of the generated output.
+The throughput test records the time it took for an algorithm to calculate the specified clustering. VisualizeResults visualizes the results of the algorithm in a graph, i.e. it creates a visualization of the clusters. OutputVisualization simply visualizes the input graph, which was mainly used for testing the randomized graphs creation.
+
+
+\newpage
+\section{Test and results}\label{sec:TR}
+\subsection{Tests}
+Multiple test were executed to verify the result of the paper\cite{paper}. The following input sets were used with certain parameters.
+\begin{itemize}
+	\item Barabási–Albert model (BA model), this is a scale free network. It creates a randomized input with 10.000 nodes.
+    \item Poisson graph. This is a randomized non-scale free network. Given the set of nodes, all edges have the same chance of being added to the graph. The graph we generated 1.000 nodes and 10.000 updates, and all updates are edge insertions.
+    \item The Higgs reply network data set used in the paper.
+    \item The Web of NotreDame data set used in the paper.
+    \item The Citations data set used in the paper.
+\end{itemize}
+
+The paper mentions several window types, whose size needed to be determined. However, in the paper it is never indicated which window settings were used exactly. Thus we decided to use two different approaches during our tests. 
+
+The first set of tests was executed with a window size of 10 times the cluster size, so that the expected number of clusters would be the same in every test, around 10, regardless of the number of nodes in the graph. The second set of tests was done using a fixed window size. This would mean that the number of expected clusters is lower if the number of nodes in the graph grows.
+
+\subsection{Results}
+In figure \ref{fig:resultsDynWin} the results from our tests with the window size 10 times the cluster size are depicted. In figures \ref{fig:NotreDame} and \ref{fig:cit} the point for the 500 test is missing. This is due to the fact that these tests would take several more weeks too complete than the projects time constraints allowed. Like in the paper, we plotted the max cluster size on the x-axis and the cut-size on the y-axis. For most inputs, we see that the cut-size increases with the growing cluster size. 
+
+However, in Figure b we see that the cut size produced by metis is steadily increasing, while the cut size produced by the structural sampler for cluster size 100 and 500 suddenly becomes 0. We believe that this is caused by the fact that metis will try to get exactly a certain number of clusters, and divide all nodes evenly accross these clusters. The structural sampler on the other hand is less rigorous in it's settings, since the only restrictions the structural sampler imposes on it's produced clusterings are that none of the clusters is larger than a certain number. This, combined with the fact that the Poisson graph is a fully randomized graph, should be sufficient to explain the fact that the structural sampler goes down to a cut size of 0, while metis's cut size keeps increasing.
+
+The total picture of these results is very inconclusive. In some cases, the structural sampler is clearly outperforming metis. In other cases, metis is the clear winner in terms of the cut size of the produced clusterings. For the web notredame, the differences between metis and the structural sampler are fairly insignificant, while in all other cases the difference between metis and the structural sampler becomes larger as the cluster size increases. 
+
+Figure \ref{fig:resultsFixedWin} depicts the results from our second set of experiments, using a constant window size. The window size in these experiments is 1.000. These results show that the cut-size decreases when the cluster size increases. The results of these tests are much more consistent than the results from the first set of tests. We can now clearly see how the structural sampler is outperformed by metis, and though the difference does increase somewhat around a cluster size of 100, the difference is very small in most cases.
+
+\begin{figure}[!htbp]
+        \centering
+        \begin{subfigure}[b]{0.48\textwidth}
+                \plot{}{BAModel10000.csv}{normal}{normal}
+                \caption{BA model}
+                \label{fig:BAModel10000}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.48\textwidth}
+                \plot{}{Poisson1000-0.8-10000.csv}{normal}{normal}
+                \caption{Poisson graph}
+                \label{fig:Poisson1000-0.8-10000}
+        \end{subfigure}
+        
+        
+        \begin{subfigure}[b]{0.48\textwidth}
+				\plot{}{higgs-reply_network.csv}{normal}{normal}
+                \caption{Higgs reply network}
+                \label{fig:higgs}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.48\textwidth}
+				\plot{}{web-NotreDame.csv}{normal}{normal}
+                \caption{Web NotreDame}
+                \label{fig:NotreDame}
+        \end{subfigure}
+        
+        
+        \begin{subfigure}[b]{0.48\textwidth}
+				\plot{}{cit-HepPh.csv}{normal}{normal} 
+                \caption{Citations}
+                \label{fig:cit}
+        \end{subfigure}
+        \caption{Quality results with different cluster sizes and window sizes 10 times the cluster size.}\label{fig:resultsDynWin}
+\end{figure}
+
+\begin{figure}[!htbp]
+        \centering
+        \begin{subfigure}[b]{0.48\textwidth}
+               \plot{}{BAModel10000-b.csv}{normal}{normal}
+                \caption{BA model}
+                \label{fig:BAModel10000-b}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.48\textwidth}
+                \plot{}{Poisson1000-0.8-10000-b.csv}{normal}{normal}
+                \caption{Poisson graph}
+                \label{fig:Poisson1000-0.8-10000-b}
+        \end{subfigure}
+        
+        
+        \begin{subfigure}[b]{0.48\textwidth}
+				\plot{}{higgs-reply_network-b.csv}{normal}{normal}
+                \caption{Higgs reply network}
+                \label{fig:higgs-b}
+        \end{subfigure}
+        \begin{subfigure}[b]{0.48\textwidth}
+				\plot{}{web-NotreDame-b.csv}{normal}{normal}
+                \caption{Web NotreDame}
+                \label{fig:NotreDame-b}
+        \end{subfigure}
+        
+        \begin{subfigure}[b]{0.48\textwidth}
+				\plot{}{cit-HepPh-b.csv}{normal}{normal} 
+                \caption{Citations}
+                \label{fig:cit-b}
+        \end{subfigure}
+        \caption{Quality results with different cluster size with a fixed window size of 1000.}\label{fig:resultsFixedWin}
+\end{figure}
+
+\pagebreak
+\subsection{Conclusions}\label{sec:Co}
+In figure \ref{fig:paqu}, in section 3.2.1, the results from the paper are shown. On the x-axis the cluster size $B$ is plotted and on the y-axis the cutsize, as defined in the paper, is plotted. For all of the datasets, we see a clear decrease in the cutsize when the cluster size is smaller. The results of metis are the best in terms of the cut size. Next are the results of the structural sampler, though they are still not that bad. The results of AZY are often very bad.
+
+The results from our first set of experiments are much more inconclusive than those from the second set of experiments. Furthermore, the results from the second set of experiments are much more in line with the results presented in the paper. Thus we believe that the paper used a constant window size for their experiments, and we agree with the conclusions from the paper that the quality of the clusterings produced by metis is similar to the quality of the clusterings produced by the structural sampler.
+
+However, the paper does not state what window settings they used for their experiments, which we feel has a strong influence on the results of the tests. Furthermore, we would like to mention that metis and the structural sampler use different restrictions to determine the clustering. Metis tries to get a balanced set of $n$ clusters. The structural sampler on the other hand only wishes the clusters to be within a certain size limit. Both solve a clustering problem, but the parameters used for solving the problem could have a major impact on the resulting clusterings.
+
+\begin{thebibliography}{99}
+\bibitem{paper} A. Eldawy, R. Khandekar and K. Wu, ``Clustering Streaming Graphs'', in \textit{32nd IEEE International Conference on Distributed Computing Systems}, 2012.
+\bibitem{1} A. Jain and R. Dubes, ``Algorithms for Clustering Data''. Prentice-Hall, 1988.
+\bibitem{11} D. Karger, ``Global Min-cuts in RNC, and Other Ramifications of a Simple Min-Cut Algorithm'', in \textit{ACM-SIAM Symposium on Discrete Algorithms}, Austin, TX, Jan. 1993, pp. 21-30.
+\bibitem{12} H. Zanghi, C. Ambroise and V. Miele, ``Fast Online Graph Clustering Via Erdos-Rényi Mixture'', \textit{Pattern Recognition}, vol. 41, no. 12, pp. 3592-3599, 2008.
+\bibitem{13} C. Aggarwal, Y. Zhao and P. Yu, ``On Clustering Graph Streams'', in \textit{Proceedings of the SIAM International Conference on Data Mining}, Columbos, OH, Apr. 2010.
+\bibitem{14} ---,  ``Outlier Detection in Graph Streams'', in \textit{Proceedings of the Internation Conference on Data Engineering, ICDE}, Hannover, Germany, Apr. 2011, pp. 399-409.
+\bibitem{METIS} G. Karypis and V. Kumar, ``A Fast and High Quality Multilevel Scheme for Partitioning Irregular Graphs'', in \textit{SIAM Journal of Scientific Computing}, vol. 20, no. 1, pp. 359-392, 1998.
+\bibitem{DynPar} M. Yuan, ``Dynamic Partitioning of Social Networks'', University of Illinois, Urbana, Illinois, 2012.
+\bibitem{StrHyp} G. Wing, ``Streaming Hypergraph Partition for Massive Graphs'', Kent State University, Dec. 2013.
+\bibitem{ProStr} m. Yuan, K. Wu, Y. Lu and G. Jacques-Silva, ``Efficient Processing of Streaming Graphs for Evolution-Aware Clustering'', in \textit{CIKM '13, Proceedings of the 22nd ACM international conference on Conference on information \& knowledge management}, pp. 319-328, New York, 2013
+\end{thebibliography}
+
+\end{document}
